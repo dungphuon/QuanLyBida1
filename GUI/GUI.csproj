@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F1B5E519-83A3-44FC-AF59-914925680A72}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>GUI</RootNamespace>
+    <AssemblyName>GUI</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Guna.UI2, Version=2.0.4.7, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">
+      <HintPath>..\packages\Guna.UI2.WinForms.2.0.4.7\lib\net472\Guna.UI2.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\FormMainAdmin.cs" />
+    <Compile Include="Admin\FormMainAdmin.Designer.cs">
+      <DependentUpon>FormMainAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\FormCauHinh.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Authentication\FormCauHinh.Designer.cs">
+      <DependentUpon>FormCauHinh.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\FormForgetPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Authentication\FormForgetPassword.Designer.cs">
+      <DependentUpon>FormForgetPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\FormLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Authentication\FormLogin.Designer.cs">
+      <DependentUpon>FormLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\FormRegister.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Authentication\FormRegister.Designer.cs">
+      <DependentUpon>FormRegister.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\FormXacthuc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Authentication\FormXacthuc.Designer.cs">
+      <DependentUpon>FormXacthuc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Authentication\NewPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Authentication\NewPassword.Designer.cs">
+      <DependentUpon>NewPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormDatBan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormDatBan.Designer.cs">
+      <DependentUpon>FormDatBan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormDichVu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormDichVu.Designer.cs">
+      <DependentUpon>FormDichVu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormHelp.Designer.cs">
+      <DependentUpon>FormHelp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormMain1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormMain1.Designer.cs">
+      <DependentUpon>FormMain1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormNhapHang.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormNhapHang.Designer.cs">
+      <DependentUpon>FormNhapHang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormPhieuChi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormPhieuChi.Designer.cs">
+      <DependentUpon>FormPhieuChi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormPhieuThu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormPhieuThu.Designer.cs">
+      <DependentUpon>FormPhieuThu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormQLHD.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormQLHD.Designer.cs">
+      <DependentUpon>FormQLHD.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormQLKH.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormQLKH.Designer.cs">
+      <DependentUpon>FormQLKH.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormQLQuy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormQLQuy.Designer.cs">
+      <DependentUpon>FormQLQuy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormQuanlyban.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormQuanlyban.Designer.cs">
+      <DependentUpon>FormQuanlyban.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormQuanlydichvuanuong.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormQuanlydichvuanuong.Designer.cs">
+      <DependentUpon>FormQuanlydichvuanuong.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormQuanlyQuy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormQuanlyQuy.Designer.cs">
+      <DependentUpon>FormQuanlyQuy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormThanhToan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormThanhToan.Designer.cs">
+      <DependentUpon>FormThanhToan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\FormTrangchu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\FormTrangchu.Designer.cs">
+      <DependentUpon>FormTrangchu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Admin\FormMainAdmin.resx">
+      <DependentUpon>FormMainAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Authentication\FormCauHinh.resx">
+      <DependentUpon>FormCauHinh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Authentication\FormForgetPassword.resx">
+      <DependentUpon>FormForgetPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Authentication\FormLogin.resx">
+      <DependentUpon>FormLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Authentication\FormRegister.resx">
+      <DependentUpon>FormRegister.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Authentication\FormXacthuc.resx">
+      <DependentUpon>FormXacthuc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Authentication\NewPassword.resx">
+      <DependentUpon>NewPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormHelp.resx">
+      <DependentUpon>FormHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormMain1.resx">
+      <DependentUpon>FormMain1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormNhapHang.resx">
+      <DependentUpon>FormNhapHang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormPhieuChi.resx">
+      <DependentUpon>FormPhieuChi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormPhieuThu.resx">
+      <DependentUpon>FormPhieuThu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormQLHD.resx">
+      <DependentUpon>FormQLHD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormQLKH.resx">
+      <DependentUpon>FormQLKH.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormQLQuy.resx">
+      <DependentUpon>FormQLQuy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormQuanlyban.resx">
+      <DependentUpon>FormQuanlyban.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormQuanlydichvuanuong.resx">
+      <DependentUpon>FormQuanlydichvuanuong.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormThanhToan.resx">
+      <DependentUpon>FormThanhToan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\FormTrangchu.resx">
+      <DependentUpon>FormTrangchu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="obj\Debug\GUI.Properties.Resources.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Authentication.FormCauHinh.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormForgetPassword.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormLogin.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormRegister.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormXacthuc.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormHelp.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormMain1.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormNhapHang.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormPhieuChi.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormPhieuThu.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormQLHD.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormQLKH.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormQLQuy.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormQuanlyban.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormQuanlydichvuanuong.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormThanhToan.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormTrangchu.resources" />
+    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.NewPassword.resources" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\GUI.csproj.AssemblyReference.cache" />
+    <None Include="obj\Debug\GUI.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\GUI.csproj.GenerateResource.cache" />
+    <None Include="obj\Debug\GUI.exe.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{b97c3674-35cb-4a24-b7d0-555e1a8ae4a6}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{51defb0b-9f79-4f7d-b703-60771bc936fb}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DTO\DTO.csproj">
+      <Project>{54b5ba1b-b2d2-4725-b50e-26a57d85f710}</Project>
+      <Name>DTO</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="obj\Debug\GUI.csproj.FileListAbsolute.txt" />
+    <Content Include="Resource\apps.png" />
+    <Content Include="Resource\bell.png" />
+    <Content Include="Resource\box-open.png" />
+    <Content Include="Resource\bulb.png" />
+    <Content Include="Resource\calendar-clock.png" />
+    <Content Include="Resource\calendar.png" />
+    <Content Include="Resource\comment-alt.png" />
+    <Content Include="Resource\credit-card.png" />
+    <Content Include="Resource\dollar.png" />
+    <Content Include="Resource\home .png" />
+    <Content Include="Resource\menu-burger.png" />
+    <Content Include="Resource\plus.png" />
+    <Content Include="Resource\power.png" />
+    <Content Include="Resource\print.png" />
+    <Content Include="Resource\search.png" />
+    <Content Include="Resource\settings.png" />
+    <Content Include="Resource\stats.png" />
+    <Content Include="Resource\trash.png" />
+    <Content Include="Resource\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+    <Folder Include="bin\Release\" />
+    <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
