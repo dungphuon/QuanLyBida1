@@ -256,7 +256,7 @@
             this.ClientSize = new System.Drawing.Size(1034, 626);
             this.Controls.Add(this.panel1);
             this.Name = "FormCauHinh";
-            this.Text = "FormCauHinh";
+            this.Text = "Cấu hình hệ thống";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);

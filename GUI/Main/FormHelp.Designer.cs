@@ -78,6 +78,8 @@
             // 
             this.panelContact.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(245)))), ((int)(((byte)(254)))));
             this.panelContact.BorderRadius = 10;
+            this.panelContact.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelContact.Controls.Add(this.labelContactHeader);
             this.panelContact.Controls.Add(this.pictureBoxPhone);
             this.panelContact.Controls.Add(this.labelContactIntro);
@@ -184,9 +186,11 @@
             // labelSection3Content
             // 
             this.labelSection3Content.AutoSize = true;
+            this.labelSection3Content.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSection3Content.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSection3Content.Location = new System.Drawing.Point(20, 440);
-            this.labelSection3Content.MaximumSize = new System.Drawing.Size(850, 0);
+            this.labelSection3Content.MaximumSize = new System.Drawing.Size(0, 0);
             this.labelSection3Content.Name = "labelSection3Content";
             this.labelSection3Content.Size = new System.Drawing.Size(640, 69);
             this.labelSection3Content.TabIndex = 9;
@@ -195,9 +199,11 @@
             // labelSection2Content
             // 
             this.labelSection2Content.AutoSize = true;
+            this.labelSection2Content.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSection2Content.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSection2Content.Location = new System.Drawing.Point(20, 216);
-            this.labelSection2Content.MaximumSize = new System.Drawing.Size(850, 0);
+            this.labelSection2Content.MaximumSize = new System.Drawing.Size(0, 0);
             this.labelSection2Content.Name = "labelSection2Content";
             this.labelSection2Content.Size = new System.Drawing.Size(764, 92);
             this.labelSection2Content.TabIndex = 4;
@@ -206,6 +212,8 @@
             // 
             // labelSection3Header
             // 
+            this.labelSection3Header.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSection3Header.BackColor = System.Drawing.Color.LightSteelBlue;
             this.labelSection3Header.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSection3Header.ForeColor = System.Drawing.Color.White;
@@ -219,6 +227,8 @@
             // 
             // panelLine3
             // 
+            this.panelLine3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelLine3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(172)))), ((int)(((byte)(193)))));
             this.panelLine3.Location = new System.Drawing.Point(20, 425);
             this.panelLine3.Name = "panelLine3";
@@ -227,6 +237,8 @@
             // 
             // labelSection2Header
             // 
+            this.labelSection2Header.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSection2Header.BackColor = System.Drawing.Color.LightSteelBlue;
             this.labelSection2Header.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSection2Header.ForeColor = System.Drawing.Color.White;
@@ -240,6 +252,8 @@
             // 
             // panelLine2
             // 
+            this.panelLine2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelLine2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(172)))), ((int)(((byte)(193)))));
             this.panelLine2.Location = new System.Drawing.Point(20, 185);
             this.panelLine2.Name = "panelLine2";
@@ -249,9 +263,11 @@
             // labelIntro
             // 
             this.labelIntro.AutoSize = true;
+            this.labelIntro.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelIntro.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelIntro.Location = new System.Drawing.Point(20, 77);
-            this.labelIntro.MaximumSize = new System.Drawing.Size(850, 0);
+            this.labelIntro.MaximumSize = new System.Drawing.Size(0, 0);
             this.labelIntro.Name = "labelIntro";
             this.labelIntro.Size = new System.Drawing.Size(817, 46);
             this.labelIntro.TabIndex = 8;
@@ -261,6 +277,8 @@
             // 
             // labelSection1Header
             // 
+            this.labelSection1Header.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSection1Header.BackColor = System.Drawing.Color.LightSteelBlue;
             this.labelSection1Header.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSection1Header.ForeColor = System.Drawing.Color.White;
@@ -274,6 +292,8 @@
             // 
             // panelLine1
             // 
+            this.panelLine1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelLine1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(172)))), ((int)(((byte)(193)))));
             this.panelLine1.Location = new System.Drawing.Point(20, 95);
             this.panelLine1.Name = "panelLine1";

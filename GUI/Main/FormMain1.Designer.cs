@@ -33,6 +33,9 @@
             this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
+            this.controlBoxMinimize = new Guna.UI2.WinForms.Guna2ControlBox();
+            this.controlBoxMaximize = new Guna.UI2.WinForms.Guna2ControlBox();
+            this.controlBoxClose = new Guna.UI2.WinForms.Guna2ControlBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.user_information = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2PictureBox2 = new Guna.UI2.WinForms.Guna2PictureBox();
@@ -71,6 +74,9 @@
             // guna2Panel1
             // 
             this.guna2Panel1.BackColor = System.Drawing.Color.White;
+            this.guna2Panel1.Controls.Add(this.controlBoxClose);
+            this.guna2Panel1.Controls.Add(this.controlBoxMaximize);
+            this.guna2Panel1.Controls.Add(this.controlBoxMinimize);
             this.guna2Panel1.Controls.Add(this.label1);
             this.guna2Panel1.Controls.Add(this.guna2PictureBox1);
             this.guna2Panel1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -102,6 +108,42 @@
             this.guna2PictureBox1.TabIndex = 0;
             this.guna2PictureBox1.TabStop = false;
             this.guna2PictureBox1.Click += new System.EventHandler(this.guna2PictureBox1_Click);
+            // 
+            // controlBoxMinimize
+            // 
+            this.controlBoxMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.controlBoxMinimize.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox;
+            this.controlBoxMinimize.FillColor = System.Drawing.Color.White;
+            this.controlBoxMinimize.HoverState.FillColor = System.Drawing.Color.Gainsboro;
+            this.controlBoxMinimize.IconColor = System.Drawing.Color.Black;
+            this.controlBoxMinimize.Location = new System.Drawing.Point(959, 3);
+            this.controlBoxMinimize.Name = "controlBoxMinimize";
+            this.controlBoxMinimize.Size = new System.Drawing.Size(36, 29);
+            this.controlBoxMinimize.TabIndex = 2;
+            // 
+            // controlBoxMaximize
+            // 
+            this.controlBoxMaximize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.controlBoxMaximize.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox;
+            this.controlBoxMaximize.FillColor = System.Drawing.Color.White;
+            this.controlBoxMaximize.HoverState.FillColor = System.Drawing.Color.Gainsboro;
+            this.controlBoxMaximize.IconColor = System.Drawing.Color.Black;
+            this.controlBoxMaximize.Location = new System.Drawing.Point(1001, 3);
+            this.controlBoxMaximize.Name = "controlBoxMaximize";
+            this.controlBoxMaximize.Size = new System.Drawing.Size(36, 29);
+            this.controlBoxMaximize.TabIndex = 3;
+            // 
+            // controlBoxClose
+            // 
+            this.controlBoxClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.controlBoxClose.FillColor = System.Drawing.Color.White;
+            this.controlBoxClose.HoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(77)))), ((int)(((byte)(94)))));
+            this.controlBoxClose.HoverState.IconColor = System.Drawing.Color.White;
+            this.controlBoxClose.IconColor = System.Drawing.Color.Black;
+            this.controlBoxClose.Location = new System.Drawing.Point(1043, 3);
+            this.controlBoxClose.Name = "controlBoxClose";
+            this.controlBoxClose.Size = new System.Drawing.Size(36, 29);
+            this.controlBoxClose.TabIndex = 4;
             // 
             // flowLayoutPanel1
             // 
@@ -357,9 +399,10 @@
             // 
             // panelLoad
             // 
-            this.panelLoad.Location = new System.Drawing.Point(186, 39);
+            this.panelLoad.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelLoad.Location = new System.Drawing.Point(179, 34);
             this.panelLoad.Name = "panelLoad";
-            this.panelLoad.Size = new System.Drawing.Size(889, 653);
+            this.panelLoad.Size = new System.Drawing.Size(903, 670);
             this.panelLoad.TabIndex = 2;
             // 
             // buttonLogout
@@ -436,5 +479,8 @@
         private Guna.UI2.WinForms.Guna2Panel guna2Panel2;
         private Guna.UI2.WinForms.Guna2Button buttonFinane;
         private Guna.UI2.WinForms.Guna2Button buttonLogout;
+        private Guna.UI2.WinForms.Guna2ControlBox controlBoxMinimize;
+        private Guna.UI2.WinForms.Guna2ControlBox controlBoxMaximize;
+        private Guna.UI2.WinForms.Guna2ControlBox controlBoxClose;
     }
 }

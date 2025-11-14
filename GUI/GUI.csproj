@@ -53,9 +53,77 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\FormMainAdmin.cs" />
+    <Compile Include="Admin\FormAddNV.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormAddNV.Designer.cs">
+      <DependentUpon>FormAddNV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormAddProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormAddProduct.Designer.cs">
+      <DependentUpon>FormAddProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormAddTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormAddTable.Designer.cs">
+      <DependentUpon>FormAddTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormDashBoardAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormDashBoardAdmin.Designer.cs">
+      <DependentUpon>FormDashBoardAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormEditProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormEditProduct.Designer.cs">
+      <DependentUpon>FormEditProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormEditTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormEditTable.Designer.cs">
+      <DependentUpon>FormEditTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormMainAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Admin\FormMainAdmin.Designer.cs">
       <DependentUpon>FormMainAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormManageProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormManageProduct.Designer.cs">
+      <DependentUpon>FormManageProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormNhaphangAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormNhaphangAdmin.Designer.cs">
+      <DependentUpon>FormNhaphangAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormQLBanAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormQLBanAdmin.Designer.cs">
+      <DependentUpon>FormQLBanAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormQLNV.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormQLNV.Designer.cs">
+      <DependentUpon>FormQLNV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormXuathuyProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormXuathuyProduct.Designer.cs">
+      <DependentUpon>FormXuathuyProduct.cs</DependentUpon>
     </Compile>
     <Compile Include="Authentication\FormCauHinh.cs">
       <SubType>Form</SubType>
@@ -192,8 +260,29 @@
     <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Admin\FormAddNV.resx">
+      <DependentUpon>FormAddNV.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormAddProduct.resx">
+      <DependentUpon>FormAddProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormAddTable.resx">
+      <DependentUpon>FormAddTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormEditProduct.resx">
+      <DependentUpon>FormEditProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormEditTable.resx">
+      <DependentUpon>FormEditTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormMainAdmin.resx">
       <DependentUpon>FormMainAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormManageProduct.resx">
+      <DependentUpon>FormManageProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormQLNV.resx">
+      <DependentUpon>FormQLNV.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Authentication\FormCauHinh.resx">
       <DependentUpon>FormCauHinh.cs</DependentUpon>
