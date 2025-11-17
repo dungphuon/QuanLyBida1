@@ -197,7 +197,7 @@ namespace QuanLyBida.GUI.Main
             {
                 Width = 230,
                 Height = 170,
-                Margin = new Padding(10),
+                Margin = new Padding(20),
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
@@ -267,86 +267,60 @@ namespace QuanLyBida.GUI.Main
 
         private void ShowActiveReservationInfo(Panel panel, TableState state, BookingDTO reservation)
         {
-            var lblReservation = new Label
+            // 1. GỘP THÔNG TIN: Giờ + Tên khách vào 1 dòng
+            var lblReservationInfo = new Label
             {
-                Text = $"Đã đặt từ:\n{reservation.ThoiGianBatDau:HH:mm} - {reservation.ThoiGianKetThuc:HH:mm}",
+                // Format: "Đặt: 14:00-16:00 • Tên Khách"
+                Text = $"Đặt: {reservation.ThoiGianBatDau:HH:mm}-{reservation.ThoiGianKetThuc:HH:mm} • Khách: {reservation.HoTen}",
                 AutoSize = false,
                 Width = panel.Width - 20,
                 Height = 30,
-                ForeColor = Color.OrangeRed,
+                ForeColor = Color.OrangeRed, // Màu cam đỏ để nổi bật trạng thái đang đặt
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
                 Location = new Point(10, 80),
-                TextAlign = ContentAlignment.MiddleLeft
+                TextAlign = ContentAlignment.MiddleLeft,
+                AutoEllipsis = true // Nếu tên dài quá sẽ hiện dấu ...
             };
-            panel.Controls.Add(lblReservation);
+            panel.Controls.Add(lblReservationInfo);
 
-            var lblCustomer = new Label
-            {
-                Text = $"Khách: {reservation.HoTen}",
-                AutoSize = false,
-                Width = panel.Width - 20,
-                Height = 20,
-                ForeColor = Color.DarkBlue,
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                Location = new Point(10, 110),
-                TextAlign = ContentAlignment.MiddleLeft
-            };
-            panel.Controls.Add(lblCustomer);
-
+            // Đổi màu nền nhẹ
             panel.BackColor = Color.FromArgb(255, 248, 225);
 
+            // 2. NÚT BẮT ĐẦU
             var btnStart = new Guna2Button
             {
                 Text = "Bắt đầu",
-                Width = 65,
-                Height = 30,
+                // Width và Location sẽ được hàm ArrangeTwoButtons tự tính toán cho đẹp
+                Height = 35,
                 FillColor = Color.FromArgb(92, 124, 250),
                 ForeColor = Color.White,
-                BorderRadius = 8,
-                Location = new Point(10, 135)
+                BorderRadius = 15
             };
             btnStart.Cursor = Cursors.Hand;
             btnStart.Click += (s, e) => StartFromReservation(state, reservation);
 
+            // 3. NÚT HỦY ĐẶT
             var btnCancel = new Guna2Button
             {
                 Text = "Hủy đặt",
-                Width = 65,
-                Height = 30,
+                // Width và Location sẽ được hàm ArrangeTwoButtons tự tính toán
+                Height = 35,
                 FillColor = Color.FromArgb(231, 76, 60),
                 ForeColor = Color.White,
-                BorderRadius = 8,
-                Location = new Point(80, 135)
+                BorderRadius = 15
             };
             btnCancel.Cursor = Cursors.Hand;
             btnCancel.Click += (s, e) => CancelReservation(state, reservation);
 
-            var btnDetail = new Guna2Button
-            {
-                Text = "Chi tiết",
-                Width = 65,
-                Height = 30,
-                FillColor = Color.FromArgb(144, 164, 174),
-                ForeColor = Color.White,
-                BorderRadius = 8,
-                Location = new Point(150, 135)
-            };
-            btnDetail.Cursor = Cursors.Hand;
-            btnDetail.Click += (s, e) =>
-            {
-                MessageBox.Show(
-                    $"Thông tin đặt bàn:\n\n" +
-                    $"Bàn: {state.TableNumber}\n" +
-                    $"Khách: {reservation.HoTen}\n" +
-                    $"Thời gian: {reservation.ThoiGianBatDau:HH:mm dd/MM} - {reservation.ThoiGianKetThuc:HH:mm dd/MM}\n" +
-                    $"Trạng thái: {reservation.TrangThai}",
-                    "Chi tiết đặt bàn"
-                );
-            };
-
             panel.Controls.Add(btnStart);
             panel.Controls.Add(btnCancel);
-            panel.Controls.Add(btnDetail);
+
+            // 4. CĂN CHỈNH VỊ TRÍ 2 NÚT
+            // Dùng hàm có sẵn để 2 nút cân đối, đặt ở độ cao 115 (ngay dưới dòng chữ)
+            ArrangeTwoButtons(panel, btnStart, btnCancel, 115);
+
+            // Đảm bảo khi resize panel thì nút vẫn cân
+            panel.Resize += (s, e2) => ArrangeTwoButtons(panel, btnStart, btnCancel, 115);
         }
 
         private void StartFromReservation(TableState state, BookingDTO reservation)
@@ -398,31 +372,33 @@ namespace QuanLyBida.GUI.Main
             if (upcomingReservations.Any())
             {
                 var nextReservation = upcomingReservations.First();
-                var lblUpcoming = new Label
+                var lblUpcomingInfo = new Label
                 {
-                    Text = $"Sắp đặt:\n{nextReservation.ThoiGianBatDau:HH:mm} - {nextReservation.ThoiGianKetThuc:HH:mm}",
+                    // GỘP: "Sắp: 14:00-16:00 • Tên Khách"
+                    Text = $"Sắp đặt: {nextReservation.ThoiGianBatDau:HH:mm}-{nextReservation.ThoiGianKetThuc:HH:mm} • Khách: {nextReservation.HoTen}",
                     AutoSize = false,
                     Width = panel.Width - 20,
                     Height = 30,
-                    ForeColor = Color.Green,
-                    Font = new Font("Segoe UI", 8, FontStyle.Italic),
-                    Location = new Point(10, 80),
-                    TextAlign = ContentAlignment.MiddleLeft
+                    ForeColor = Color.DarkGreen, // Dùng màu đậm hơn chút cho dễ đọc trên 1 dòng
+                    Font = new Font("Segoe UI", 8, FontStyle.Italic), // Hoặc tăng lên size 9 nếu thấy nhỏ
+                    Location = new Point(10, 80), // Vị trí cũ của dòng đầu tiên
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    AutoEllipsis = true // QUAN TRỌNG: Nếu tên khách dài quá, nó sẽ tự hiện dấu "..." thay vì vỡ giao diện
                 };
-                panel.Controls.Add(lblUpcoming);
+                panel.Controls.Add(lblUpcomingInfo);
 
-                var lblUpcomingCustomer = new Label
-                {
-                    Text = $"Khách: {nextReservation.HoTen}",
-                    AutoSize = false,
-                    Width = panel.Width - 20,
-                    Height = 20,
-                    ForeColor = Color.DarkGreen,
-                    Font = new Font("Segoe UI", 8, FontStyle.Italic),
-                    Location = new Point(10, 105),
-                    TextAlign = ContentAlignment.MiddleLeft
-                };
-                panel.Controls.Add(lblUpcomingCustomer);
+                //var lblUpcomingCustomer = new Label
+                //{
+                //    Text = $"Khách: {nextReservation.HoTen}",
+                //    AutoSize = false,
+                //    Width = panel.Width - 20,
+                //    Height = 20,
+                //    ForeColor = Color.DarkGreen,
+                //    Font = new Font("Segoe UI", 8, FontStyle.Italic),
+                //    Location = new Point(10, 105),
+                //    TextAlign = ContentAlignment.MiddleLeft
+                //};
+                //panel.Controls.Add(lblUpcomingCustomer);
             }
 
             var btnStart = new Guna2Button
@@ -460,7 +436,7 @@ namespace QuanLyBida.GUI.Main
             panel.Controls.Add(btnStart);
             panel.Controls.Add(btnReserve);
 
-            int buttonTop = upcomingReservations.Any() ? 130 : 90;
+            int buttonTop = 115;
             ArrangeTwoButtons(panel, btnStart, btnReserve, buttonTop);
             panel.Resize += (s, e2) => ArrangeTwoButtons(panel, btnStart, btnReserve, buttonTop);
         }
@@ -578,8 +554,13 @@ namespace QuanLyBida.GUI.Main
 
             panel.Controls.Add(btnPay);
             panel.Controls.Add(btnService);
-            ArrangeTwoButtons(panel, btnPay, btnService);
-            panel.Resize += (s, e2) => ArrangeTwoButtons(panel, btnPay, btnService);
+
+            // --- SỬA PHẦN CĂN CHỈNH VỊ TRÍ TẠI ĐÂY ---
+            // Thêm số 115 vào cuối hàm để đẩy nút xuống vị trí Y=115
+            ArrangeTwoButtons(panel, btnPay, btnService, 115);
+
+            // Đảm bảo khi resize cũng giữ vị trí 115
+            panel.Resize += (s, e2) => ArrangeTwoButtons(panel, btnPay, btnService, 115);
         }
 
         private string GetStatusText(TableState state)
