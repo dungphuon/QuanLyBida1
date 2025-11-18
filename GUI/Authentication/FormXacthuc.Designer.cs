@@ -24,6 +24,9 @@
             this.TextBox_Code = new Guna.UI2.WinForms.Guna2TextBox();
             this.ButtonConfirm = new Guna.UI2.WinForms.Guna2Button();
             this.guna2AnimateWindow1 = new Guna.UI2.WinForms.Guna2AnimateWindow(this.components);
+            this.ButtonMinimize = new System.Windows.Forms.Button();
+            this.ButtonMaximize = new System.Windows.Forms.Button();
+            this.ButtonClose = new System.Windows.Forms.Button();
             this.MainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,14 +104,73 @@
             this.ButtonConfirm.Text = "Xác nhận";
             this.ButtonConfirm.Click += new System.EventHandler(this.ButtonConfirm_Click);
             // 
+            // ButtonMinimize
+            // 
+            this.ButtonMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonMinimize.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonMinimize.FlatAppearance.BorderSize = 0;
+            this.ButtonMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonMinimize.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.ButtonMinimize.ForeColor = System.Drawing.Color.Gray;
+            this.ButtonMinimize.Location = new System.Drawing.Point(1140, 3);
+            this.ButtonMinimize.Name = "ButtonMinimize";
+            this.ButtonMinimize.Size = new System.Drawing.Size(40, 40);
+            this.ButtonMinimize.TabIndex = 98;
+            this.ButtonMinimize.Text = "─";
+            this.ButtonMinimize.UseVisualStyleBackColor = false;
+            this.ButtonMinimize.Click += new System.EventHandler(this.ButtonMinimize_Click);
+            this.ButtonMinimize.MouseEnter += new System.EventHandler(this.ButtonMinimize_MouseEnter);
+            this.ButtonMinimize.MouseLeave += new System.EventHandler(this.ButtonMinimize_MouseLeave);
+            // 
+            // ButtonMaximize
+            // 
+            this.ButtonMaximize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonMaximize.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonMaximize.FlatAppearance.BorderSize = 0;
+            this.ButtonMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonMaximize.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.ButtonMaximize.ForeColor = System.Drawing.Color.Gray;
+            this.ButtonMaximize.Location = new System.Drawing.Point(1180, 3);
+            this.ButtonMaximize.Name = "ButtonMaximize";
+            this.ButtonMaximize.Size = new System.Drawing.Size(40, 40);
+            this.ButtonMaximize.TabIndex = 99;
+            this.ButtonMaximize.Text = "□";
+            this.ButtonMaximize.UseVisualStyleBackColor = false;
+            this.ButtonMaximize.Click += new System.EventHandler(this.ButtonMaximize_Click);
+            this.ButtonMaximize.MouseEnter += new System.EventHandler(this.ButtonMaximize_MouseEnter);
+            this.ButtonMaximize.MouseLeave += new System.EventHandler(this.ButtonMaximize_MouseLeave);
+            // 
+            // ButtonClose
+            // 
+            this.ButtonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonClose.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonClose.FlatAppearance.BorderSize = 0;
+            this.ButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonClose.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.ButtonClose.ForeColor = System.Drawing.Color.Gray;
+            this.ButtonClose.Location = new System.Drawing.Point(1220, 3);
+            this.ButtonClose.Name = "ButtonClose";
+            this.ButtonClose.Size = new System.Drawing.Size(40, 40);
+            this.ButtonClose.TabIndex = 100;
+            this.ButtonClose.Text = "✕";
+            this.ButtonClose.UseVisualStyleBackColor = false;
+            this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);
+            this.ButtonClose.MouseEnter += new System.EventHandler(this.ButtonClose_MouseEnter);
+            this.ButtonClose.MouseLeave += new System.EventHandler(this.ButtonClose_MouseLeave);
+            // 
             // FormXacthuc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1262, 673);
+            this.Controls.Add(this.ButtonMinimize);
+            this.Controls.Add(this.ButtonMaximize);
+            this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.MainPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = true;
+            this.MinimizeBox = true;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FormXacthuc";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -126,5 +188,8 @@
         private Guna.UI2.WinForms.Guna2TextBox TextBox_Code;
         private Guna.UI2.WinForms.Guna2Button ButtonConfirm;
         private Guna.UI2.WinForms.Guna2AnimateWindow guna2AnimateWindow1;
+        private System.Windows.Forms.Button ButtonMinimize;
+        private System.Windows.Forms.Button ButtonMaximize;
+        private System.Windows.Forms.Button ButtonClose;
     }
 }

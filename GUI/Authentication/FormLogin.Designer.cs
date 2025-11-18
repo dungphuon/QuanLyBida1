@@ -18,7 +18,6 @@
         private void InitializeComponent()
         {
             this.MainPanel = new System.Windows.Forms.Panel();
-            this.Textboxpassword = new Guna.UI2.WinForms.Guna2TextBox();
             this.TextBox_username = new Guna.UI2.WinForms.Guna2TextBox();
             this.SubtitleLabel = new System.Windows.Forms.Label();
             this.TitleLabel = new System.Windows.Forms.Label();
@@ -27,6 +26,10 @@
             this.ButtonLogin = new System.Windows.Forms.Button();
             this.LinkForgot = new System.Windows.Forms.LinkLabel();
             this.LinkSignup = new System.Windows.Forms.LinkLabel();
+            this.Textboxpassword = new Guna.UI2.WinForms.Guna2TextBox();
+            this.ButtonShowPassword = new System.Windows.Forms.Button();
+            this.ButtonMinimize = new System.Windows.Forms.Button();
+            this.ButtonMaximize = new System.Windows.Forms.Button();
             this.ButtonClose = new System.Windows.Forms.Button();
             this.MainPanel.SuspendLayout();
             this.SuspendLayout();
@@ -34,7 +37,7 @@
             // MainPanel
             // 
             this.MainPanel.BackColor = System.Drawing.Color.AliceBlue;
-            this.MainPanel.Controls.Add(this.Textboxpassword);
+            this.MainPanel.Controls.Add(this.ButtonShowPassword);
             this.MainPanel.Controls.Add(this.TextBox_username);
             this.MainPanel.Controls.Add(this.SubtitleLabel);
             this.MainPanel.Controls.Add(this.TitleLabel);
@@ -43,32 +46,12 @@
             this.MainPanel.Controls.Add(this.ButtonLogin);
             this.MainPanel.Controls.Add(this.LinkForgot);
             this.MainPanel.Controls.Add(this.LinkSignup);
+            this.MainPanel.Controls.Add(this.Textboxpassword);
             this.MainPanel.Location = new System.Drawing.Point(266, 51);
             this.MainPanel.Name = "MainPanel";
             this.MainPanel.Size = new System.Drawing.Size(420, 540);
             this.MainPanel.TabIndex = 0;
             this.MainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.MainPanel_Paint);
-            // 
-            // Textboxpassword
-            // 
-            this.Textboxpassword.BorderRadius = 20;
-            this.Textboxpassword.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
-            this.Textboxpassword.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.Textboxpassword.DefaultText = "";
-            this.Textboxpassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.Textboxpassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.Textboxpassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.Textboxpassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.Textboxpassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.Textboxpassword.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.Textboxpassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.Textboxpassword.Location = new System.Drawing.Point(56, 289);
-            this.Textboxpassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Textboxpassword.Name = "Textboxpassword";
-            this.Textboxpassword.PlaceholderText = "Nhập mật khẩu";
-            this.Textboxpassword.SelectedText = "";
-            this.Textboxpassword.Size = new System.Drawing.Size(308, 51);
-            this.Textboxpassword.TabIndex = 12;
             // 
             // TextBox_username
             // 
@@ -131,7 +114,7 @@
             this.label_Matkhau.BackColor = System.Drawing.Color.Transparent;
             this.label_Matkhau.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.label_Matkhau.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label_Matkhau.Location = new System.Drawing.Point(56, 260);
+            this.label_Matkhau.Location = new System.Drawing.Point(55, 260);
             this.label_Matkhau.Name = "label_Matkhau";
             this.label_Matkhau.Size = new System.Drawing.Size(308, 40);
             this.label_Matkhau.TabIndex = 5;
@@ -180,6 +163,79 @@
             this.LinkSignup.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
             this.LinkSignup.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkSignup_LinkClicked);
             // 
+            // Textboxpassword
+            // 
+            this.Textboxpassword.BorderRadius = 20;
+            this.Textboxpassword.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+            this.Textboxpassword.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.Textboxpassword.DefaultText = "";
+            this.Textboxpassword.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.Textboxpassword.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.Textboxpassword.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.Textboxpassword.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.Textboxpassword.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.Textboxpassword.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.Textboxpassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.Textboxpassword.Location = new System.Drawing.Point(56, 304);
+            this.Textboxpassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Textboxpassword.Name = "Textboxpassword";
+            this.Textboxpassword.PasswordChar = '●';
+            this.Textboxpassword.PlaceholderText = "Nhập mật khẩu";
+            this.Textboxpassword.SelectedText = "";
+            this.Textboxpassword.Size = new System.Drawing.Size(308, 51);
+            this.Textboxpassword.TabIndex = 12;
+            // 
+            // ButtonShowPassword
+            // 
+            this.ButtonShowPassword.BackColor = System.Drawing.Color.White;
+            this.ButtonShowPassword.FlatAppearance.BorderSize = 0;
+            this.ButtonShowPassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonShowPassword.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.ButtonShowPassword.ForeColor = System.Drawing.Color.Black;
+            this.ButtonShowPassword.Location = new System.Drawing.Point(301, 310);
+            this.ButtonShowPassword.Name = "ButtonShowPassword";
+            this.ButtonShowPassword.Size = new System.Drawing.Size(49, 34);
+            this.ButtonShowPassword.TabIndex = 13;
+            this.ButtonShowPassword.Text = "👁";
+            this.ButtonShowPassword.UseVisualStyleBackColor = false;
+            this.ButtonShowPassword.Click += new System.EventHandler(this.ButtonShowPassword_Click);
+            // 
+            // ButtonMinimize
+            // 
+            this.ButtonMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonMinimize.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonMinimize.FlatAppearance.BorderSize = 0;
+            this.ButtonMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonMinimize.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.ButtonMinimize.ForeColor = System.Drawing.Color.Gray;
+            this.ButtonMinimize.Location = new System.Drawing.Point(929, 0);
+            this.ButtonMinimize.Name = "ButtonMinimize";
+            this.ButtonMinimize.Size = new System.Drawing.Size(40, 40);
+            this.ButtonMinimize.TabIndex = 97;
+            this.ButtonMinimize.Text = "─";
+            this.ButtonMinimize.UseVisualStyleBackColor = false;
+            this.ButtonMinimize.Click += new System.EventHandler(this.ButtonMinimize_Click);
+            this.ButtonMinimize.MouseEnter += new System.EventHandler(this.ButtonMinimize_MouseEnter);
+            this.ButtonMinimize.MouseLeave += new System.EventHandler(this.ButtonMinimize_MouseLeave);
+            // 
+            // ButtonMaximize
+            // 
+            this.ButtonMaximize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonMaximize.BackColor = System.Drawing.Color.Transparent;
+            this.ButtonMaximize.FlatAppearance.BorderSize = 0;
+            this.ButtonMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ButtonMaximize.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.ButtonMaximize.ForeColor = System.Drawing.Color.Gray;
+            this.ButtonMaximize.Location = new System.Drawing.Point(969, 0);
+            this.ButtonMaximize.Name = "ButtonMaximize";
+            this.ButtonMaximize.Size = new System.Drawing.Size(40, 40);
+            this.ButtonMaximize.TabIndex = 98;
+            this.ButtonMaximize.Text = "□";
+            this.ButtonMaximize.UseVisualStyleBackColor = false;
+            this.ButtonMaximize.Click += new System.EventHandler(this.ButtonMaximize_Click);
+            this.ButtonMaximize.MouseEnter += new System.EventHandler(this.ButtonMaximize_MouseEnter);
+            this.ButtonMaximize.MouseLeave += new System.EventHandler(this.ButtonMaximize_MouseLeave);
+            // 
             // ButtonClose
             // 
             this.ButtonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -196,6 +252,7 @@
             this.ButtonClose.UseVisualStyleBackColor = false;
             this.ButtonClose.Click += new System.EventHandler(this.ButtonClose_Click);
             this.ButtonClose.MouseEnter += new System.EventHandler(this.ButtonClose_MouseEnter);
+            this.ButtonClose.MouseLeave += new System.EventHandler(this.ButtonClose_MouseLeave);
             // 
             // FormLogin
             // 
@@ -203,11 +260,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1052, 673);
+            this.Controls.Add(this.ButtonMinimize);
+            this.Controls.Add(this.ButtonMaximize);
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.MainPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "FormLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Đăng nhập hệ thống";
@@ -223,6 +280,8 @@
         #endregion
 
         private System.Windows.Forms.Panel MainPanel;
+        private System.Windows.Forms.Button ButtonMinimize;
+        private System.Windows.Forms.Button ButtonMaximize;
         private System.Windows.Forms.Button ButtonClose;
         private System.Windows.Forms.Label label_username;
         private System.Windows.Forms.Label label_Matkhau;
@@ -233,5 +292,6 @@
         private Guna.UI2.WinForms.Guna2TextBox Textboxpassword;
         private Guna.UI2.WinForms.Guna2TextBox TextBox_username;
         private System.Windows.Forms.Button ButtonLogin;
+        private System.Windows.Forms.Button ButtonShowPassword;
     }
 }

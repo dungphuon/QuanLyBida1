@@ -104,26 +104,92 @@ namespace QuanLyBida.GUI
             // Căn giữa panel
             MainPanel.Left = (this.ClientSize.Width - MainPanel.Width) / 2;
             MainPanel.Top = (this.ClientSize.Height - MainPanel.Height) / 2;
-            ButtonClose.Location = new Point(this.ClientSize.Width - ButtonClose.Width - 10, 10);
+            // Cập nhật vị trí các nút
             ButtonClose.Left = this.ClientSize.Width - ButtonClose.Width - 10;
             ButtonClose.Top = 10;
+            ButtonMaximize.Left = ButtonClose.Left - ButtonMaximize.Width - 5;
+            ButtonMaximize.Top = 10;
+            ButtonMinimize.Left = ButtonMaximize.Left - ButtonMinimize.Width - 5;
+            ButtonMinimize.Top = 10;
         }
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
             FormLogin_Resize(sender, e); // Đảm bảo panel căn giữa khi load
+            // Đảm bảo button hiển thị trên textbox
+            ButtonShowPassword.BringToFront();
         }
+        private void ButtonMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void ButtonMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonMinimize.BackColor = Color.LightGray;
+        }
+
+        private void ButtonMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            ButtonMinimize.BackColor = Color.Transparent;
+        }
+
+        private void ButtonMaximize_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Normal;
+                ButtonMaximize.Text = "□";
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Maximized;
+                ButtonMaximize.Text = "❐";
+            }
+        }
+
+        private void ButtonMaximize_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonMaximize.BackColor = Color.LightGray;
+        }
+
+        private void ButtonMaximize_MouseLeave(object sender, EventArgs e)
+        {
+            ButtonMaximize.BackColor = Color.Transparent;
+        }
+
         private void ButtonClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
         private void ButtonClose_MouseEnter(object sender, EventArgs e)
         {
-            ButtonClose.BackColor = Color.LightGray; // hoặc màu bạn muốn khi hover
+            ButtonClose.BackColor = Color.Red;
+            ButtonClose.ForeColor = Color.White;
         }
 
+        private void ButtonClose_MouseLeave(object sender, EventArgs e)
+        {
+            ButtonClose.BackColor = Color.Transparent;
+            ButtonClose.ForeColor = Color.Gray;
+        }
 
-
+        private void ButtonShowPassword_Click(object sender, EventArgs e)
+        {
+            if (Textboxpassword.PasswordChar == '●')
+            {
+                // Hiển thị mật khẩu
+                Textboxpassword.PasswordChar = '\0';
+                ButtonShowPassword.Text = "👁‍🗨";
+            }
+            else
+            {
+                // Ẩn mật khẩu bằng chấm tròn
+                Textboxpassword.PasswordChar = '●';
+                ButtonShowPassword.Text = "👁";
+            }
+        }
         
     }
 }

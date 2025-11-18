@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using QuanLyBida.BLL;
 using QuanLyBida.DTO;
@@ -13,6 +14,9 @@ namespace QuanLyBida.GUI
         {
             InitializeComponent();
             _email = email;
+            // Đảm bảo button hiển thị trên textbox
+            ButtonShowNewPassword.BringToFront();
+            ButtonShowConfirmPassword.BringToFront();
         }
 
         private void ButtonChange_Click(object sender, EventArgs e)
@@ -72,5 +76,93 @@ namespace QuanLyBida.GUI
 
         private void TitleLabel_Click(object sender, EventArgs e) { }
         private void NewPassword_Load(object sender, EventArgs e) { }
+
+        private void ButtonMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void ButtonMinimize_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonMinimize.BackColor = Color.LightGray;
+        }
+
+        private void ButtonMinimize_MouseLeave(object sender, EventArgs e)
+        {
+            ButtonMinimize.BackColor = Color.Transparent;
+        }
+
+        private void ButtonMaximize_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Normal;
+                ButtonMaximize.Text = "□";
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Maximized;
+                ButtonMaximize.Text = "❐";
+            }
+        }
+
+        private void ButtonMaximize_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonMaximize.BackColor = Color.LightGray;
+        }
+
+        private void ButtonMaximize_MouseLeave(object sender, EventArgs e)
+        {
+            ButtonMaximize.BackColor = Color.Transparent;
+        }
+
+        private void ButtonClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ButtonClose_MouseEnter(object sender, EventArgs e)
+        {
+            ButtonClose.BackColor = Color.Red;
+            ButtonClose.ForeColor = Color.White;
+        }
+
+        private void ButtonClose_MouseLeave(object sender, EventArgs e)
+        {
+            ButtonClose.BackColor = Color.Transparent;
+            ButtonClose.ForeColor = Color.Gray;
+        }
+
+        private void ButtonShowNewPassword_Click(object sender, EventArgs e)
+        {
+            if (TextBox_newPassword.PasswordChar == '●')
+            {
+                // Hiển thị mật khẩu
+                TextBox_newPassword.PasswordChar = '\0';
+                ButtonShowNewPassword.Text = "👁‍🗨";
+            }
+            else
+            {
+                // Ẩn mật khẩu bằng chấm tròn
+                TextBox_newPassword.PasswordChar = '●';
+                ButtonShowNewPassword.Text = "👁";
+            }
+        }
+
+        private void ButtonShowConfirmPassword_Click(object sender, EventArgs e)
+        {
+            if (TextBox_confirmPassword.PasswordChar == '●')
+            {
+                // Hiển thị mật khẩu
+                TextBox_confirmPassword.PasswordChar = '\0';
+                ButtonShowConfirmPassword.Text = "👁‍🗨";
+            }
+            else
+            {
+                // Ẩn mật khẩu bằng chấm tròn
+                TextBox_confirmPassword.PasswordChar = '●';
+                ButtonShowConfirmPassword.Text = "👁";
+            }
+        }
     }
 }
