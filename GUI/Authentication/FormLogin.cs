@@ -1,9 +1,11 @@
 ﻿using QuanLyBida.BLL;
 using QuanLyBida.DAL;
 using QuanLyBida.DTO;
+using QuanLyBida.GUI.Admin;
 using QuanLyBida.GUI.Main;
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace QuanLyBida.GUI
@@ -39,12 +41,25 @@ namespace QuanLyBida.GUI
                 if (loginResult.Success)
                 {
                     var taiKhoan = loginResult.Data as TaiKhoanDTO;
-                    MessageBox.Show($"Đăng nhập thành công! Chào {taiKhoan.HoTenNV}", "Thành công");
+                    MessageBox.Show($"Đăng nhập thành công! Chào {taiKhoan.TenDangNhap}", "Thành công");
 
-                    this.Hide();
-                    var mainForm = new FormMain1(taiKhoan);
-                    mainForm.ShowDialog();
-                    this.Close(); // Đóng form login sau khi form main đóng
+                    // Kiểm tra quyền theo VaiTro
+                    if (IsAdminRole(taiKhoan.VaiTro))
+                    {
+                        // Mở form admin cho tài khoản có vai trò admin
+                        this.Hide();
+                        var adminForm = new FormMainAdmin(taiKhoan);
+                        adminForm.ShowDialog();
+                        this.Close();
+                    }
+                    else
+                    {
+                        // Mở form main thông thường cho nhân viên
+                        this.Hide();
+                        var mainForm = new FormMain1(taiKhoan);
+                        mainForm.ShowDialog();
+                        this.Close();
+                    }
                 }
                 else
                 {
@@ -55,6 +70,12 @@ namespace QuanLyBida.GUI
             {
                 MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi hệ thống");
             }
+        }
+        private bool IsAdminRole(string vaiTro)
+        {
+            // Tuỳ chỉnh các vai trò được phép vào admin
+            string[] adminRoles = { "Admin" };
+            return adminRoles.Contains(vaiTro?.Trim(), StringComparer.OrdinalIgnoreCase);
         }
 
         // Các method cũ giữ nguyên

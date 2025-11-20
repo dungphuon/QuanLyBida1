@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GUI.Admin;
+using QuanLyBida.DTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,20 +9,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GUI.Admin;
 
 namespace QuanLyBida.GUI.Admin
 {
     public partial class FormMainAdmin : Form
     {
         private Form activeChildForm;
+        private TaiKhoanDTO currentUser;
 
-        public FormMainAdmin()
+        public FormMainAdmin(TaiKhoanDTO taiKhoan)
         {
             InitializeComponent();
+            currentUser = taiKhoan;
             RegisterEvents();
-            // Load dashboard mặc định khi form được mở
+            LoadUserInfo();
+
+            // Kiểm tra quyền ngay khi khởi tạo
+            if (!CheckAdminPermission())
+            {
+                MessageBox.Show("Bạn không có quyền truy cập trang quản trị!", "Từ chối truy cập",
+                               MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.Close();
+                return;
+            }
+
             OpenChildForm(new FormDashBoardAdmin());
+        }
+
+        private void LoadUserInfo()
+        {
+            // Hiển thị thông tin người dùng
+            
+            labelRole.Text = currentUser.VaiTro; // Hiển thị VaiTro thay vì ChucVu
+        }
+
+        private bool CheckAdminPermission()
+        {
+            // Kiểm tra quyền theo VaiTro
+            string[] allowedRoles = { "Admin"};
+            return allowedRoles.Contains(currentUser.VaiTro?.Trim(), StringComparer.OrdinalIgnoreCase);
         }
 
         private void RegisterEvents()

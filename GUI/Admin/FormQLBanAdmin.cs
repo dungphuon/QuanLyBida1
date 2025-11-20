@@ -7,33 +7,101 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using QuanLyBida.DTO;
 
 namespace QuanLyBida.GUI.Admin
 {
     public partial class FormQLBanAdmin : Form
     {
-        // Class để lưu dữ liệu mẫu bàn
-        private class BanMau
-        {
-            public string TenBan { get; set; }
-            public string LoaiBan { get; set; }
-            public decimal GiaBan { get; set; }
-        }
-
-        private List<BanMau> danhSachBan;
+        private TableBLL tableBLL;
+        private List<TableDTO> danhSachBan;
 
         public FormQLBanAdmin()
         {
             InitializeComponent();
+            tableBLL = new TableBLL();
             RegisterEvents();
-            TaoDuLieuMau();
-            HienThiDuLieu();
+            LoadDataFromDatabase();
+            LoadFilterOptions();
         }
 
         private void RegisterEvents()
         {
             this.buttonAdd.Click += ButtonAdd_Click;
             this.gridTables.CellContentClick += GridTables_CellContentClick;
+            this.comboBoxFilter.SelectedIndexChanged += ComboBoxFilter_SelectedIndexChanged;
+        }
+
+        private void LoadDataFromDatabase()
+        {
+            try
+            {
+                danhSachBan = tableBLL.GetAllTables();
+                HienThiDuLieu();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi",
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadFilterOptions()
+        {
+            try
+            {
+                // Xóa items cũ
+                comboBoxFilter.Items.Clear();
+
+                // Thêm "Tất cả" đầu tiên
+                comboBoxFilter.Items.Add("Tất cả");
+
+                // Lấy danh sách loại bàn duy nhất từ database
+                var loaiBanList = danhSachBan
+                    .Select(b => b.LoaiBan)
+                    .Distinct()
+                    .OrderBy(l => l)
+                    .ToList();
+
+                // Thêm các loại bàn vào combobox
+                foreach (var loaiBan in loaiBanList)
+                {
+                    comboBoxFilter.Items.Add(loaiBan);
+                }
+
+                // Chọn "Tất cả" mặc định
+                comboBoxFilter.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải tùy chọn lọc: {ex.Message}", "Lỗi",
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void HienThiDuLieu()
+        {
+            gridTables.Rows.Clear();
+
+            var danhSachHienThi = danhSachBan;
+
+            // Lọc dữ liệu nếu không chọn "Tất cả"
+            if (comboBoxFilter.SelectedIndex > 0)
+            {
+                string loaiBanLoc = comboBoxFilter.SelectedItem.ToString();
+                danhSachHienThi = danhSachBan
+                    .Where(b => b.LoaiBan == loaiBanLoc)
+                    .ToList();
+            }
+
+            foreach (var ban in danhSachHienThi)
+            {
+                gridTables.Rows.Add(
+                    ban.TenBan,
+                    ban.LoaiBan,
+                    ban.GiaGio.ToString("N0") + " VNĐ"
+                );
+            }
         }
 
         private void ButtonAdd_Click(object sender, EventArgs e)
@@ -41,39 +109,12 @@ namespace QuanLyBida.GUI.Admin
             using (var addTableForm = new FormAddTable())
             {
                 addTableForm.StartPosition = FormStartPosition.CenterParent;
-                addTableForm.ShowDialog(this);
-            }
-        }
-
-        private void TaoDuLieuMau()
-        {
-            danhSachBan = new List<BanMau>
-            {
-                new BanMau
+                if (addTableForm.ShowDialog(this) == DialogResult.OK)
                 {
-                    TenBan = "Bàn 01",
-                    LoaiBan = "Bàn thường",
-                    GiaBan = 50000
-                },
-                new BanMau
-                {
-                    TenBan = "Bàn 02",
-                    LoaiBan = "Bàn VIP",
-                    GiaBan = 100000
+                    // Load lại cả dữ liệu và filter options
+                    LoadDataFromDatabase();
+                    LoadFilterOptions();
                 }
-            };
-        }
-
-        private void HienThiDuLieu()
-        {
-            gridTables.Rows.Clear();
-            foreach (var ban in danhSachBan)
-            {
-                gridTables.Rows.Add(
-                    ban.TenBan,
-                    ban.LoaiBan,
-                    ban.GiaBan.ToString("N0") + " VNĐ"
-                );
             }
         }
 
@@ -81,40 +122,29 @@ namespace QuanLyBida.GUI.Admin
         {
             if (e.RowIndex < 0) return;
 
-            // Kiểm tra nếu click vào cột "Xem"
+            var row = gridTables.Rows[e.RowIndex];
+            string tenBan = row.Cells["colTenBan"].Value?.ToString() ?? "";
+
+            var ban = danhSachBan.FirstOrDefault(b => b.TenBan == tenBan);
+            if (ban == null) return;
+
             if (gridTables.Columns[e.ColumnIndex].Name == "colView")
             {
-                var row = gridTables.Rows[e.RowIndex];
-                string tenBan = row.Cells["colTenBan"].Value?.ToString() ?? "";
-                string loaiBan = row.Cells["colLoaiBan"].Value?.ToString() ?? "";
-                string giaBanStr = row.Cells["colGiaBan"].Value?.ToString() ?? "";
-                
-                // Lấy giá bàn (bỏ phần " VNĐ")
-                decimal giaBan = 0;
-                if (!string.IsNullOrEmpty(giaBanStr))
-                {
-                    string giaBanNumber = giaBanStr.Replace(" VNĐ", "").Replace(",", "");
-                    decimal.TryParse(giaBanNumber, out giaBan);
-                }
-
-                // Tìm bàn trong danh sách
-                var ban = danhSachBan.FirstOrDefault(b => b.TenBan == tenBan);
-                
-                // Mở form EditTable
                 using (var editTableForm = new FormEditTable())
                 {
-                    // Truyền dữ liệu vào form
-                    editTableForm.SetTableData(tenBan, loaiBan, giaBan);
+                    editTableForm.SetTableData(ban);
                     editTableForm.StartPosition = FormStartPosition.CenterParent;
-                    editTableForm.ShowDialog(this);
+
+                    if (editTableForm.ShowDialog(this) == DialogResult.OK)
+                    {
+                        // Load lại cả dữ liệu và filter options
+                        LoadDataFromDatabase();
+                        LoadFilterOptions();
+                    }
                 }
             }
-            // Kiểm tra nếu click vào cột "Xóa"
             else if (gridTables.Columns[e.ColumnIndex].Name == "colDelete")
             {
-                var row = gridTables.Rows[e.RowIndex];
-                string tenBan = row.Cells["colTenBan"].Value?.ToString() ?? "";
-
                 var result = MessageBox.Show(
                     $"Bạn có chắc muốn xóa bàn '{tenBan}'?",
                     "Xác nhận xóa",
@@ -124,15 +154,36 @@ namespace QuanLyBida.GUI.Admin
 
                 if (result == DialogResult.Yes)
                 {
-                    var ban = danhSachBan.FirstOrDefault(b => b.TenBan == tenBan);
-                    if (ban != null)
+                    try
                     {
-                        danhSachBan.Remove(ban);
-                        HienThiDuLieu();
-                        MessageBox.Show("Đã xóa bàn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        bool success = tableBLL.DeleteTable(ban.MaBan);
+
+                        if (success)
+                        {
+                            // Load lại cả dữ liệu và filter options
+                            LoadDataFromDatabase();
+                            LoadFilterOptions();
+                            MessageBox.Show("Đã xóa bàn thành công!", "Thông báo",
+                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không thể xóa bàn!", "Lỗi",
+                                          MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi khi xóa bàn: {ex.Message}", "Lỗi",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
+        }
+
+        private void ComboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            HienThiDuLieu();
         }
     }
 }

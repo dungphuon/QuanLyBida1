@@ -14,25 +14,14 @@ namespace QuanLyBida.GUI.Admin
 {
     public partial class FormManageProduct : Form
     {
-        // Class để lưu dữ liệu hàng hóa với loại hàng hóa
-        private class HangHoaMau
-        {
-            public int MaSP { get; set; }
-            public string TenSP { get; set; }
-            public string LoaiHangHoa { get; set; }
-            public decimal GiaBan { get; set; }
-            public int SoLuongTon { get; set; }
-        }
-
-        private List<HangHoaMau> danhSachHangHoa;
+        private List<SanPhamDTO> danhSachSanPham;
         private SanPhamBLL _sanPhamBLL = new SanPhamBLL();
 
         public FormManageProduct()
         {
             InitializeComponent();
             RegisterEvents();
-            TaoDuLieuMau();
-            HienThiDuLieu();
+            LoadDanhSachSanPham();
         }
 
         private void RegisterEvents()
@@ -44,18 +33,29 @@ namespace QuanLyBida.GUI.Admin
             this.gridProducts.CellContentClick += GridProducts_CellContentClick;
         }
 
+        private void LoadDanhSachSanPham()
+        {
+            try
+            {
+                danhSachSanPham = _sanPhamBLL.GetDanhSachSanPham();
+                HienThiDuLieu(danhSachSanPham);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải danh sách sản phẩm: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
             using (var addProductForm = new FormAddProduct())
             {
                 addProductForm.StartPosition = FormStartPosition.CenterParent;
                 var result = addProductForm.ShowDialog(this);
-                
-                // Nếu lưu thành công, refresh lại danh sách
+
                 if (result == DialogResult.OK)
                 {
-                    // TODO: Reload data from database
-                    HienThiDuLieu();
+                    LoadDanhSachSanPham(); // Refresh lại danh sách
                 }
             }
         }
@@ -66,12 +66,10 @@ namespace QuanLyBida.GUI.Admin
             {
                 nhapHangForm.StartPosition = FormStartPosition.CenterParent;
                 var result = nhapHangForm.ShowDialog(this);
-                
-                // Nếu lưu thành công, refresh lại danh sách
+
                 if (result == DialogResult.OK || result == DialogResult.None)
                 {
-                    // TODO: Reload data from database
-                    HienThiDuLieu();
+                    LoadDanhSachSanPham(); // Refresh lại danh sách
                 }
             }
         }
@@ -82,12 +80,10 @@ namespace QuanLyBida.GUI.Admin
             {
                 xuatHuyForm.StartPosition = FormStartPosition.CenterParent;
                 var result = xuatHuyForm.ShowDialog(this);
-                
-                // Nếu lưu thành công, refresh lại danh sách
+
                 if (result == DialogResult.OK || result == DialogResult.None)
                 {
-                    // TODO: Reload data from database
-                    HienThiDuLieu();
+                    LoadDanhSachSanPham(); // Refresh lại danh sách
                 }
             }
         }
@@ -95,143 +91,80 @@ namespace QuanLyBida.GUI.Admin
         private void TextBoxSearch_TextChanged(object sender, EventArgs e)
         {
             string searchText = textBoxSearch.Text.ToLower().Trim();
-            
+
             if (string.IsNullOrEmpty(searchText))
             {
-                HienThiDuLieu();
+                HienThiDuLieu(danhSachSanPham);
             }
             else
             {
-                var filteredList = danhSachHangHoa.Where(h =>
+                var filteredList = danhSachSanPham.Where(h =>
                     h.TenSP.ToLower().Contains(searchText) ||
                     h.MaSP.ToString().Contains(searchText)
                 ).ToList();
-                
+
                 HienThiDuLieu(filteredList);
             }
         }
 
-        private void TaoDuLieuMau()
+        private void HienThiDuLieu(List<SanPhamDTO> list)
         {
-            // Tạo dữ liệu mẫu cho hàng hóa
-            danhSachHangHoa = new List<HangHoaMau>
-            {
-                new HangHoaMau
-                {
-                    MaSP = 1,
-                    TenSP = "Coca Cola",
-                    LoaiHangHoa = "Đồ uống",
-                    GiaBan = 15000,
-                    SoLuongTon = 50
-                },
-                new HangHoaMau
-                {
-                    MaSP = 2,
-                    TenSP = "Pepsi",
-                    LoaiHangHoa = "Đồ uống",
-                    GiaBan = 15000,
-                    SoLuongTon = 45
-                },
-                new HangHoaMau
-                {
-                    MaSP = 3,
-                    TenSP = "Bánh mì thịt nướng",
-                    LoaiHangHoa = "Đồ ăn",
-                    GiaBan = 30000,
-                    SoLuongTon = 20
-                },
-                new HangHoaMau
-                {
-                    MaSP = 4,
-                    TenSP = "Phấn bida",
-                    LoaiHangHoa = "Phụ kiện",
-                    GiaBan = 50000,
-                    SoLuongTon = 15
-                },
-                new HangHoaMau
-                {
-                    MaSP = 5,
-                    TenSP = "Cơm tấm sườn",
-                    LoaiHangHoa = "Đồ ăn",
-                    GiaBan = 45000,
-                    SoLuongTon = 30
-                },
-                new HangHoaMau
-                {
-                    MaSP = 6,
-                    TenSP = "Nước suối",
-                    LoaiHangHoa = "Đồ uống",
-                    GiaBan = 10000,
-                    SoLuongTon = 100
-                },
-                new HangHoaMau
-                {
-                    MaSP = 7,
-                    TenSP = "Cơ bida",
-                    LoaiHangHoa = "Phụ kiện",
-                    GiaBan = 200000,
-                    SoLuongTon = 8
-                }
-            };
-        }
-
-        private void HienThiDuLieu(List<HangHoaMau> list = null)
-        {
-            if (list == null)
-            {
-                list = danhSachHangHoa;
-            }
-
             gridProducts.Rows.Clear();
-            foreach (var hangHoa in list)
+            foreach (var sanPham in list)
             {
                 gridProducts.Rows.Add(
-                    hangHoa.TenSP,
-                    hangHoa.LoaiHangHoa,
-                    hangHoa.GiaBan.ToString("N0") + " VNĐ",
-                    hangHoa.SoLuongTon.ToString(),
+                    sanPham.TenSP,
+                    GetLoaiHangHoa(sanPham.TenSP), // Bạn cần thêm trường LoaiHangHoa vào SanPhamDTO
+                    sanPham.GiaBan.ToString("N0") + " VNĐ",
+                    sanPham.SoLuongTon.ToString(),
                     "Xem",
                     "Xóa"
                 );
             }
         }
 
+        // Hàm tạm để xác định loại hàng hóa (cần sửa khi có trường LoaiHangHoa trong database)
+        private string GetLoaiHangHoa(string tenSP)
+        {
+            if (tenSP.ToLower().Contains("nước") || tenSP.ToLower().Contains("coca") || tenSP.ToLower().Contains("pepsi"))
+                return "Đồ uống";
+            else if (tenSP.ToLower().Contains("bánh") || tenSP.ToLower().Contains("cơm") || tenSP.ToLower().Contains("mì"))
+                return "Đồ ăn";
+            else
+                return "Phụ kiện";
+        }
+
         private void GridProducts_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            // Kiểm tra nếu click vào cột "Xem thông tin"
             if (gridProducts.Columns[e.ColumnIndex].Name == "colXem")
             {
                 var row = gridProducts.Rows[e.RowIndex];
                 string tenSP = row.Cells["colTenHangHoa"].Value?.ToString() ?? "";
-                string loaiHangHoa = row.Cells["colLoaiHangHoa"].Value?.ToString() ?? "";
-                string giaBanStr = row.Cells["colGiaBan"].Value?.ToString() ?? "";
-                string soLuongTonStr = row.Cells["colSoLuongTon"].Value?.ToString() ?? "";
 
-                // Lấy giá bán (bỏ phần " VNĐ")
-                decimal giaBan = 0;
-                if (!string.IsNullOrEmpty(giaBanStr))
+                // Tìm sản phẩm trong database
+                var sanPham = _sanPhamBLL.GetSanPhamByTen(tenSP);
+
+                if (sanPham != null)
                 {
-                    string giaBanNumber = giaBanStr.Replace(" VNĐ", "").Replace(",", "");
-                    decimal.TryParse(giaBanNumber, out giaBan);
-                }
-
-                int soLuongTon = 0;
-                int.TryParse(soLuongTonStr, out soLuongTon);
-
-                // Tìm hàng hóa trong danh sách
-                var hangHoa = danhSachHangHoa.FirstOrDefault(h => h.TenSP == tenSP);
-
-                if (hangHoa != null)
-                {
-                    // Mở form EditProduct
                     using (var editProductForm = new FormEditProduct())
                     {
-                        // Truyền dữ liệu vào form
-                        editProductForm.SetProductData(tenSP, loaiHangHoa, giaBan, soLuongTon);
+                        // Truyền dữ liệu thực từ database
+                        editProductForm.SetProductData(
+                            sanPham.TenSP,
+                            GetLoaiHangHoa(sanPham.TenSP), // Hoặc lấy từ database nếu có
+                            sanPham.GiaBan,
+                            sanPham.SoLuongTon
+                        );
                         editProductForm.StartPosition = FormStartPosition.CenterParent;
                         editProductForm.ShowDialog(this);
+
+                        // Refresh lại danh sách sau khi chỉnh sửa
+                        if (editProductForm.DialogResult == DialogResult.OK)
+                        {
+                            LoadDanhSachSanPham();
+                        }
                     }
                 }
             }
@@ -242,7 +175,7 @@ namespace QuanLyBida.GUI.Admin
                 string tenSP = row.Cells["colTenHangHoa"].Value?.ToString() ?? "";
 
                 var result = MessageBox.Show(
-                    $"Bạn có chắc muốn xóa hàng hóa '{tenSP}'?",
+                    $"Bạn có chắc muốn xóa sản phẩm '{tenSP}'?",
                     "Xác nhận xóa",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
@@ -250,12 +183,27 @@ namespace QuanLyBida.GUI.Admin
 
                 if (result == DialogResult.Yes)
                 {
-                    var hangHoa = danhSachHangHoa.FirstOrDefault(h => h.TenSP == tenSP);
-                    if (hangHoa != null)
+                    try
                     {
-                        danhSachHangHoa.Remove(hangHoa);
-                        HienThiDuLieu();
-                        MessageBox.Show("Đã xóa hàng hóa thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        var sanPham = danhSachSanPham.FirstOrDefault(h => h.TenSP == tenSP);
+                        if (sanPham != null)
+                        {
+                            bool xoaThanhCong = _sanPhamBLL.XoaSanPham(sanPham.MaSP);
+                            if (xoaThanhCong)
+                            {
+                                danhSachSanPham.Remove(sanPham);
+                                HienThiDuLieu(danhSachSanPham);
+                                MessageBox.Show("Đã xóa sản phẩm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Không thể xóa sản phẩm!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi khi xóa sản phẩm: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

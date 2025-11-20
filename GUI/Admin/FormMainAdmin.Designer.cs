@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMainAdmin));
             this.guna2PanelTop = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.controlBoxClose = new Guna.UI2.WinForms.Guna2ControlBox();
             this.controlBoxMaximize = new Guna.UI2.WinForms.Guna2ControlBox();
             this.controlBoxMinimize = new Guna.UI2.WinForms.Guna2ControlBox();
@@ -38,9 +39,9 @@
             this.pictureLogo = new Guna.UI2.WinForms.Guna2PictureBox();
             this.flowLayoutPanelSidebar = new System.Windows.Forms.FlowLayoutPanel();
             this.panelUserInfo = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2PictureBox2 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.pictureAvatar = new Guna.UI2.WinForms.Guna2PictureBox();
             this.labelRole = new System.Windows.Forms.Label();
-            this.labelUsername = new System.Windows.Forms.Label();
             this.panelTrangchu = new Guna.UI2.WinForms.Guna2Panel();
             this.buttonTrangchu = new Guna.UI2.WinForms.Guna2Button();
             this.panelQuanlyban = new Guna.UI2.WinForms.Guna2Panel();
@@ -56,12 +57,12 @@
             this.buttonLogout = new Guna.UI2.WinForms.Guna2Button();
             this.panelAdminLoad = new System.Windows.Forms.Panel();
             this.guna2AnimateWindow1 = new Guna.UI2.WinForms.Guna2AnimateWindow(this.components);
-            this.guna2PictureBox2 = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             this.guna2PanelTop.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureLogo)).BeginInit();
             this.flowLayoutPanelSidebar.SuspendLayout();
             this.panelUserInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureAvatar)).BeginInit();
             this.panelTrangchu.SuspendLayout();
             this.panelQuanlyban.SuspendLayout();
@@ -69,8 +70,6 @@
             this.panelQuanlyNhanVien.SuspendLayout();
             this.panelBaocaotaichinh.SuspendLayout();
             this.panelBaotri.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // guna2PanelTop
@@ -87,6 +86,17 @@
             this.guna2PanelTop.Name = "guna2PanelTop";
             this.guna2PanelTop.Size = new System.Drawing.Size(1180, 45);
             this.guna2PanelTop.TabIndex = 0;
+            // 
+            // guna2PictureBox1
+            // 
+            this.guna2PictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("guna2PictureBox1.Image")));
+            this.guna2PictureBox1.ImageRotate = 0F;
+            this.guna2PictureBox1.Location = new System.Drawing.Point(12, 12);
+            this.guna2PictureBox1.Name = "guna2PictureBox1";
+            this.guna2PictureBox1.Size = new System.Drawing.Size(37, 25);
+            this.guna2PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.guna2PictureBox1.TabIndex = 4;
+            this.guna2PictureBox1.TabStop = false;
             // 
             // controlBoxClose
             // 
@@ -159,7 +169,6 @@
             this.flowLayoutPanelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanelSidebar.Location = new System.Drawing.Point(0, 45);
             this.flowLayoutPanelSidebar.Name = "flowLayoutPanelSidebar";
-            this.flowLayoutPanelSidebar.Padding = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanelSidebar.Size = new System.Drawing.Size(220, 675);
             this.flowLayoutPanelSidebar.TabIndex = 1;
             // 
@@ -169,7 +178,6 @@
             this.panelUserInfo.Controls.Add(this.guna2PictureBox2);
             this.panelUserInfo.Controls.Add(this.pictureAvatar);
             this.panelUserInfo.Controls.Add(this.labelRole);
-            this.panelUserInfo.Controls.Add(this.labelUsername);
             this.panelUserInfo.FillColor = System.Drawing.Color.White;
             this.panelUserInfo.ForeColor = System.Drawing.Color.Black;
             this.panelUserInfo.Location = new System.Drawing.Point(0, 0);
@@ -177,6 +185,17 @@
             this.panelUserInfo.Name = "panelUserInfo";
             this.panelUserInfo.Size = new System.Drawing.Size(220, 105);
             this.panelUserInfo.TabIndex = 0;
+            // 
+            // guna2PictureBox2
+            // 
+            this.guna2PictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("guna2PictureBox2.Image")));
+            this.guna2PictureBox2.ImageRotate = 0F;
+            this.guna2PictureBox2.Location = new System.Drawing.Point(17, 25);
+            this.guna2PictureBox2.Name = "guna2PictureBox2";
+            this.guna2PictureBox2.Size = new System.Drawing.Size(50, 50);
+            this.guna2PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.guna2PictureBox2.TabIndex = 3;
+            this.guna2PictureBox2.TabStop = false;
             // 
             // pictureAvatar
             // 
@@ -193,26 +212,16 @@
             // 
             this.labelRole.AutoSize = true;
             this.labelRole.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelRole.Location = new System.Drawing.Point(91, 55);
+            this.labelRole.Location = new System.Drawing.Point(82, 38);
             this.labelRole.Name = "labelRole";
             this.labelRole.Size = new System.Drawing.Size(62, 20);
             this.labelRole.TabIndex = 1;
             this.labelRole.Text = "Quản trị";
             // 
-            // labelUsername
-            // 
-            this.labelUsername.AutoSize = true;
-            this.labelUsername.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.labelUsername.Location = new System.Drawing.Point(75, 30);
-            this.labelUsername.Name = "labelUsername";
-            this.labelUsername.Size = new System.Drawing.Size(96, 23);
-            this.labelUsername.TabIndex = 0;
-            this.labelUsername.Text = "Admin Tên";
-            // 
             // panelTrangchu
             // 
             this.panelTrangchu.Controls.Add(this.buttonTrangchu);
-            this.panelTrangchu.Location = new System.Drawing.Point(0, 128);
+            this.panelTrangchu.Location = new System.Drawing.Point(0, 115);
             this.panelTrangchu.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.panelTrangchu.Name = "panelTrangchu";
             this.panelTrangchu.Size = new System.Drawing.Size(220, 55);
@@ -241,7 +250,7 @@
             // panelQuanlyban
             // 
             this.panelQuanlyban.Controls.Add(this.buttonQuanlyban);
-            this.panelQuanlyban.Location = new System.Drawing.Point(0, 193);
+            this.panelQuanlyban.Location = new System.Drawing.Point(0, 180);
             this.panelQuanlyban.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.panelQuanlyban.Name = "panelQuanlyban";
             this.panelQuanlyban.Size = new System.Drawing.Size(220, 55);
@@ -270,7 +279,7 @@
             // panelHanghoa
             // 
             this.panelHanghoa.Controls.Add(this.buttonHanghoa);
-            this.panelHanghoa.Location = new System.Drawing.Point(0, 258);
+            this.panelHanghoa.Location = new System.Drawing.Point(0, 245);
             this.panelHanghoa.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.panelHanghoa.Name = "panelHanghoa";
             this.panelHanghoa.Size = new System.Drawing.Size(220, 55);
@@ -299,7 +308,7 @@
             // panelQuanlyNhanVien
             // 
             this.panelQuanlyNhanVien.Controls.Add(this.buttonQuanlyNhanVien);
-            this.panelQuanlyNhanVien.Location = new System.Drawing.Point(0, 323);
+            this.panelQuanlyNhanVien.Location = new System.Drawing.Point(0, 310);
             this.panelQuanlyNhanVien.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.panelQuanlyNhanVien.Name = "panelQuanlyNhanVien";
             this.panelQuanlyNhanVien.Size = new System.Drawing.Size(220, 55);
@@ -328,7 +337,7 @@
             // panelBaocaotaichinh
             // 
             this.panelBaocaotaichinh.Controls.Add(this.buttonBaocaotaichinh);
-            this.panelBaocaotaichinh.Location = new System.Drawing.Point(0, 388);
+            this.panelBaocaotaichinh.Location = new System.Drawing.Point(0, 375);
             this.panelBaocaotaichinh.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.panelBaocaotaichinh.Name = "panelBaocaotaichinh";
             this.panelBaocaotaichinh.Size = new System.Drawing.Size(220, 55);
@@ -357,7 +366,7 @@
             // panelBaotri
             // 
             this.panelBaotri.Controls.Add(this.buttonBaotri);
-            this.panelBaotri.Location = new System.Drawing.Point(0, 453);
+            this.panelBaotri.Location = new System.Drawing.Point(0, 440);
             this.panelBaotri.Margin = new System.Windows.Forms.Padding(0, 0, 0, 10);
             this.panelBaotri.Name = "panelBaotri";
             this.panelBaotri.Size = new System.Drawing.Size(220, 55);
@@ -395,7 +404,7 @@
             this.buttonLogout.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.buttonLogout.ImageOffset = new System.Drawing.Point(-5, 0);
             this.buttonLogout.ImageSize = new System.Drawing.Size(22, 22);
-            this.buttonLogout.Location = new System.Drawing.Point(0, 518);
+            this.buttonLogout.Location = new System.Drawing.Point(0, 505);
             this.buttonLogout.Margin = new System.Windows.Forms.Padding(0);
             this.buttonLogout.Name = "buttonLogout";
             this.buttonLogout.Size = new System.Drawing.Size(220, 55);
@@ -412,28 +421,6 @@
             this.panelAdminLoad.Size = new System.Drawing.Size(960, 675);
             this.panelAdminLoad.TabIndex = 2;
             // 
-            // guna2PictureBox2
-            // 
-            this.guna2PictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("guna2PictureBox2.Image")));
-            this.guna2PictureBox2.ImageRotate = 0F;
-            this.guna2PictureBox2.Location = new System.Drawing.Point(17, 25);
-            this.guna2PictureBox2.Name = "guna2PictureBox2";
-            this.guna2PictureBox2.Size = new System.Drawing.Size(50, 50);
-            this.guna2PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.guna2PictureBox2.TabIndex = 3;
-            this.guna2PictureBox2.TabStop = false;
-            // 
-            // guna2PictureBox1
-            // 
-            this.guna2PictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("guna2PictureBox1.Image")));
-            this.guna2PictureBox1.ImageRotate = 0F;
-            this.guna2PictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.guna2PictureBox1.Name = "guna2PictureBox1";
-            this.guna2PictureBox1.Size = new System.Drawing.Size(37, 25);
-            this.guna2PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.guna2PictureBox1.TabIndex = 4;
-            this.guna2PictureBox1.TabStop = false;
-            // 
             // FormMainAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -449,10 +436,12 @@
             this.Text = "FormMainAdmin";
             this.guna2PanelTop.ResumeLayout(false);
             this.guna2PanelTop.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureLogo)).EndInit();
             this.flowLayoutPanelSidebar.ResumeLayout(false);
             this.panelUserInfo.ResumeLayout(false);
             this.panelUserInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureAvatar)).EndInit();
             this.panelTrangchu.ResumeLayout(false);
             this.panelQuanlyban.ResumeLayout(false);
@@ -460,8 +449,6 @@
             this.panelQuanlyNhanVien.ResumeLayout(false);
             this.panelBaocaotaichinh.ResumeLayout(false);
             this.panelBaotri.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.guna2PictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -478,7 +465,6 @@
         private Guna.UI2.WinForms.Guna2Panel panelUserInfo;
         private Guna.UI2.WinForms.Guna2PictureBox pictureAvatar;
         private System.Windows.Forms.Label labelRole;
-        private System.Windows.Forms.Label labelUsername;
         private Guna.UI2.WinForms.Guna2Panel panelTrangchu;
         private Guna.UI2.WinForms.Guna2Button buttonTrangchu;
         private Guna.UI2.WinForms.Guna2Panel panelQuanlyban;

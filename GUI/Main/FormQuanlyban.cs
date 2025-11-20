@@ -628,19 +628,19 @@ namespace QuanLyBida.GUI.Main
         }
 
         // 🔧 THÊM PHƯƠNG THỨC LẤY MA NHÂN VIÊN THỰC TẾ
-        private int LayMaNhanVienThucTe(string tenNhanVien)
-        {
-            try
-            {
-                var nhanVienBLL = new NhanVienBLL();
-                return nhanVienBLL.LayMaNhanVienTheoTen(tenNhanVien);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Lỗi khi lấy MaNV thực tế: {ex.Message}");
-                return 1; // Fallback
-            }
-        }
+        //private int LayMaNhanVienThucTe(string tenNhanVien)
+        //{
+        //    try
+        //    {
+        //        var nhanVienBLL = new NhanVienBLL();
+        //        return nhanVienBLL.LayMaNhanVienTheoTen(tenNhanVien);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Lỗi khi lấy MaNV thực tế: {ex.Message}");
+        //        return 1; // Fallback
+        //    }
+        //}
 
         private void UpdateDatabaseAfterPayment(TableState state, BookingDTO activeBooking)
         {

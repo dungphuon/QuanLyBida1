@@ -56,5 +56,33 @@ namespace QuanLyBida.BLL
             var allProducts = _sanPhamDAL.GetAllSanPham();
             return allProducts.FirstOrDefault(sp => sp.MaSP == maSP);
         }
+        public bool ThemSanPhamMoi(SanPhamDTO sanPham)
+        {
+            try
+            {
+                return _sanPhamDAL.ThemSanPhamMoi(sanPham);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi thêm sản phẩm: {ex.Message}");
+            }
+        }
+        public bool CapNhatSanPham(SanPhamDTO sanPham)
+        {
+            try
+            {
+                return _sanPhamDAL.CapNhatSanPham(sanPham);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Lỗi khi cập nhật sản phẩm: {ex.Message}");
+            }
+        }
+
+        public SanPhamDTO GetSanPhamByTen(string tenSP)
+        {
+            var allProducts = _sanPhamDAL.GetAllSanPham();
+            return allProducts.FirstOrDefault(sp => sp.TenSP == tenSP);
+        }
     }
 }

@@ -114,5 +114,50 @@ namespace QuanLyBida.DAL
                 }
             }
         }
+        public bool ThemSanPhamMoi(SanPhamDTO sanPham)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string query = @"
+            INSERT INTO DichVu_SanPham (TenSP, DonViTinh, GiaNhap, GiaBan, SoLuongTon)
+            VALUES (@TenSP, @DonViTinh, @GiaNhap, @GiaBan, @SoLuongTon)";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@TenSP", sanPham.TenSP);
+                    cmd.Parameters.AddWithValue("@DonViTinh", sanPham.DonViTinh);
+                    cmd.Parameters.AddWithValue("@GiaNhap", sanPham.GiaNhap);
+                    cmd.Parameters.AddWithValue("@GiaBan", sanPham.GiaBan);
+                    cmd.Parameters.AddWithValue("@SoLuongTon", sanPham.SoLuongTon);
+
+                    int result = cmd.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+        }
+        public bool CapNhatSanPham(SanPhamDTO sanPham)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string query = @"
+            UPDATE DichVu_SanPham 
+            SET TenSP = @TenSP, 
+                GiaBan = @GiaBan, 
+                SoLuongTon = @SoLuongTon
+            WHERE TenSP = @TenSP";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@TenSP", sanPham.TenSP);
+                    cmd.Parameters.AddWithValue("@GiaBan", sanPham.GiaBan);
+                    cmd.Parameters.AddWithValue("@SoLuongTon", sanPham.SoLuongTon);
+
+                    int result = cmd.ExecuteNonQuery();
+                    return result > 0;
+                }
+            }
+        }
     }
 }

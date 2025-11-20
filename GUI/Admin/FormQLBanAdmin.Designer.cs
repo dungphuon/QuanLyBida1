@@ -185,11 +185,11 @@
             this.comboBoxFilter.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.comboBoxFilter.ForeColor = System.Drawing.Color.FromArgb(68, 88, 112);
             this.comboBoxFilter.ItemHeight = 30;
-            this.comboBoxFilter.Items.AddRange(new object[] {
-            "Tất cả",
-            "Bàn thường",
-            "Bàn VIP",
-            "Bàn đôi"});
+            //this.comboBoxFilter.Items.AddRange(new object[] {
+            //"Tất cả",
+            //"Bàn thường",
+            //"Bàn VIP",
+            //"Bàn đôi"});
             this.comboBoxFilter.Location = new System.Drawing.Point(32, 85);
             this.comboBoxFilter.Name = "comboBoxFilter";
             this.comboBoxFilter.Size = new System.Drawing.Size(200, 36);

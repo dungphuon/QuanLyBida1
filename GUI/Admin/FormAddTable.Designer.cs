@@ -149,10 +149,10 @@
             this.comboBoxLoaiBan.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.comboBoxLoaiBan.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.comboBoxLoaiBan.ItemHeight = 30;
-            this.comboBoxLoaiBan.Items.AddRange(new object[] {
-            "Bàn thường",
-            "Bàn VIP",
-            "Bàn đôi"});
+            //this.comboBoxLoaiBan.Items.AddRange(new object[] {
+            //"Bàn thường",
+            //"Bàn VIP",
+            //"Bàn đôi"});
             this.comboBoxLoaiBan.Location = new System.Drawing.Point(180, 120);
             this.comboBoxLoaiBan.Name = "comboBoxLoaiBan";
             this.comboBoxLoaiBan.Size = new System.Drawing.Size(500, 36);

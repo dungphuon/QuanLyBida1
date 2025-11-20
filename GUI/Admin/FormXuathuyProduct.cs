@@ -21,18 +21,19 @@ namespace QuanLyBida.GUI.Admin
             _maNV = maNV;
             _tenNV = tenNV;
         }
+
         public FormXuathuyProduct()
         {
             InitializeComponent();
             _maNV = 1; // Mặc định
             _tenNV = "Admin";
         }
+
         private void FormXuathuyProduct_Load(object sender, EventArgs e)
         {
             LoadDanhSachSanPham();
             SetupDataGridView();
             guna2TextBoxTimKiem.KeyDown += guna2TextBoxTimKiem_KeyDown;
-            
         }
 
         private void LoadDanhSachSanPham()

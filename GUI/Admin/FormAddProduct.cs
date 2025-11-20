@@ -1,7 +1,9 @@
-﻿using System;
+﻿using QuanLyBida.DAL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,13 +14,13 @@ namespace QuanLyBida.GUI.Admin
 {
     public partial class FormAddProduct : Form
     {
+        private SanPhamDAL _sanPhamDAL = new SanPhamDAL();
+
         public FormAddProduct()
         {
             InitializeComponent();
             RegisterEvents();
-            
-            // Thiết lập giá trị mặc định cho comboBox Loại
-            comboBoxLoai.SelectedIndex = 0; // Chọn "Đồ ăn" mặc định
+            comboBoxLoai.SelectedIndex = 0;
         }
 
         private void RegisterEvents()
@@ -86,24 +88,56 @@ namespace QuanLyBida.GUI.Admin
                 return;
             }
 
-            // TODO: Implement logic to save product data to database
-            string loaiHangHoa = comboBoxLoai.SelectedItem?.ToString() ?? "";
-            
-            MessageBox.Show(
-                $"Đã lưu thông tin hàng hóa:\n\n" +
-                $"Tên hàng: {textBoxTenHang.Text}\n" +
-                $"Loại: {loaiHangHoa}\n" +
-                $"Giá bán: {giaBan:N0} VNĐ\n" +
-                $"Số lượng: {soLuong}\n\n" +
-                $"(Chức năng lưu vào database sẽ được triển khai sau)",
-                "Thông báo",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+            try
+            {
+                // Thêm sản phẩm vào database
+                bool result = ThemSanPhamVaoDatabase(
+                    textBoxTenHang.Text,
+                    comboBoxLoai.SelectedItem?.ToString() ?? "",
+                    giaBan,
+                    soLuong
+                );
 
-            // Đóng form sau khi lưu thành công
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+                if (result)
+                {
+                    MessageBox.Show("Đã thêm sản phẩm mới thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Không thể thêm sản phẩm!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi thêm sản phẩm: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool ThemSanPhamVaoDatabase(string tenSP, string loai, decimal giaBan, int soLuong)
+        {
+            // Bạn cần thêm phương thức này vào SanPhamDAL
+            // Tạm thời sử dụng stored procedure hoặc query trực tiếp
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string query = @"
+                    INSERT INTO DichVu_SanPham (TenSP, DonViTinh, GiaNhap, GiaBan, SoLuongTon)
+                    VALUES (@TenSP, @DonViTinh, @GiaNhap, @GiaBan, @SoLuongTon)";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@TenSP", tenSP);
+                    cmd.Parameters.AddWithValue("@DonViTinh", "Cái"); // Hoặc lấy từ combobox
+                    cmd.Parameters.AddWithValue("@GiaNhap", giaBan * 0.8m); // Giả sử giá nhập = 80% giá bán
+                    cmd.Parameters.AddWithValue("@GiaBan", giaBan);
+                    cmd.Parameters.AddWithValue("@SoLuongTon", soLuong);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }
+            }
         }
 
         private void ButtonCancel_Click(object sender, EventArgs e)

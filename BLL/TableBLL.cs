@@ -33,4 +33,18 @@ public class TableBLL
     {
         return tableDAL.ResetTime(maBan);
     }
+    public bool AddTable(TableDTO table)
+    {
+        return tableDAL.AddTable(table);
+    }
+
+    public bool UpdateTable(TableDTO table)
+    {
+        return tableDAL.UpdateTable(table);
+    }
+
+    public bool DeleteTable(int maBan)
+    {
+        return tableDAL.DeleteTable(maBan);
+    }
 }

@@ -98,4 +98,66 @@ public class TableDAL : DatabaseHelper
             }
         }
     }
+    public bool AddTable(TableDTO table)
+    {
+        using (var conn = GetConnection())
+        {
+            conn.Open();
+            string sql = @"
+            INSERT INTO BanBida (TenBan, LoaiBan, TrangThai, GiaGio, ThoiGianBatDau, ThoiGianKetThuc)
+            VALUES (@TenBan, @LoaiBan, @TrangThai, @GiaGio, @ThoiGianBatDau, @ThoiGianKetThuc)";
+
+            using (var cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@TenBan", table.TenBan);
+                cmd.Parameters.AddWithValue("@LoaiBan", table.LoaiBan);
+                cmd.Parameters.AddWithValue("@TrangThai", table.TrangThai);
+                cmd.Parameters.AddWithValue("@GiaGio", table.GiaGio);
+                cmd.Parameters.AddWithValue("@ThoiGianBatDau", table.ThoiGianBatDau ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@ThoiGianKetThuc", table.ThoiGianKetThuc ?? (object)DBNull.Value);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+    }
+
+    public bool UpdateTable(TableDTO table)
+    {
+        using (var conn = GetConnection())
+        {
+            conn.Open();
+            string sql = @"
+            UPDATE BanBida 
+            SET TenBan = @TenBan, LoaiBan = @LoaiBan, TrangThai = @TrangThai, 
+                GiaGio = @GiaGio, ThoiGianBatDau = @ThoiGianBatDau, ThoiGianKetThuc = @ThoiGianKetThuc
+            WHERE MaBan = @MaBan";
+
+            using (var cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MaBan", table.MaBan);
+                cmd.Parameters.AddWithValue("@TenBan", table.TenBan);
+                cmd.Parameters.AddWithValue("@LoaiBan", table.LoaiBan);
+                cmd.Parameters.AddWithValue("@TrangThai", table.TrangThai);
+                cmd.Parameters.AddWithValue("@GiaGio", table.GiaGio);
+                cmd.Parameters.AddWithValue("@ThoiGianBatDau", table.ThoiGianBatDau ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@ThoiGianKetThuc", table.ThoiGianKetThuc ?? (object)DBNull.Value);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+    }
+
+    public bool DeleteTable(int maBan)
+    {
+        using (var conn = GetConnection())
+        {
+            conn.Open();
+            string sql = "DELETE FROM BanBida WHERE MaBan = @MaBan";
+            using (var cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@MaBan", maBan);
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+    }
 }

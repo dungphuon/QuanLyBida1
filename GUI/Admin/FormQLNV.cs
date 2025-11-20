@@ -1,59 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using QuanLyBida.DTO;
+using QuanLyBida.BLL;
 
 namespace GUI.Admin
 {
     public partial class FormQLNV : Form
     {
-        // Class để lưu dữ liệu mẫu nhân viên
-        private class NhanVienMau
-        {
-            public int MaNV { get; set; }
-            public string HoTen { get; set; }
-            public string GioiTinh { get; set; }
-            public DateTime? NgaySinh { get; set; }
-            public string ChucVu { get; set; }
-            public string SoDienThoai { get; set; }
-            public string Email { get; set; }
-            public decimal? Luong { get; set; }
-            public string TrangThai { get; set; }
-        }
-
-        private List<NhanVienMau> danhSachNhanVien;
+        private List<NhanVienDTO> danhSachNhanVien;
+        private NhanVienBLL nhanVienBLL;
 
         public FormQLNV()
         {
             InitializeComponent();
-            TaoDuLieuMau();
+            nhanVienBLL = new NhanVienBLL();
             KhoiTaoDataGridView();
             KhoiTaoFilter();
-            HienThiDuLieu();
-            
-            // Gắn sự kiện click cho button Thêm nhân viên
+            TaiDuLieu();
+
             btnThemNV.Click += BtnThemNV_Click;
+
+            // Thêm sự kiện tìm kiếm real-time
+            txtSearch.TextChanged += TxtSearch_TextChanged;
+            cmbTrangThai.SelectedIndexChanged += Filter_Changed;
+            cmbChucVu.SelectedIndexChanged += Filter_Changed;
         }
 
         private void BtnThemNV_Click(object sender, EventArgs e)
         {
-            // Mở form thêm nhân viên dưới dạng dialog
-            using (var formAddNV = new FormAddNV())
+            // Thêm mới: không truyền tham số
+            using (var formNV = new FormAddNV())
             {
-                if (formAddNV.ShowDialog() == DialogResult.OK)
+                if (formNV.ShowDialog() == DialogResult.OK)
                 {
-                    // Nếu người dùng nhấn Lưu thành công, có thể reload dữ liệu
-                    // TODO: Thêm logic reload dữ liệu từ database
-                    MessageBox.Show("Thêm nhân viên thành công!", "Thông báo", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    
-                    // Reload dữ liệu (tạm thời giữ nguyên dữ liệu mẫu)
-                    // HienThiDuLieu();
+                    TaiDuLieu();
                 }
             }
         }
@@ -65,59 +48,18 @@ namespace GUI.Admin
             cmbChucVu.SelectedIndex = 0; // "Tất cả"
         }
 
-        private void TaoDuLieuMau()
+        private void TaiDuLieu()
         {
-            danhSachNhanVien = new List<NhanVienMau>
+            try
             {
-                new NhanVienMau
-                {
-                    MaNV = 1,
-                    HoTen = "Nguyễn Văn An",
-                    GioiTinh = "Nam",
-                    NgaySinh = new DateTime(1990, 5, 15),
-                    ChucVu = "Quản lý",
-                    SoDienThoai = "0912345678",
-                    Email = "nguyenvanan@email.com",
-                    Luong = 15000000,
-                    TrangThai = "Đang làm việc"
-                },
-                new NhanVienMau
-                {
-                    MaNV = 2,
-                    HoTen = "Trần Thị Bình",
-                    GioiTinh = "Nữ",
-                    NgaySinh = new DateTime(1995, 8, 20),
-                    ChucVu = "Nhân viên",
-                    SoDienThoai = "0923456789",
-                    Email = "tranthibinh@email.com",
-                    Luong = 8000000,
-                    TrangThai = "Đang làm việc"
-                },
-                new NhanVienMau
-                {
-                    MaNV = 3,
-                    HoTen = "Lê Văn Cường",
-                    GioiTinh = "Nam",
-                    NgaySinh = new DateTime(1992, 3, 10),
-                    ChucVu = "Nhân viên",
-                    SoDienThoai = "0934567890",
-                    Email = "levancuong@email.com",
-                    Luong = 7500000,
-                    TrangThai = "Đã nghỉ"
-                },
-                new NhanVienMau
-                {
-                    MaNV = 4,
-                    HoTen = "Phạm Thị Dung",
-                    GioiTinh = "Nữ",
-                    NgaySinh = new DateTime(1998, 11, 25),
-                    ChucVu = "Bảo vệ",
-                    SoDienThoai = "0945678901",
-                    Email = "phamthidung@email.com",
-                    Luong = 6000000,
-                    TrangThai = "Đang làm việc"
-                }
-            };
+                danhSachNhanVien = nhanVienBLL.LayDanhSachNhanVien();
+                HienThiDuLieu();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void KhoiTaoDataGridView()
@@ -199,6 +141,15 @@ namespace GUI.Admin
                 DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" }
             });
 
+            // Cột Ca làm việc
+            gridNhanVien.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "colCaLamViec",
+                HeaderText = "Ca làm việc",
+                DataPropertyName = "CaLamViec",
+                Width = 100
+            });
+
             // Cột Trạng thái (với màu sắc)
             var colTrangThai = new DataGridViewTextBoxColumn
             {
@@ -241,8 +192,8 @@ namespace GUI.Admin
             if (gridNhanVien.Columns[e.ColumnIndex].Name == "colTrangThai" && e.RowIndex >= 0)
             {
                 var row = gridNhanVien.Rows[e.RowIndex];
-                var nhanVien = row.DataBoundItem as NhanVienMau;
-                
+                var nhanVien = row.DataBoundItem as NhanVienDTO;
+
                 if (nhanVien != null)
                 {
                     if (nhanVien.TrangThai == "Đang làm việc")
@@ -263,25 +214,19 @@ namespace GUI.Admin
         {
             if (e.RowIndex < 0) return;
 
-            var nhanVien = gridNhanVien.Rows[e.RowIndex].DataBoundItem as NhanVienMau;
+            var nhanVien = gridNhanVien.Rows[e.RowIndex].DataBoundItem as NhanVienDTO;
             if (nhanVien == null) return;
 
             if (gridNhanVien.Columns[e.ColumnIndex].Name == "colXem")
             {
-                MessageBox.Show(
-                    $"Mã NV: {nhanVien.MaNV}\n" +
-                    $"Họ tên: {nhanVien.HoTen}\n" +
-                    $"Giới tính: {nhanVien.GioiTinh}\n" +
-                    $"Ngày sinh: {nhanVien.NgaySinh?.ToString("dd/MM/yyyy")}\n" +
-                    $"Chức vụ: {nhanVien.ChucVu}\n" +
-                    $"Số điện thoại: {nhanVien.SoDienThoai}\n" +
-                    $"Email: {nhanVien.Email}\n" +
-                    $"Lương: {nhanVien.Luong?.ToString("N0")} VNĐ\n" +
-                    $"Trạng thái: {nhanVien.TrangThai}",
-                    "Thông tin nhân viên",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
-                );
+                // Xem thông tin: truyền false để vào chế độ xem
+                using (var formNV = new FormAddNV(nhanVien, false))
+                {
+                    if (formNV.ShowDialog() == DialogResult.OK)
+                    {
+                        TaiDuLieu();
+                    }
+                }
             }
             else if (gridNhanVien.Columns[e.ColumnIndex].Name == "colXoa")
             {
@@ -294,17 +239,75 @@ namespace GUI.Admin
 
                 if (result == DialogResult.Yes)
                 {
-                    danhSachNhanVien.Remove(nhanVien);
-                    HienThiDuLieu();
-                    MessageBox.Show("Đã xóa nhân viên thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    try
+                    {
+                        string deleteResult = nhanVienBLL.XoaNhanVien(nhanVien.MaNV);
+                        if (deleteResult == "Thành công")
+                        {
+                            TaiDuLieu();
+                            MessageBox.Show("Đã xóa nhân viên thành công!", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show(deleteResult, "Lỗi",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi khi xóa nhân viên: {ex.Message}", "Lỗi",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
 
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        {
+            LocVaHienThiDuLieu();
+        }
+
+        private void Filter_Changed(object sender, EventArgs e)
+        {
+            LocVaHienThiDuLieu();
+        }
+
+        private void LocVaHienThiDuLieu()
+        {
+            if (danhSachNhanVien == null) return;
+
+            var ketQua = danhSachNhanVien.AsEnumerable();
+
+            // Lọc theo từ khóa tìm kiếm
+            if (!string.IsNullOrWhiteSpace(txtSearch.Text))
+            {
+                string search = txtSearch.Text.ToLower();
+                ketQua = ketQua.Where(nv =>
+                    nv.HoTen.ToLower().Contains(search) ||
+                    nv.MaNV.ToString().Contains(search) ||
+                    (nv.SoDienThoai != null && nv.SoDienThoai.Contains(search)) ||
+                    (nv.Email != null && nv.Email.ToLower().Contains(search)));
+            }
+
+            // Lọc theo trạng thái
+            if (cmbTrangThai.SelectedIndex > 0)
+            {
+                ketQua = ketQua.Where(nv => nv.TrangThai == cmbTrangThai.SelectedItem.ToString());
+            }
+
+            // Lọc theo chức vụ
+            if (cmbChucVu.SelectedIndex > 0)
+            {
+                ketQua = ketQua.Where(nv => nv.ChucVu == cmbChucVu.SelectedItem.ToString());
+            }
+
+            gridNhanVien.DataSource = ketQua.ToList();
+        }
+
         private void HienThiDuLieu()
         {
-            gridNhanVien.DataSource = null;
-            gridNhanVien.DataSource = danhSachNhanVien;
+            LocVaHienThiDuLieu();
         }
     }
 }
