@@ -206,6 +206,7 @@ namespace QuanLyBida.GUI.Admin
                 {
                     MaSP = maSP,
                     TenSP = textBoxTenHang.Text,
+                    LoaiHangHoa = comboBoxLoai.SelectedItem?.ToString() ?? "", // QUAN TRỌNG: THÊM DÒNG NÀY
                     GiaBan = giaBan,
                     SoLuongTon = soLuong
                 };
@@ -218,7 +219,7 @@ namespace QuanLyBida.GUI.Admin
 
                     // Cập nhật dữ liệu gốc
                     originalTenHang = textBoxTenHang.Text;
-                    originalLoai = comboBoxLoai.SelectedItem?.ToString() ?? "";
+                    originalLoai = comboBoxLoai.SelectedItem?.ToString() ?? ""; // CẬP NHẬT LOẠI HÀNG HÓA
                     originalGia = giaBan;
                     originalSoLuong = soLuong;
 

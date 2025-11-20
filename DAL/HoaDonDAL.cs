@@ -478,7 +478,29 @@ namespace QuanLyBida.DAL
                 }
             }
         }
+        // Thêm vào file HoaDonDAL.cs
 
+        public void CapNhatTrangThaiHoaDonCu(int maBan, int maHDMoi)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                // Logic: Tìm tất cả hóa đơn của bàn này đang "Chưa thanh toán" (TRỪ cái hóa đơn mới vừa tạo)
+                // và set chúng thành "Đã thanh toán" để ẩn đi.
+                string sql = @"UPDATE HoaDon 
+                       SET TrangThaiThanhToan = N'Đã thanh toán'
+                       WHERE MaBan = @MaBan 
+                       AND TrangThaiThanhToan = N'Chưa thanh toán' 
+                       AND MaHD != @MaHDMoi";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaBan", maBan);
+                    cmd.Parameters.AddWithValue("@MaHDMoi", maHDMoi);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
     }
 }

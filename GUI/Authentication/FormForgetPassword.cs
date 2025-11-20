@@ -18,35 +18,49 @@ namespace QuanLyBida.GUI
             try
             {
                 string email = TextBox_email.Text.Trim();
-
                 if (string.IsNullOrEmpty(email))
                 {
-                    MessageBox.Show("Vui lòng nhập email!", "Cảnh báo",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Vui lòng nhập email!");
                     return;
                 }
 
-                // Gọi BLL để kiểm tra email
-                var taiKhoanBLL = new TaiKhoanBLL();
-                var result = taiKhoanBLL.CheckEmailExists(email);
+                TaiKhoanBLL bll = new TaiKhoanBLL();
 
-                if (result.Success)
+                // 1. Kiểm tra email có trong hệ thống không
+                var checkResult = bll.CheckEmailExists(email);
+                if (!checkResult.Success)
                 {
+                    MessageBox.Show("Email này không tồn tại trong hệ thống!", "Lỗi");
+                    return;
+                }
+
+                // 2. Tạo mã OTP ngẫu nhiên (Tại GUI hoặc BLL đều được, ở đây để GUI cho tiện truyền)
+                Random rnd = new Random();
+                string otp = rnd.Next(100000, 999999).ToString();
+
+                // 3. Gọi BLL để gửi mail
+                this.Cursor = Cursors.WaitCursor; // Hiển thị chuột xoay
+                bool guithanhcong = bll.GuiMaOTP(email, otp);
+                this.Cursor = Cursors.Default;
+
+                if (guithanhcong)
+                {
+                    MessageBox.Show("Đã gửi mã OTP vào email. Vui lòng kiểm tra!");
+
+                    // 4. Chuyển sang form Nhập mã OTP (Truyền mã OTP + Email qua)
+                    FormXacthuc frm = new FormXacthuc(otp, email);
                     this.Hide();
-                    var newPasswordForm = new NewPassword(email); // Truyền email sang form mới
-                    newPasswordForm.ShowDialog();
+                    frm.ShowDialog();
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show(result.Message, "Không tìm thấy email",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Gửi mail thất bại. Vui lòng kiểm tra lại mạng hoặc email!");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi hệ thống",
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
 

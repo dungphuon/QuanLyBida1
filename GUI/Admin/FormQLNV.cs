@@ -5,6 +5,9 @@ using System.Linq;
 using System.Windows.Forms;
 using QuanLyBida.DTO;
 using QuanLyBida.BLL;
+using OfficeOpenXml;
+using System.IO;
+using System.Drawing;
 
 namespace GUI.Admin
 {
@@ -22,7 +25,7 @@ namespace GUI.Admin
             TaiDuLieu();
 
             btnThemNV.Click += BtnThemNV_Click;
-
+            btnXuatExcel.Click += btnXuatExcel_Click;
             // Thêm sự kiện tìm kiếm real-time
             txtSearch.TextChanged += TxtSearch_TextChanged;
             cmbTrangThai.SelectedIndexChanged += Filter_Changed;
@@ -308,6 +311,169 @@ namespace GUI.Admin
         private void HienThiDuLieu()
         {
             LocVaHienThiDuLieu();
+        }
+        private void btnXuatExcel_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.Filter = "Excel Files|*.xlsx";
+                    saveFileDialog.Title = "Lưu file Excel";
+                    saveFileDialog.FileName = "DanhSachNhanVien_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        XuatExcel(saveFileDialog.FileName);
+                        MessageBox.Show("Xuất Excel thành công!", "Thông báo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Mở file Excel sau khi xuất (tuỳ chọn)
+                        // System.Diagnostics.Process.Start(saveFileDialog.FileName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất Excel: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void XuatExcel(string filePath)
+        {
+            // Set license context
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (ExcelPackage excelPackage = new ExcelPackage())
+            {
+                // Tạo worksheet
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Nhân viên");
+
+                // Tiêu đề chính
+                worksheet.Cells[1, 1].Value = "DANH SÁCH NHÂN VIÊN";
+                worksheet.Cells[1, 1, 1, 10].Merge = true;
+                worksheet.Cells[1, 1].Style.Font.Bold = true;
+                worksheet.Cells[1, 1].Style.Font.Size = 16;
+                worksheet.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                worksheet.Cells[1, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+
+                // Ngày xuất
+                worksheet.Cells[2, 1].Value = "Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                worksheet.Cells[2, 1, 2, 10].Merge = true;
+                worksheet.Cells[2, 1].Style.Font.Italic = true;
+                worksheet.Cells[2, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                worksheet.Cells[2, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+
+                // Header các cột
+                int row = 4;
+                int col = 1;
+
+                string[] headers = { "Mã NV", "Họ và tên", "Giới tính", "Ngày sinh", "Chức vụ",
+                           "Số điện thoại", "Email", "Lương", "Ca làm việc", "Trạng thái" };
+
+                // Tạo header
+                for (int i = 0; i < headers.Length; i++)
+                {
+                    worksheet.Cells[row, col].Value = headers[i];
+                    worksheet.Cells[row, col].Style.Font.Bold = true;
+                    worksheet.Cells[row, col].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    worksheet.Cells[row, col].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                    worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                    worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                    col++;
+                }
+
+                // Dữ liệu
+                row++;
+                var data = gridNhanVien.DataSource as List<NhanVienDTO>;
+
+                if (data != null)
+                {
+                    foreach (var nv in data)
+                    {
+                        col = 1;
+
+                        worksheet.Cells[row, col].Value = nv.MaNV;
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.HoTen;
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.GioiTinh ?? "";
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.NgaySinh?.ToString("dd/MM/yyyy") ?? "";
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.ChucVu;
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.SoDienThoai ?? "";
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.Email ?? "";
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.Luong;
+                        worksheet.Cells[row, col].Style.Numberformat.Format = "#,##0";
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.CaLamViec;
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        worksheet.Cells[row, col].Value = nv.TrangThai ?? "";
+                        worksheet.Cells[row, col].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[row, col].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        worksheet.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                        col++;
+
+                        row++;
+                    }
+                }
+
+                // Đường viền đậm cho toàn bộ bảng (viền ngoài)
+                if (data != null && data.Count > 0)
+                {
+                    var tableRange = worksheet.Cells[4, 1, row - 1, headers.Length];
+                    tableRange.Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+                }
+
+                // Tự động điều chỉnh độ rộng cột
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // Lưu file
+                FileInfo excelFile = new FileInfo(filePath);
+                excelPackage.SaveAs(excelFile);
+            }
         }
     }
 }

@@ -114,7 +114,7 @@ namespace QuanLyBida.GUI.Admin
             {
                 gridProducts.Rows.Add(
                     sanPham.TenSP,
-                    GetLoaiHangHoa(sanPham.TenSP), // Bạn cần thêm trường LoaiHangHoa vào SanPhamDTO
+                    sanPham.LoaiHangHoa, // Bạn cần thêm trường LoaiHangHoa vào SanPhamDTO
                     sanPham.GiaBan.ToString("N0") + " VNĐ",
                     sanPham.SoLuongTon.ToString(),
                     "Xem",
@@ -124,15 +124,7 @@ namespace QuanLyBida.GUI.Admin
         }
 
         // Hàm tạm để xác định loại hàng hóa (cần sửa khi có trường LoaiHangHoa trong database)
-        private string GetLoaiHangHoa(string tenSP)
-        {
-            if (tenSP.ToLower().Contains("nước") || tenSP.ToLower().Contains("coca") || tenSP.ToLower().Contains("pepsi"))
-                return "Đồ uống";
-            else if (tenSP.ToLower().Contains("bánh") || tenSP.ToLower().Contains("cơm") || tenSP.ToLower().Contains("mì"))
-                return "Đồ ăn";
-            else
-                return "Phụ kiện";
-        }
+
 
         private void GridProducts_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -153,7 +145,7 @@ namespace QuanLyBida.GUI.Admin
                         // Truyền dữ liệu thực từ database
                         editProductForm.SetProductData(
                             sanPham.TenSP,
-                            GetLoaiHangHoa(sanPham.TenSP), // Hoặc lấy từ database nếu có
+                            sanPham.LoaiHangHoa, // Hoặc lấy từ database nếu có
                             sanPham.GiaBan,
                             sanPham.SoLuongTon
                         );

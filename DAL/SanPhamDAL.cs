@@ -17,7 +17,7 @@ namespace QuanLyBida.DAL
             {
                 conn.Open();
                 string query = @"
-            SELECT MaSP, TenSP, DonViTinh, GiaNhap, GiaBan, SoLuongTon
+            SELECT MaSP, TenSP, DonViTinh, GiaNhap, GiaBan, SoLuongTon, LoaiHangHoa
             FROM DichVu_SanPham 
             ORDER BY TenSP";
 
@@ -33,7 +33,8 @@ namespace QuanLyBida.DAL
                             DonViTinh = reader["DonViTinh"].ToString(),
                             GiaNhap = (decimal)reader["GiaNhap"],
                             GiaBan = (decimal)reader["GiaBan"],
-                            SoLuongTon = (int)reader["SoLuongTon"]
+                            SoLuongTon = (int)reader["SoLuongTon"],
+                            LoaiHangHoa = reader["LoaiHangHoa"]?.ToString()
                         });
                     }
                 }
@@ -120,8 +121,8 @@ namespace QuanLyBida.DAL
             {
                 conn.Open();
                 string query = @"
-            INSERT INTO DichVu_SanPham (TenSP, DonViTinh, GiaNhap, GiaBan, SoLuongTon)
-            VALUES (@TenSP, @DonViTinh, @GiaNhap, @GiaBan, @SoLuongTon)";
+            INSERT INTO DichVu_SanPham (TenSP, DonViTinh, GiaNhap, GiaBan, SoLuongTon, LoaiHangHoa)
+            VALUES (@TenSP, @DonViTinh, @GiaNhap, @GiaBan, @SoLuongTon, @LoaiHangHoa)";
 
                 using (var cmd = new SqlCommand(query, conn))
                 {
@@ -130,6 +131,7 @@ namespace QuanLyBida.DAL
                     cmd.Parameters.AddWithValue("@GiaNhap", sanPham.GiaNhap);
                     cmd.Parameters.AddWithValue("@GiaBan", sanPham.GiaBan);
                     cmd.Parameters.AddWithValue("@SoLuongTon", sanPham.SoLuongTon);
+                    cmd.Parameters.AddWithValue("@LoaiHangHoa", sanPham.LoaiHangHoa ?? (object)System.DBNull.Value); // Thêm trường mới
 
                     int result = cmd.ExecuteNonQuery();
                     return result > 0;
@@ -145,7 +147,8 @@ namespace QuanLyBida.DAL
             UPDATE DichVu_SanPham 
             SET TenSP = @TenSP, 
                 GiaBan = @GiaBan, 
-                SoLuongTon = @SoLuongTon
+                SoLuongTon = @SoLuongTon,
+                LoaiHangHoa = @LoaiHangHoa
             WHERE TenSP = @TenSP";
 
                 using (var cmd = new SqlCommand(query, conn))
@@ -153,6 +156,7 @@ namespace QuanLyBida.DAL
                     cmd.Parameters.AddWithValue("@TenSP", sanPham.TenSP);
                     cmd.Parameters.AddWithValue("@GiaBan", sanPham.GiaBan);
                     cmd.Parameters.AddWithValue("@SoLuongTon", sanPham.SoLuongTon);
+                    cmd.Parameters.AddWithValue("@LoaiHangHoa", sanPham.LoaiHangHoa ?? (object)System.DBNull.Value);
 
                     int result = cmd.ExecuteNonQuery();
                     return result > 0;

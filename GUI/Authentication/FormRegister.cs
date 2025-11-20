@@ -4,6 +4,7 @@ using System;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace QuanLyBida.GUI
 {
@@ -20,23 +21,42 @@ namespace QuanLyBida.GUI
         {
             try
             {
-                // Test kết nối trước
+                // 1. Test kết nối trước
                 if (!DatabaseHelper.TestConnection())
                 {
                     MessageBox.Show("Lỗi kết nối database!", "Lỗi");
                     return;
                 }
 
-                // Lấy dữ liệu từ form
+                // 2. Lấy dữ liệu từ form
+                string username = TextBox_username.Text.Trim();
+                string email = TextBox_email.Text.Trim();
+                string password = TextBox_password.Text;
+
+                // 3. Kiểm tra rỗng
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // 4. [MỚI] Kiểm tra mật khẩu: Ít nhất 8 ký tự, có chữ Hoa và Số
+                // Regex: ^(?=.*[A-Z])(?=.*\d).{8,}$
+                if (!Regex.IsMatch(password, @"^(?=.*[A-Z])(?=.*\d).{8,}$"))
+                {
+                    MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ in hoa và chữ số!",
+                                    "Mật khẩu yếu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 var taiKhoanDTO = new TaiKhoanDTO
                 {
-                    TenDangNhap = TextBox_username.Text.Trim(),
-                    Email = TextBox_email.Text.Trim(),
-                    MatKhau = TextBox_password.Text
+                    TenDangNhap = username,
+                    Email = email,
+                    MatKhau = password
                 };
 
-
-                // Gọi BLL để đăng ký
+                // 5. Gọi BLL để đăng ký
                 var taiKhoanBLL = new TaiKhoanBLL();
                 var registerResult = taiKhoanBLL.Register(taiKhoanDTO);
 
@@ -44,7 +64,7 @@ namespace QuanLyBida.GUI
                 {
                     MessageBox.Show("Đăng ký thành công!", "Thông báo");
 
-                    // Kiểm tra ngay trong database
+                    // Kiểm tra ngay trong database (Code cũ của bạn)
                     CheckUserInDatabase(taiKhoanDTO.TenDangNhap);
 
                     var loginForm = new FormLogin();

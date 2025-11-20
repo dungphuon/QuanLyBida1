@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Web.UI;
 using System.Windows.Forms;
 
 namespace QuanLyBida.GUI.Main
@@ -24,6 +25,10 @@ namespace QuanLyBida.GUI.Main
         private KhachHangBLL _khachHangBLL = new KhachHangBLL();
         private KhachHangDTO _khachHangHienTai = null;
         private int _diemTichLuyThem = 0;
+        // Khai báo ngay dưới dòng "public partial class FormThanhToan : Form"
+        private const string BANK_ID = "VCB";       // Tên ngân hàng (MB, VCB, ACB,...)
+        private const string ACCOUNT_NO = "1040678824"; // Số tài khoản nhận tiền
+        private const string TEMPLATE = "compact"; // Kiểu QR
         public FormThanhToan(string tableName, string tableType, decimal hourlyRate, TimeSpan playTime,
                      List<FormDichVu.ServiceItem> items = null, int maDatBan = 0, string tenNhanVien = "", int maNhanVien = 0)
         {
@@ -416,25 +421,35 @@ namespace QuanLyBida.GUI.Main
 
         private void ShowInvoicePreview(string invoiceContent, string phuongThuc)
         {
+            // 1. Tính toán lại tổng tiền cuối cùng để tạo QR chính xác
+            var tableCost = Math.Round((decimal)playTime.TotalHours * hourlyRate, 0);
+            decimal serviceTotal = _items.Sum(item => item.Price * item.Quantity);
+            decimal tongTam = tableCost + serviceTotal;
+            decimal tienGiam = tongTam * (numGiamGia.Value / 100);
+            decimal tongCuoi = tongTam - tienGiam; // Số tiền cần thanh toán
+
+            // 2. Cấu hình Form Preview
             var invoiceForm = new Form()
             {
                 Text = "HÓA ĐƠN THANH TOÁN - BIDA CLUB",
-                Size = new Size(450, 700),
+                Size = new Size(480, 750),
                 StartPosition = FormStartPosition.CenterParent,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 MaximizeBox = false,
                 BackColor = Color.White
             };
 
+            // 3. Panel chứa nội dung Text hóa đơn
             var lineCount = invoiceContent.Split('\n').Length;
-            var textHeight = Math.Min(lineCount * 20, 400);
+            var textHeight = Math.Min(lineCount * 20, 400); // Giới hạn chiều cao vùng chữ
 
             var textPanel = new Panel()
             {
                 Dock = DockStyle.Top,
                 Height = textHeight + 20,
-                BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.White
+                BorderStyle = BorderStyle.None,
+                BackColor = Color.White,
+                Padding = new Padding(10)
             };
 
             var textBoxInside = new RichTextBox()
@@ -442,34 +457,105 @@ namespace QuanLyBida.GUI.Main
                 Text = invoiceContent,
                 Multiline = true,
                 ReadOnly = true,
-                Font = new Font("Courier New", 11, FontStyle.Regular),
+                Font = new Font("Courier New", 10, FontStyle.Regular), // Font monospaced để thẳng hàng
                 ScrollBars = RichTextBoxScrollBars.None,
-                Location = new Point(10, 10),
-                Size = new Size(410, textHeight),
+                Dock = DockStyle.Fill,
                 BorderStyle = BorderStyle.None,
                 BackColor = Color.White,
                 ForeColor = Color.Black
             };
             textPanel.Controls.Add(textBoxInside);
+            invoiceForm.Controls.Add(textPanel);
 
+            // 4. 🔥 XỬ LÝ QR CODE (CHUYỂN KHOẢN HOẶC VÍ ĐIỆN TỬ)
+            if (phuongThuc == "Chuyển khoản" || phuongThuc == "Ví điện tử")
+            {
+                // Tăng chiều cao form để chứa QR
+                invoiceForm.Height += 350;
+
+                var qrPanel = new Panel()
+                {
+                    Dock = DockStyle.Top,
+                    Height = 350,
+                    BackColor = Color.White
+                };
+
+                var picQR = new PictureBox()
+                {
+                    Size = new Size(300, 300),
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Location = new Point((invoiceForm.Width - 330) / 2, 10), // Căn giữa
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                // Tùy chỉnh câu hướng dẫn dựa trên phương thức
+                string huongDanText = (phuongThuc == "Ví điện tử")
+                    ? "Mở Momo/ZaloPay quét mã để thanh toán"
+                    : "Mở App Ngân hàng quét mã để thanh toán";
+
+                var lblHuongDan = new Label()
+                {
+                    Text = huongDanText,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Dock = DockStyle.Bottom,
+                    Height = 30,
+                    Font = new Font("Segoe UI", 10, FontStyle.Italic),
+                    ForeColor = Color.DimGray
+                };
+
+                try
+                {
+                    // Tạo Link VietQR
+                    // Link này sẽ tự động điền số tiền và nội dung chuyển khoản
+                    long amount = (long)tongCuoi;
+                    string content = $"TT HD{_maHoaDon}"; // Nội dung: TT HD000123
+
+                    // BANK_ID và ACCOUNT_NO lấy từ biến hằng số bạn đã khai báo ở đầu class
+                    string url = $"https://img.vietqr.io/image/{BANK_ID}-{ACCOUNT_NO}-{TEMPLATE}.png?amount={amount}&addInfo={content}";
+
+                    picQR.Load(url);
+                }
+                catch
+                {
+                    // Xử lý nếu không có mạng
+                    picQR.Image = null;
+                    picQR.BackColor = Color.WhiteSmoke;
+                    lblHuongDan.Text = "Không thể tải mã QR (Kiểm tra Internet)";
+                    lblHuongDan.ForeColor = Color.Red;
+                }
+
+                qrPanel.Controls.Add(picQR);
+                qrPanel.Controls.Add(lblHuongDan);
+                invoiceForm.Controls.Add(qrPanel);
+
+                // Đưa panel text lên trên cùng lại
+                textPanel.BringToFront();
+            }
+
+            // 5. Nút Đóng
             var actionPanel = new Panel()
             {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White
+                Dock = DockStyle.Bottom,
+                Height = 60,
+                BackColor = Color.WhiteSmoke
             };
 
             var btnClose = new Button()
             {
-                Text = "Đóng",
-                Size = new Size(100, 35),
-                Location = new Point(175, 20),
-                Font = new Font("Segoe UI", 9, FontStyle.Regular)
+                Text = "Hoàn tất",
+                Size = new Size(120, 40),
+                Location = new Point((invoiceForm.Width - 140) / 2, 10),
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
             };
+            btnClose.FlatAppearance.BorderSize = 0;
             btnClose.Click += (s, e) => invoiceForm.Close();
-            actionPanel.Controls.Add(btnClose);
 
+            actionPanel.Controls.Add(btnClose);
             invoiceForm.Controls.Add(actionPanel);
-            invoiceForm.Controls.Add(textPanel);
+
             invoiceForm.ShowDialog();
         }
 
@@ -514,14 +600,14 @@ namespace QuanLyBida.GUI.Main
                     inputHangThanhVien.SelectedIndex = 0;
                 }
 
-                dialog.Controls.AddRange(new Control[]
-                {
-            labelHoTen, inputHoTen,
-            labelSoDienThoai, inputSoDienThoai,
-            labelEmail, inputEmail,
-            labelHangThanhVien, inputHangThanhVien,
-            btnOk, btnCancel
-                });
+                dialog.Controls.AddRange(new System.Windows.Forms.Control[]
+                 {
+                    labelHoTen, inputHoTen,
+                    labelSoDienThoai, inputSoDienThoai,
+                    labelEmail, inputEmail,
+                    labelHangThanhVien, inputHangThanhVien,
+                    btnOk, btnCancel
+                 });
 
                 dialog.AcceptButton = btnOk;
                 dialog.CancelButton = btnCancel;

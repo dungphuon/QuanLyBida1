@@ -6,23 +6,43 @@ namespace QuanLyBida.GUI
 {
     public partial class FormXacthuc : Form
     {
+        private string _otpHeThong; // Mã OTP đúng (được truyền từ form trước)
+        private string _email;      // Email người dùng
         public FormXacthuc()
         {
             InitializeComponent();
         }
-
+        public FormXacthuc(string otp, string email)
+        {
+            InitializeComponent();
+            _otpHeThong = otp;
+            _email = email;
+        }
         private void ButtonConfirm_Click(object sender, EventArgs e)
         {
-            string code = TextBox_Code.Text.Trim();
-            if (string.IsNullOrEmpty(code))
+            string otpNhap = TextBox_Code.Text.Trim();
+
+            if (string.IsNullOrEmpty(otpNhap))
             {
-                MessageBox.Show("Vui lòng nhập mã xác thực!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập mã xác thực!");
                 return;
             }
 
-            // TODO: Thêm logic xác thực mã nếu cần
-            DialogResult = DialogResult.OK;
-            Close();
+            // So sánh mã nhập vào với mã hệ thống
+            if (otpNhap == _otpHeThong)
+            {
+                MessageBox.Show("Xác thực thành công!");
+
+                // Mở form đổi mật khẩu
+                NewPassword frm = new NewPassword(_email);
+                this.Hide();
+                frm.ShowDialog();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Mã xác thực không đúng!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ButtonMinimize_Click(object sender, EventArgs e)

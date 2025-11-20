@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using QuanLyBida.BLL;
 using QuanLyBida.DTO;
+using System.Text.RegularExpressions;
 
 namespace QuanLyBida.GUI
 {
@@ -26,7 +27,7 @@ namespace QuanLyBida.GUI
                 string newPassword = TextBox_newPassword.Text;
                 string confirmPassword = TextBox_confirmPassword.Text;
 
-                // Validate
+                // 1. Kiểm tra rỗng
                 if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
                 {
                     MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo",
@@ -34,6 +35,7 @@ namespace QuanLyBida.GUI
                     return;
                 }
 
+                // 2. Kiểm tra nhập lại có khớp không
                 if (newPassword != confirmPassword)
                 {
                     MessageBox.Show("Mật khẩu xác nhận không khớp!", "Cảnh báo",
@@ -41,14 +43,16 @@ namespace QuanLyBida.GUI
                     return;
                 }
 
-                if (newPassword.Length < 6)
+                // 3. [MỚI] Kiểm tra mật khẩu: Ít nhất 8 ký tự, có chữ Hoa và Số
+                // Regex: ^(?=.*[A-Z])(?=.*\d).{8,}$
+                if (!Regex.IsMatch(newPassword, @"^(?=.*[A-Z])(?=.*\d).{8,}$"))
                 {
-                    MessageBox.Show("Mật khẩu phải có ít nhất 6 ký tự!", "Cảnh báo",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ in hoa và chữ số!",
+                                    "Mật khẩu yếu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Gọi BLL để đổi mật khẩu
+                // 4. Gọi BLL để đổi mật khẩu
                 var taiKhoanBLL = new TaiKhoanBLL();
                 var result = taiKhoanBLL.ChangePassword(_email, newPassword);
 

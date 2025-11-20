@@ -7,7 +7,7 @@ namespace QuanLyBida.BLL
     public class TaiKhoanBLL
     {
         private TaiKhoanDAL _taiKhoanDAL;
-
+        private EmailDAL _emailDAL = new EmailDAL();
         public TaiKhoanBLL()
         {
             _taiKhoanDAL = new TaiKhoanDAL();
@@ -76,7 +76,21 @@ namespace QuanLyBida.BLL
                 return new ResultDTO(false, $"Lỗi hệ thống: {ex.Message}");
             }
         }
+        public bool GuiMaOTP(string emailNhan, string maOTP)
+        {
+            string tieuDe = "Mã xác thực khôi phục mật khẩu - Bida Club";
+            string noiDung = $@"
+                <html>
+                    <body>
+                        <h2>Yêu cầu cấp lại mật khẩu</h2>
+                        <p>Mã OTP của bạn là: <b style='color:red;font-size:20px;'>{maOTP}</b></p>
+                        <p>Vui lòng nhập mã này vào phần mềm để đổi mật khẩu.</p>
+                    </body>
+                </html>";
 
+            // Gọi xuống DAL để thực hiện gửi
+            return _emailDAL.SendMail(emailNhan, tieuDe, noiDung);
+        }
         public ResultDTO ChangePassword(string email, string newPassword)
         {
             try

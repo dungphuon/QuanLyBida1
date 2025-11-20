@@ -15,6 +15,7 @@ namespace QuanLyBida.DTO
         public string DonViTinh { get; set; }
         public decimal GiaBan { get; set; }
         public int SoLuongTon { get; set; }
+        public string LoaiHangHoa { get; set; }
     }
 
     public class SanPhamNhapDTO
