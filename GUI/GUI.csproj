@@ -103,6 +103,12 @@
     <Compile Include="Admin\FormAddTable.Designer.cs">
       <DependentUpon>FormAddTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Admin\FormBaotrisuco.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormBaotrisuco.Designer.cs">
+      <DependentUpon>FormBaotrisuco.cs</DependentUpon>
+    </Compile>
     <Compile Include="Admin\FormDashBoardAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,12 @@
     </Compile>
     <Compile Include="Admin\FormEditTable.Designer.cs">
       <DependentUpon>FormEditTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormFinance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormFinance.Designer.cs">
+      <DependentUpon>FormFinance.cs</DependentUpon>
     </Compile>
     <Compile Include="Admin\FormMainAdmin.cs">
       <SubType>Form</SubType>
@@ -139,6 +151,18 @@
     <Compile Include="Admin\FormNhaphangAdmin.Designer.cs">
       <DependentUpon>FormNhaphangAdmin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Admin\FormPhieuChiAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormPhieuChiAdmin.Designer.cs">
+      <DependentUpon>FormPhieuChiAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormPhieuThuAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormPhieuThuAdmin.Designer.cs">
+      <DependentUpon>FormPhieuThuAdmin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Admin\FormQLBanAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +174,13 @@
     </Compile>
     <Compile Include="Admin\FormQLNV.Designer.cs">
       <DependentUpon>FormQLNV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormXuatbaocao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\Downloads\FormXuatbaocao.Designer.cs">
+      <DependentUpon>FormXuatbaocao.cs</DependentUpon>
+      <Link>Admin\FormXuatbaocao.Designer.cs</Link>
     </Compile>
     <Compile Include="Admin\FormXuathuyProduct.cs">
       <SubType>Form</SubType>
@@ -295,11 +326,17 @@
     <EmbeddedResource Include="Admin\FormAddTable.resx">
       <DependentUpon>FormAddTable.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormDashBoardAdmin.resx">
+      <DependentUpon>FormDashBoardAdmin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormEditProduct.resx">
       <DependentUpon>FormEditProduct.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormEditTable.resx">
       <DependentUpon>FormEditTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormFinance.resx">
+      <DependentUpon>FormFinance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormMainAdmin.resx">
       <DependentUpon>FormMainAdmin.cs</DependentUpon>
@@ -309,6 +346,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\FormQLNV.resx">
       <DependentUpon>FormQLNV.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormXuatbaocao.resx">
+      <DependentUpon>FormXuatbaocao.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Authentication\FormCauHinh.resx">
       <DependentUpon>FormCauHinh.cs</DependentUpon>

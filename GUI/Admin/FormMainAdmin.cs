@@ -56,6 +56,8 @@ namespace QuanLyBida.GUI.Admin
             this.buttonQuanlyban.Click += ButtonQuanlyban_Click;
             this.buttonQuanlyNhanVien.Click += ButtonQuanlyNhanVien_Click;
             this.buttonHanghoa.Click += ButtonHanghoa_Click;
+            this.buttonBaocaotaichinh.Click += ButtonBaocaotaichinh_Click;
+            this.buttonBaotri.Click += ButtonBaotri_Click;
         }
 
         private void ButtonTrangchu_Click(object sender, EventArgs e)
@@ -78,6 +80,16 @@ namespace QuanLyBida.GUI.Admin
             OpenChildForm(new FormManageProduct());
         }
 
+        private void ButtonBaocaotaichinh_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormFinance());
+        }
+
+        private void ButtonBaotri_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormBaotrisuco());
+        }
+
         private void OpenChildForm(Form childForm)
         {
             if (activeChildForm != null)
@@ -94,6 +106,11 @@ namespace QuanLyBida.GUI.Admin
             this.panelAdminLoad.Controls.Add(childForm);
             childForm.BringToFront();
             childForm.Show();
+        }
+
+        public void LoadFormToPanel(Form form)
+        {
+            OpenChildForm(form);
         }
     }
 }
