@@ -3,29 +3,41 @@ using System.Data.SqlClient;
 
 public class DatabaseHelper
 {
-    // DÙNG SQL SERVER EXPRESS
-    private static string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=QuanLyBida;Integrated Security=True";
+    // Biến tĩnh lưu chuỗi kết nối (được nạp từ Program.cs hoặc FormCauHinh)
+    private static string _connectionString = "";
+
+    // Hàm để nạp chuỗi kết nối mới
+    public static void SetConnectionString(string connStr)
+    {
+        _connectionString = connStr;
+    }
 
     public static SqlConnection GetConnection()
     {
-        return new SqlConnection(connectionString);
+        // Nếu chưa có chuỗi kết nối, trả về chuỗi rỗng để tránh lỗi null
+        return new SqlConnection(_connectionString);
     }
 
-    public static bool TestConnection()
+    // Hàm kiểm tra kết nối (Dùng cho cả Program.cs và FormCauHinh)
+    // Trả về true nếu kết nối OK, false nếu thất bại
+    public static bool TestConnection(string connStrToTest = null)
     {
+        // Nếu không truyền tham số, dùng chuỗi hiện tại
+        string connStr = connStrToTest ?? _connectionString;
+
+        if (string.IsNullOrEmpty(connStr)) return false;
+
         try
         {
-            using (var conn = GetConnection())
+            using (var conn = new SqlConnection(connStr))
             {
                 conn.Open();
-               
-                return true;
+                return true; // Kết nối thành công
             }
         }
-        catch (Exception ex)
+        catch
         {
-            throw new Exception($"❌ Lỗi kết nối: {ex.Message}\n\nConnection String: {connectionString}");
+            return false; // Kết nối thất bại
         }
-
     }
 }
