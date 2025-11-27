@@ -175,11 +175,6 @@ namespace QuanLyBida.GUI.Main
             LoadFormToPanel(new FormQLHD());
         }
 
-        private void guna2Button3_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
         private void Helpbutton_Click(object sender, EventArgs e)
         {
             // Load form Trợ giúp vào panelLoad

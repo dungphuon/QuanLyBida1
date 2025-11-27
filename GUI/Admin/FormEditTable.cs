@@ -26,8 +26,8 @@ namespace QuanLyBida.GUI.Admin
             this.MinimumSize = new Size(891, 570);
 
             // Ẩn phần trạng thái
-            comboBoxTrangThai.Visible = false;
-            labelTrangThai.Visible = false;
+            //comboBoxTrangThai.Visible = false;
+            //labelTrangThai.Visible = false;
 
             // Load loại bàn từ database
             LoadLoaiBanOptions();
@@ -113,6 +113,23 @@ namespace QuanLyBida.GUI.Admin
 
                 this.Text = $"Xem thông tin bàn: {currentTable.TenBan}";
                 labelTitle.Text = $"Xem thông tin bàn: {currentTable.TenBan}";
+
+                if (comboBoxTrangThai.Items.Contains(currentTable.TrangThai))
+                {
+                    comboBoxTrangThai.SelectedItem = currentTable.TrangThai;
+                }
+                else
+                {
+                    comboBoxTrangThai.Items.Add(currentTable.TrangThai);
+                    comboBoxTrangThai.SelectedItem = currentTable.TrangThai;
+                }
+
+                // Đảm bảo combobox hiện lên
+                comboBoxTrangThai.Visible = true;
+                labelTrangThai.Visible = true;
+
+                // Disable khi ở chế độ View, Enable khi Edit
+                comboBoxTrangThai.Enabled = false;
             }
 
             SetViewMode();
@@ -159,7 +176,7 @@ namespace QuanLyBida.GUI.Admin
             textBoxTenBan.ReadOnly = false;
             textBoxGiaBan.ReadOnly = false;
             comboBoxLoaiBan.Enabled = true;
-
+            comboBoxTrangThai.Enabled = true;
             buttonSave.Visible = true;
             buttonEdit.Visible = false;
             buttonCancel.Visible = true;
@@ -201,6 +218,7 @@ namespace QuanLyBida.GUI.Admin
                 currentTable.TenBan = textBoxTenBan.Text.Trim();
                 currentTable.LoaiBan = comboBoxLoaiBan.SelectedItem?.ToString() ?? "";
                 currentTable.GiaGio = giaGio;
+                currentTable.TrangThai = comboBoxTrangThai.SelectedItem?.ToString() ?? "Trống"; // Cập nhật trạng thái
 
                 // Lưu vào database
                 bool success = tableBLL.UpdateTable(currentTable);

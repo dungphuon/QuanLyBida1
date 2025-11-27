@@ -12,6 +12,8 @@ namespace QuanLyBida.GUI.Main
         public FormDatBan()
         {
             InitializeComponent();
+            dtpStart.ShowUpDown = true;
+            dtpEnd.ShowUpDown = true;
             dtpStart.Value = DateTime.Now.AddMinutes(10);
             dtpEnd.Value = DateTime.Now.AddHours(2);
         }

@@ -152,8 +152,10 @@ public class TableDAL : DatabaseHelper
         using (var conn = GetConnection())
         {
             conn.Open();
-            string sql = "DELETE FROM BanBida WHERE MaBan = @MaBan";
-            using (var cmd = new SqlCommand(sql, conn))
+            // THAY ĐỔI: Không dùng DELETE nữa, dùng UPDATE để đổi trạng thái
+            string query = "UPDATE BanBida SET TrangThai = N'Ngưng hoạt động' WHERE MaBan = @MaBan";
+
+            using (var cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@MaBan", maBan);
                 return cmd.ExecuteNonQuery() > 0;

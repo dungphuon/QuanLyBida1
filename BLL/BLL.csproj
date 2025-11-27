@@ -41,9 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaoTriBLL.cs" />
     <Compile Include="BookingBLL.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="DashboardBLL.cs" />
     <Compile Include="HoaDonBLL.cs" />
+    <Compile Include="HomeBLL.cs" />
     <Compile Include="KhachHangBLL.cs" />
     <Compile Include="NhanVienBLL.cs" />
     <Compile Include="PhieuThuChiBLL.cs" />

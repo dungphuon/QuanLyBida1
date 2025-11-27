@@ -412,6 +412,7 @@
             this.buttonLogout.Text = "Đăng xuất";
             this.buttonLogout.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
             this.buttonLogout.TextOffset = new System.Drawing.Point(10, 0);
+            this.buttonLogout.Click += new System.EventHandler(this.ButtonLogout_Click);
             // 
             // panelAdminLoad
             // 

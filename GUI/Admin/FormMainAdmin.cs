@@ -58,8 +58,25 @@ namespace QuanLyBida.GUI.Admin
             this.buttonHanghoa.Click += ButtonHanghoa_Click;
             this.buttonBaocaotaichinh.Click += ButtonBaocaotaichinh_Click;
             this.buttonBaotri.Click += ButtonBaotri_Click;
+            this.buttonLogout.Click += ButtonLogout_Click;
         }
+        private void ButtonLogout_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Bạn có chắc muốn đăng xuất khỏi quyền Admin?",
+                                         "Xác nhận đăng xuất",
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
 
+            if (result == DialogResult.Yes)
+            {
+                this.Hide(); // Ẩn form Admin
+
+                FormLogin loginForm = new FormLogin();
+                loginForm.ShowDialog(); // Hiện lại form đăng nhập
+
+                this.Close(); // Đóng hoàn toàn form Admin sau khi form Login đóng
+            }
+        }
         private void ButtonTrangchu_Click(object sender, EventArgs e)
         {
             OpenChildForm(new FormDashBoardAdmin());

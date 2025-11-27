@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using QuanLyBida.BLL;
 using QuanLyBida.DTO;
@@ -14,43 +8,176 @@ namespace GUI.Admin
 {
     public partial class FormBaotrisuco : Form
     {
-        private TableBLL tableBLL;
+        private TableBLL _tableBLL;
+        private BaoTriBLL _baoTriBLL;
 
         public FormBaotrisuco()
         {
             InitializeComponent();
-            tableBLL = new TableBLL();
-            RegisterEvents();
-            LoadTables();
-            LoadSampleData();
-            
-            // Set default value và trigger event để hiển thị/ẩn controls
-            if (comboBoxType.Items.Count > 0)
-            {
-                comboBoxType.SelectedIndex = 0;
-            }
+            _tableBLL = new TableBLL();
+            _baoTriBLL = new BaoTriBLL();
+
+            // Cài đặt sự kiện
+            Load += FormBaotrisuco_Load;
+            comboBoxType.SelectedIndexChanged += ComboBoxType_SelectedIndexChanged;
+            buttonAddIncident.Click += ButtonAddIncident_Click;
+            gridIncidents.CellContentClick += GridIncidents_CellContentClick; // Sự kiện bấm nút trên lưới
         }
 
-        private void RegisterEvents()
+        private void FormBaotrisuco_Load(object sender, EventArgs e)
         {
-            this.comboBoxType.SelectedIndexChanged += ComboBoxType_SelectedIndexChanged;
+            LoadTables();
+            LoadIncidentList();
+
+            // Set mặc định
+            if (comboBoxType.Items.Count > 0) comboBoxType.SelectedIndex = 0;
+            if (comboBoxStatus.Items.Count > 0) comboBoxStatus.SelectedIndex = 2; // Mặc định: Chờ xử lý
         }
 
         private void LoadTables()
         {
             try
             {
-                var danhSachBan = tableBLL.GetAllTables();
+                var danhSachBan = _tableBLL.GetAllTables();
                 comboBoxTable.Items.Clear();
                 foreach (var ban in danhSachBan)
                 {
-                    comboBoxTable.Items.Add(ban.TenBan);
+                    // Lưu tên bàn (ví dụ: Bàn 1, Bàn 2...)
+                    comboBoxTable.Items.Add($"Bàn {ban.MaBan}");
+                }
+                if (comboBoxTable.Items.Count > 0) comboBoxTable.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi tải bàn: {ex.Message}");
+            }
+        }
+
+        private void LoadIncidentList()
+        {
+            try
+            {
+                var list = _baoTriBLL.LayDanhSachSuCo();
+                gridIncidents.Rows.Clear();
+
+                foreach (var item in list)
+                {
+                    int index = gridIncidents.Rows.Add();
+                    var row = gridIncidents.Rows[index];
+
+                    row.Cells["colID"].Value = item.MaSuCo;
+                    row.Cells["colDeviceTable"].Value = item.TenDoiTuong;
+                    row.Cells["colDescription"].Value = item.MoTa;
+                    row.Cells["colStatus"].Value = item.TrangThai;
+
+                    // Đặt màu sắc cho trạng thái
+                    SetStatusColor(row, item.TrangThai);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải danh sách bàn: {ex.Message}", "Lỗi", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Không hiện lỗi nếu chưa có bảng trong DB, chỉ log console
+                Console.WriteLine("Lỗi load danh sách sự cố: " + ex.Message);
+            }
+        }
+
+        private void SetStatusColor(DataGridViewRow row, string status)
+        {
+            var cell = row.Cells["colStatus"];
+            if (status == "Đang xử lý")
+                cell.Style.ForeColor = Color.FromArgb(255, 159, 67); // Cam
+            else if (status == "Đã xử lý")
+                cell.Style.ForeColor = Color.FromArgb(46, 213, 115); // Xanh lá
+            else
+                cell.Style.ForeColor = Color.FromArgb(107, 114, 128); // Xám (Chờ xử lý)
+        }
+
+        private void ButtonAddIncident_Click(object sender, EventArgs e)
+        {
+            string type = comboBoxType.SelectedItem?.ToString();
+            string targetName = "";
+
+            // Xác định đối tượng bị lỗi
+            if (type == "Bàn")
+            {
+                targetName = comboBoxTable.SelectedItem?.ToString();
+                if (string.IsNullOrEmpty(targetName))
+                {
+                    MessageBox.Show("Vui lòng chọn bàn!");
+                    return;
+                }
+            }
+            else // Thiết bị
+            {
+                targetName = textBoxDevice.Text.Trim();
+                if (string.IsNullOrEmpty(targetName))
+                {
+                    MessageBox.Show("Vui lòng nhập tên thiết bị!");
+                    return;
+                }
+            }
+
+            string description = textBoxDescription.Text.Trim();
+            if (string.IsNullOrEmpty(description))
+            {
+                MessageBox.Show("Vui lòng nhập mô tả sự cố!");
+                return;
+            }
+
+            string status = comboBoxStatus.SelectedItem?.ToString() ?? "Chờ xử lý";
+
+            try
+            {
+                bool result = _baoTriBLL.ThemSuCoMoi(type, targetName, description, status);
+                if (result)
+                {
+                    MessageBox.Show("Thêm sự cố thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadIncidentList(); // Reload lại lưới
+
+                    // Reset form
+                    textBoxDescription.Clear();
+                    textBoxDevice.Clear();
+                }
+                else
+                {
+                    MessageBox.Show("Thêm thất bại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+        }
+
+        private void GridIncidents_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Kiểm tra xem có bấm vào cột Button "Action" không
+            if (e.RowIndex >= 0 && e.ColumnIndex == gridIncidents.Columns["colAction"].Index)
+            {
+                int maSuCo = Convert.ToInt32(gridIncidents.Rows[e.RowIndex].Cells["colID"].Value);
+                string currentStatus = gridIncidents.Rows[e.RowIndex].Cells["colStatus"].Value.ToString();
+
+                if (currentStatus == "Đã xử lý")
+                {
+                    MessageBox.Show("Sự cố này đã hoàn thành!");
+                    return;
+                }
+
+                var confirm = MessageBox.Show($"Bạn muốn chuyển trạng thái từ '{currentStatus}' sang bước tiếp theo?",
+                                              "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (confirm == DialogResult.Yes)
+                {
+                    bool success = _baoTriBLL.ChuyenTrangThaiTiepTheo(maSuCo, currentStatus);
+                    if (success)
+                    {
+                        LoadIncidentList(); // Reload lại để thấy trạng thái mới
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể cập nhật trạng thái.");
+                    }
+                }
             }
         }
 
@@ -59,10 +186,9 @@ namespace GUI.Admin
             if (comboBoxType.SelectedItem == null) return;
 
             string selectedType = comboBoxType.SelectedItem.ToString();
-            
+
             if (selectedType == "Bàn")
             {
-                // Hiển thị combobox Bàn, ẩn textbox Thiết bị
                 labelTable.Visible = true;
                 comboBoxTable.Visible = true;
                 labelDevice.Visible = false;
@@ -70,45 +196,10 @@ namespace GUI.Admin
             }
             else if (selectedType == "Thiết bị")
             {
-                // Hiển thị textbox Thiết bị, ẩn combobox Bàn
                 labelTable.Visible = false;
                 comboBoxTable.Visible = false;
                 labelDevice.Visible = true;
                 textBoxDevice.Visible = true;
-            }
-        }
-
-        private void LoadSampleData()
-        {
-            // Xóa dữ liệu cũ
-            gridIncidents.Rows.Clear();
-
-            // Thêm dữ liệu giả lập
-            gridIncidents.Rows.Add("1", "Bàn số 5", "Bóng bàn hỏng", "Đang xử lý", "Cập nhật");
-            gridIncidents.Rows.Add("2", "Máy tính tiền", "Lỗi phần mềm", "Đã xử lý", "Cập nhật");
-            gridIncidents.Rows.Add("3", "Bàn số 8", "Mua bị mới cho bàn 8", "Chờ xử lý", "Cập nhật");
-            gridIncidents.Rows.Add("4", "Máy lạnh", "Không hoạt động", "Đang xử lý", "Cập nhật");
-            gridIncidents.Rows.Add("5", "Bàn số 2", "Bàn bị nứt", "Đã xử lý", "Cập nhật");
-
-            // Tô màu cho cột Trạng thái
-            foreach (DataGridViewRow row in gridIncidents.Rows)
-            {
-                if (row.Cells["colStatus"].Value != null)
-                {
-                    string status = row.Cells["colStatus"].Value.ToString();
-                    if (status == "Đang xử lý")
-                    {
-                        row.Cells["colStatus"].Style.ForeColor = Color.FromArgb(255, 159, 67); // Màu cam
-                    }
-                    else if (status == "Đã xử lý")
-                    {
-                        row.Cells["colStatus"].Style.ForeColor = Color.FromArgb(46, 213, 115); // Màu xanh lá
-                    }
-                    else if (status == "Chờ xử lý")
-                    {
-                        row.Cells["colStatus"].Style.ForeColor = Color.FromArgb(107, 114, 128); // Màu xám
-                    }
-                }
             }
         }
     }

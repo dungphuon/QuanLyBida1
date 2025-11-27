@@ -78,15 +78,17 @@ namespace QuanLyBida.DAL
 
         public bool XoaNhanVien(int maNV)
         {
-            using (SqlConnection connection = DatabaseHelper.GetConnection())
+            using (var conn = DatabaseHelper.GetConnection())
             {
-                string query = "DELETE FROM NhanVien WHERE MaNV = @MaNV";
-                SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@MaNV", maNV);
+                conn.Open();
+                // THAY ĐỔI: Chuyển trạng thái sang "Đã nghỉ" thay vì xóa hẳn khỏi database
+                string query = "UPDATE NhanVien SET TrangThai = N'Đã nghỉ' WHERE MaNV = @MaNV";
 
-                connection.Open();
-                int result = command.ExecuteNonQuery();
-                return result > 0;
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaNV", maNV);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
             }
         }
 

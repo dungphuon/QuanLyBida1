@@ -41,10 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaoTriDAL.cs" />
     <Compile Include="BookingDAL.cs" />
+    <Compile Include="DashboardDAL.cs" />
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="EmailDAL.cs" />
     <Compile Include="HoaDonDAL.cs" />
+    <Compile Include="HomeDAL.cs" />
     <Compile Include="KhachHangDAL.cs" />
     <Compile Include="NhanVienDAL.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />

@@ -13,6 +13,8 @@ namespace QuanLyBida.BLL
             _taiKhoanDAL = new TaiKhoanDAL();
         }
 
+        // Trong file BLL/TaiKhoanBLL.cs
+
         public ResultDTO Login(string username, string password)
         {
             try
@@ -20,11 +22,21 @@ namespace QuanLyBida.BLL
                 if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                     return new ResultDTO(false, "Vui lòng nhập đầy đủ thông tin");
 
+                // 1. Gọi DAL lấy thông tin (Code DAL ở trên đã lấy kèm TrangThai rồi)
                 var taiKhoan = _taiKhoanDAL.GetTaiKhoanByUsername(username);
 
+                // 2. Kiểm tra tài khoản tồn tại
                 if (taiKhoan == null)
                     return new ResultDTO(false, "Tài khoản không tồn tại");
 
+                // 3. 🔥 KIỂM TRA TRẠNG THÁI NHÂN VIÊN
+                // Nếu trạng thái là "Đã nghỉ" hoặc "Đã nghỉ việc" thì chặn lại
+                if (taiKhoan.TrangThai == "Đã nghỉ" || taiKhoan.TrangThai == "Đã nghỉ việc")
+                {
+                    return new ResultDTO(false, "Tài khoản này đã bị khóa do nhân viên đã nghỉ việc!");
+                }
+
+                // 4. Kiểm tra mật khẩu
                 if (taiKhoan.MatKhau != password)
                     return new ResultDTO(false, "Mật khẩu không chính xác");
 

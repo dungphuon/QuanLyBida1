@@ -15,17 +15,20 @@ namespace QuanLyBida.DAL
             using (var connection = DatabaseHelper.GetConnection())
             {
                 connection.Open();
+
+                // 🔥 SỬA QUERY: JOIN với bảng NhanVien để lấy HoTen
                 string query = @"
-                    SELECT MaPhieu, LoaiPhieu, NgayTao, SoTien, LyDo, PhuongThuc, MaNV, TrangThai
-                    FROM PHIEUTHUCHI 
-                    WHERE 1=1";
+            SELECT p.MaPhieu, p.LoaiPhieu, p.NgayTao, p.SoTien, p.LyDo, p.PhuongThuc, p.MaNV, p.TrangThai, nv.HoTen
+            FROM PHIEUTHUCHI p
+            LEFT JOIN NhanVien nv ON p.MaNV = nv.MaNV
+            WHERE 1=1";
 
                 if (tuNgay.HasValue)
-                    query += " AND NgayTao >= @TuNgay";
+                    query += " AND p.NgayTao >= @TuNgay";
                 if (denNgay.HasValue)
-                    query += " AND NgayTao <= @DenNgay";
+                    query += " AND p.NgayTao <= @DenNgay";
 
-                query += " ORDER BY NgayTao DESC";
+                query += " ORDER BY p.NgayTao DESC";
 
                 using (var cmd = new SqlCommand(query, connection))
                 {
@@ -40,18 +43,18 @@ namespace QuanLyBida.DAL
                         {
                             var phieu = new PhieuThuChiDTO
                             {
-                                MaPhieu = reader.GetInt32(reader.GetOrdinal("MaPhieu")),
-                                LoaiPhieu = reader.GetString(reader.GetOrdinal("LoaiPhieu")),
-                                NgayTao = reader.GetDateTime(reader.GetOrdinal("NgayTao")),
-                                SoTien = reader.GetDecimal(reader.GetOrdinal("SoTien")),
-                                LyDo = reader.GetString(reader.GetOrdinal("LyDo")),
-                                PhuongThuc = reader.GetString(reader.GetOrdinal("PhuongThuc")),
-                                TrangThai = reader.GetString(reader.GetOrdinal("TrangThai"))
-                            };
+                                MaPhieu = Convert.ToInt32(reader["MaPhieu"]),
+                                LoaiPhieu = reader["LoaiPhieu"].ToString(),
+                                NgayTao = Convert.ToDateTime(reader["NgayTao"]),
+                                SoTien = Convert.ToDecimal(reader["SoTien"]),
+                                LyDo = reader["LyDo"].ToString(),
+                                PhuongThuc = reader["PhuongThuc"].ToString(),
+                                TrangThai = reader["TrangThai"].ToString(),
+                                MaNV = reader["MaNV"] != DBNull.Value ? (int?)reader["MaNV"] : null,
 
-                            int maNVOrdinal = reader.GetOrdinal("MaNV");
-                            if (!reader.IsDBNull(maNVOrdinal))
-                                phieu.MaNV = reader.GetInt32(maNVOrdinal);
+                                // 🔥 LẤY TÊN: Nếu null (không có NV) thì để là "Admin" hoặc "Hệ thống"
+                                TenNhanVien = reader["HoTen"] != DBNull.Value ? reader["HoTen"].ToString() : "Admin"
+                            };
 
                             list.Add(phieu);
                         }

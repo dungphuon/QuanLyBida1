@@ -24,6 +24,7 @@ namespace QuanLyBida.GUI.Main
             public bool IsReserved { get; set; }
             public string TableType { get; set; }
             public decimal HourlyRate { get; set; }
+            public string TrangThai { get; set; }
             public DateTime? StartTime { get; set; }
             public List<FormDichVu.ServiceItem> Items { get; set; } = new List<FormDichVu.ServiceItem>();
             public List<BookingDTO> Reservations { get; set; } = new List<BookingDTO>();
@@ -108,7 +109,8 @@ namespace QuanLyBida.GUI.Main
                         HourlyRate = tableDTO.GiaGio,
                         IsPlaying = tableDTO.TrangThai == "Đang sử dụng",
                         IsReserved = tableDTO.TrangThai == "Đã đặt trước",
-                        StartTime = tableDTO.ThoiGianBatDau
+                        StartTime = tableDTO.ThoiGianBatDau,
+                        TrangThai = tableDTO.TrangThai
                     };
 
                     // THÊM: Load dịch vụ từ database nếu bàn đang chơi
@@ -201,6 +203,56 @@ namespace QuanLyBida.GUI.Main
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
+
+            // ---------------------------------------------------------
+            // 🔥 [MỚI] KIỂM TRA TRẠNG THÁI NGƯNG HOẠT ĐỘNG (XÓA MỀM)
+            // ---------------------------------------------------------
+            if (state.TrangThai == "Ngưng hoạt động" || state.TrangThai == "Hỏng")
+            {
+                panel.BackColor = Color.FromArgb(240, 240, 240); // Màu xám nhạt
+                                                                 // panel.Enabled = false; // Có thể bỏ comment dòng này nếu muốn không cho click vào panel luôn
+
+                // Tên bàn (Gạch ngang để thể hiện đã hủy)
+                var lblNameDeleted = new Label
+                {
+                    Text = $"Bàn {state.TableNumber}",
+                    Font = new Font("Segoe UI", 12, FontStyle.Strikeout | FontStyle.Bold),
+                    AutoSize = true,
+                    Location = new Point(10, 10),
+                    ForeColor = Color.DimGray
+                };
+                panel.Controls.Add(lblNameDeleted);
+
+                // Loại bàn
+                var lblTypeDeleted = new Label
+                {
+                    Text = $"Loại: {state.TableType}",
+                    AutoSize = true,
+                    Location = new Point(10, 40),
+                    ForeColor = Color.DimGray
+                };
+                panel.Controls.Add(lblTypeDeleted);
+
+                // Thông báo lớn ở giữa
+                var lblReason = new Label
+                {
+                    Text = "NGƯNG HOẠT ĐỘNG",
+                    Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                    AutoSize = false,
+                    Width = panel.Width - 20,
+                    Height = 30,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    ForeColor = Color.IndianRed,
+                    Location = new Point(10, 80)
+                };
+                panel.Controls.Add(lblReason);
+
+                return panel; // 🛑 DỪNG TẠI ĐÂY, không vẽ nút bấm nữa
+            }
+            // ---------------------------------------------------------
+
+
+            // --- [CODE CŨ] XỬ LÝ CHO BÀN HOẠT ĐỘNG BÌNH THƯỜNG ---
 
             var lbl = new Label
             {

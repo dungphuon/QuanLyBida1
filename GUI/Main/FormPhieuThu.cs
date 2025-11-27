@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Drawing;
+
 using QuanLyBida.BLL;
 using QuanLyBida.DTO;
 
@@ -89,7 +91,6 @@ namespace QuanLyBida.GUI.Main
                 string lyDo = txtLyDo.Text.Trim();
                 string phuongThuc = "Tiền mặt";
 
-                Console.WriteLine($"✅ Lưu phiếu thu với MaNV = {_maNV}");
 
                 // 🔥 SỬA: Gọi phương thức với 4 tham số (bỏ số phiếu)
                 bool result = _phieuBLL.ThemPhieuThu(soTien, lyDo, phuongThuc, _maNV);
@@ -152,22 +153,16 @@ namespace QuanLyBida.GUI.Main
 
         private void BtnInPhieu_Click(object sender, EventArgs e)
         {
-            if (!KiemTraDuLieuHopLe())
-                return;
+            if (!KiemTraDuLieuHopLe()) return;
 
             try
             {
-                // Tạo nội dung phiếu thu để in
                 string noiDungPhieu = TaoNoiDungPhieuThu();
-
-                // Hiển thị form in (tạm thời hiển thị messagebox)
-                MessageBox.Show(noiDungPhieu, "Nội dung phiếu thu",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ShowPreview(noiDungPhieu, "PHIẾU THU TIỀN");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi in phiếu: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi in phiếu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -185,19 +180,55 @@ namespace QuanLyBida.GUI.Main
 
         private string TaoNoiDungPhieuThu()
         {
-            decimal soTien = decimal.Parse(txtSoTien.Text.Replace(",", "").Replace(".", ""));
+            // Format lại cho đẹp giống Admin
+            return $@"
+       BIDA CLUB - PHIẾU THU
+    ════════════════════════════
+    Số phiếu:  {txtSoPhieu.Text}
+    Ngày lập:  {dtpNgayLap.Value:dd/MM/yyyy HH:mm}
+    ----------------------------
+    Người nộp: {txtNguoiNop.Text}
+    Lý do thu: {txtLyDo.Text}
+    
+    SỐ TIỀN:   {txtSoTien.Text} VND
+    ----------------------------
+    Người lập: {txtNguoiLap.Text}
+    
+    (Ký, ghi rõ họ tên)
+    
+    
+    ════════════════════════════";
+        }
 
-            return $@"PHIẾU THU
-══════════════════════════════
-Số phiếu: {txtSoPhieu.Text}
-Ngày: {dtpNgayLap.Value:dd/MM/yyyy}
-Số tiền: {soTien:N0} đ
-Lý do: {txtLyDo.Text}
-Người lập: {txtNguoiLap.Text}
-Phương thức: Tiền mặt
-──────────────────────────────
-            Phiếu thu này đã được ghi nhận vào sổ quỹ.
-══════════════════════════════";
+        private void ShowPreview(string content, string title)
+        {
+            Form previewForm = new Form();
+            previewForm.Text = title;
+            previewForm.Size = new Size(400, 550);
+            previewForm.StartPosition = FormStartPosition.CenterParent;
+            previewForm.BackColor = Color.White;
+
+            RichTextBox rtb = new RichTextBox();
+            rtb.Dock = DockStyle.Fill;
+            rtb.Text = content;
+            rtb.Font = new Font("Courier New", 11, FontStyle.Regular); // Font đơn cách để thẳng hàng
+            rtb.ReadOnly = true;
+            rtb.BorderStyle = BorderStyle.None;
+
+            // Căn giữa tiêu đề (Hack nhỏ)
+            rtb.SelectionAlignment = HorizontalAlignment.Left;
+            rtb.Select(0, content.IndexOf("════"));
+            rtb.SelectionAlignment = HorizontalAlignment.Center;
+
+            Button btnClose = new Button();
+            btnClose.Text = "Đóng / In";
+            btnClose.Dock = DockStyle.Bottom;
+            btnClose.Height = 40;
+            btnClose.Click += (s, e) => previewForm.Close();
+
+            previewForm.Controls.Add(rtb);
+            previewForm.Controls.Add(btnClose);
+            previewForm.ShowDialog();
         }
 
         // Sự kiện khi nhấn Enter trong txtSoTien

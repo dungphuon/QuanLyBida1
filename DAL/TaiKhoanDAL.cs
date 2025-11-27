@@ -8,6 +8,8 @@ namespace QuanLyBida.DAL
 {
     public class TaiKhoanDAL
     {
+        // Trong file DAL/TaiKhoanDAL.cs
+
         public TaiKhoanDTO GetTaiKhoanByUsername(string username)
         {
             TaiKhoanDTO taiKhoan = null;
@@ -15,7 +17,14 @@ namespace QuanLyBida.DAL
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                string query = "SELECT * FROM TaiKhoan WHERE TenDangNhap = @Username";
+
+                // 🔥 SỬA QUERY: Kết nối bảng TaiKhoan (tk) với NhanVien (nv)
+                // Để lấy được cột nv.TrangThai
+                string query = @"
+            SELECT tk.*, nv.TrangThai 
+            FROM TaiKhoan tk
+            LEFT JOIN NhanVien nv ON tk.MaNV = nv.MaNV
+            WHERE tk.TenDangNhap = @Username";
 
                 using (var cmd = new SqlCommand(query, conn))
                 {
@@ -31,10 +40,15 @@ namespace QuanLyBida.DAL
                                 TenDangNhap = reader["TenDangNhap"].ToString(),
                                 MatKhau = reader["MatKhau"].ToString(),
                                 VaiTro = reader["VaiTro"].ToString(),
-                                MaNV = reader["MaNV"] == DBNull.Value ? 0 : Convert.ToInt32(reader["MaNV"]),
+                                // Xử lý MaNV có thể null (ví dụ tài khoản admin gốc)
+                                MaNV = reader["MaNV"] != DBNull.Value ? Convert.ToInt32(reader["MaNV"]) : 0,
                                 HoTenNV = "User",
                                 ChucVu = reader["VaiTro"].ToString(),
-                                Email = reader["Email"]?.ToString()
+                                Email = reader["Email"]?.ToString(),
+
+                                // 🔥 HỨNG DỮ LIỆU TRẠNG THÁI TỪ BẢNG NHÂN VIÊN
+                                // Nếu không có liên kết nhân viên (null) thì mặc định là "Đang làm việc"
+                                TrangThai = reader["TrangThai"] != DBNull.Value ? reader["TrangThai"].ToString() : "Đang làm việc"
                             };
                         }
                     }

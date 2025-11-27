@@ -11,8 +11,8 @@ namespace QuanLyBida.DTO
         public int MaNV { get; set; }
         public string HoTenNV { get; set; }
         public string ChucVu { get; set; }
-
         public string Email { get; set; }
+        public string TrangThai { get; set; }
     }
 
     public class ResultDTO

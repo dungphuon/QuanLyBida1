@@ -143,11 +143,13 @@ namespace QuanLyBida.GUI.Admin
                     }
                 }
             }
+            // Trong FormQLBanAdmin.cs
+
             else if (gridTables.Columns[e.ColumnIndex].Name == "colDelete")
             {
                 var result = MessageBox.Show(
-                    $"Bạn có chắc muốn xóa bàn '{tenBan}'?",
-                    "Xác nhận xóa",
+                    $"Bạn có chắc muốn NGƯNG HOẠT ĐỘNG bàn '{tenBan}'?\n(Dữ liệu lịch sử hóa đơn sẽ được giữ lại)",
+                    "Xác nhận ngưng hoạt động",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
                 );
@@ -156,25 +158,25 @@ namespace QuanLyBida.GUI.Admin
                 {
                     try
                     {
+                        // Gọi hàm DAL (Lúc này DAL đã chạy lệnh UPDATE nên sẽ không bị lỗi SQL nữa)
                         bool success = tableBLL.DeleteTable(ban.MaBan);
 
                         if (success)
                         {
-                            // Load lại cả dữ liệu và filter options
-                            LoadDataFromDatabase();
+                            LoadDataFromDatabase(); // Load lại để thấy trạng thái mới
                             LoadFilterOptions();
-                            MessageBox.Show("Đã xóa bàn thành công!", "Thông báo",
+                            MessageBox.Show("Đã chuyển trạng thái bàn sang 'Ngưng hoạt động'!", "Thành công",
                                           MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
-                            MessageBox.Show("Không thể xóa bàn!", "Lỗi",
+                            MessageBox.Show("Có lỗi xảy ra khi cập nhật trạng thái bàn!", "Lỗi",
                                           MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Lỗi khi xóa bàn: {ex.Message}", "Lỗi",
+                        MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi hệ thống",
                                       MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }

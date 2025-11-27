@@ -11,6 +11,7 @@ namespace QuanLyBida.DTO
         public string LyDo { get; set; }
         public string PhuongThuc { get; set; }
         public int? MaNV { get; set; }
+        public string TenNhanVien { get; set; }
         public string TrangThai { get; set; }
 
         // Property để hiển thị loại giao dịch
@@ -19,8 +20,6 @@ namespace QuanLyBida.DTO
             get
             {
                 // Kiểm tra giá trị thực tế trong database
-                Console.WriteLine($"🔍 LoaiPhieu trong DTO: '{LoaiPhieu}'");
-
                 if (LoaiPhieu == "THU" || LoaiPhieu == "Thu")
                     return "Phiếu Thu";
                 else if (LoaiPhieu == "CHI" || LoaiPhieu == "Chi")

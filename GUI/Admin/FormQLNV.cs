@@ -231,11 +231,13 @@ namespace GUI.Admin
                     }
                 }
             }
+            // Trong FormQLNV.cs
+
             else if (gridNhanVien.Columns[e.ColumnIndex].Name == "colXoa")
             {
                 var result = MessageBox.Show(
-                    $"Bạn có chắc muốn xóa nhân viên '{nhanVien.HoTen}'?",
-                    "Xác nhận xóa",
+                    $"Bạn có chắc muốn cho nhân viên '{nhanVien.HoTen}' THÔI VIỆC?\n(Tài khoản sẽ bị khóa nhưng lịch sử làm việc vẫn còn)",
+                    "Xác nhận thôi việc",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
                 );
@@ -244,23 +246,26 @@ namespace GUI.Admin
                 {
                     try
                     {
+                        // Gọi hàm BLL -> DAL (DAL giờ đã chạy lệnh UPDATE)
                         string deleteResult = nhanVienBLL.XoaNhanVien(nhanVien.MaNV);
-                        if (deleteResult == "Thành công")
+
+                        // Kiểm tra kết quả (Tùy vào cách BLL của bạn trả về bool hay string)
+                        // Nếu BLL trả về bool, sửa thành: if (deleteResult)
+                        if (deleteResult == "Thành công" || deleteResult == "true" || deleteResult == "True")
                         {
-                            TaiDuLieu();
-                            MessageBox.Show("Đã xóa nhân viên thành công!", "Thông báo",
+                            TaiDuLieu(); // Load lại lưới, dòng nhân viên đó sẽ chuyển sang màu đỏ (nhờ code CellFormatting cũ của bạn)
+                            MessageBox.Show("Đã cập nhật trạng thái nhân viên thành 'Đã nghỉ'!", "Thành công",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
-                            MessageBox.Show(deleteResult, "Lỗi",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            // Nếu BLL trả về chuỗi lỗi
+                            MessageBox.Show(deleteResult, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Lỗi khi xóa nhân viên: {ex.Message}", "Lỗi",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Lỗi xử lý: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
