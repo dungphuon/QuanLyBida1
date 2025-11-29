@@ -175,10 +175,10 @@ namespace QuanLyBida.GUI.Main
             else if (gridCustomers.Columns[e.ColumnIndex].Name == "colDelete")
             {
                 var confirm = MessageBox.Show(
-                    $"Bạn có chắc muốn ẨN khách hàng '{customer.HoTen}'?\n\n" +
-                    $"Khách hàng sẽ được ẩn khỏi danh sách nhưng dữ liệu lịch sử\n" +
+                    $"Bạn có chắc muốn xóa khách hàng '{customer.HoTen}'?\n\n" +
+                    $"Khách hàng sẽ được xóa khỏi danh sách nhưng dữ liệu lịch sử\n" +
                     $"và hóa đơn vẫn được giữ nguyên để báo cáo.",
-                    "Xác nhận ẩn khách hàng",
+                    "Xác nhận xóa khách hàng",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
                 );
@@ -192,18 +192,22 @@ namespace QuanLyBida.GUI.Main
                         if (success)
                         {
                             customers.Remove(customer);
-                            MessageBox.Show("Đã ẩn khách hàng thành công!", "Thông báo",
+                            MessageBox.Show("Đã xóa khách hàng thành công!", "Thông báo",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Lỗi khi ẩn khách hàng: {ex.Message}", "Lỗi",
+                        MessageBox.Show($"Lỗi khi xóa khách hàng: {ex.Message}", "Lỗi",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
         }
+
+        // Trong file FormQLKH.cs
+
+        // Trong file FormQLKH.cs
 
         private bool ShowCustomerDialog(out KhachHangDTO customer, KhachHangDTO seed = null)
         {
@@ -229,10 +233,44 @@ namespace QuanLyBida.GUI.Main
 
                 var labelHangThanhVien = new Label { Text = "Hạng thành viên", Left = 20, Top = 140, AutoSize = true };
                 var inputHangThanhVien = new ComboBox { Left = 160, Top = 136, Width = 230, DropDownStyle = ComboBoxStyle.DropDownList };
-                inputHangThanhVien.Items.AddRange(new object[] { "Thường","Bạc", "Vàng", "Kim Cương" });
+                inputHangThanhVien.Items.AddRange(new object[] { "Thường", "Bạc", "Vàng", "Kim Cương" });
 
                 var btnOk = new Button { Text = "Lưu", DialogResult = DialogResult.OK, Left = 220, Width = 80, Top = 190 };
                 var btnCancel = new Button { Text = "Hủy", DialogResult = DialogResult.Cancel, Left = 310, Width = 80, Top = 190 };
+
+                // --- 1. SẮP XẾP THỨ TỰ TAB ---
+                inputHoTen.TabIndex = 0;
+                inputSoDienThoai.TabIndex = 1;
+                inputEmail.TabIndex = 2;
+                inputHangThanhVien.TabIndex = 3;
+                btnOk.TabIndex = 4;
+                btnCancel.TabIndex = 5;
+
+                // --- QUAN TRỌNG: BỎ DÒNG NÀY ĐI ---
+                // dialog.AcceptButton = btnOk; <--- XÓA DÒNG NÀY ĐỂ KHÔNG BỊ ENTER LÀ LƯU LUÔN
+
+                dialog.CancelButton = btnCancel; // Giữ lại dòng này để bấm Esc là thoát
+
+                // --- 2. XỬ LÝ PHÍM ENTER (Code cũ giữ nguyên) ---
+                // Họ tên -> Enter -> SĐT
+                inputHoTen.KeyDown += (s, e) => {
+                    if (e.KeyCode == Keys.Enter) { inputSoDienThoai.Focus(); e.SuppressKeyPress = true; }
+                };
+
+                // SĐT -> Enter -> Email
+                inputSoDienThoai.KeyDown += (s, e) => {
+                    if (e.KeyCode == Keys.Enter) { inputEmail.Focus(); e.SuppressKeyPress = true; }
+                };
+
+                // Email -> Enter -> Hạng thành viên
+                inputEmail.KeyDown += (s, e) => {
+                    if (e.KeyCode == Keys.Enter) { inputHangThanhVien.Focus(); e.SuppressKeyPress = true; }
+                };
+
+                // Hạng -> Enter -> Bấm LƯU luôn (Chỉ cho phép Lưu ở ô cuối cùng)
+                inputHangThanhVien.KeyDown += (s, e) => {
+                    if (e.KeyCode == Keys.Enter) { btnOk.PerformClick(); e.SuppressKeyPress = true; }
+                };
 
                 if (seed != null)
                 {
@@ -248,15 +286,16 @@ namespace QuanLyBida.GUI.Main
 
                 dialog.Controls.AddRange(new Control[]
                 {
-                    labelHoTen, inputHoTen,
-                    labelSoDienThoai, inputSoDienThoai,
-                    labelEmail, inputEmail,
-                    labelHangThanhVien, inputHangThanhVien,
-                    btnOk, btnCancel
+            labelHoTen, inputHoTen,
+            labelSoDienThoai, inputSoDienThoai,
+            labelEmail, inputEmail,
+            labelHangThanhVien, inputHangThanhVien,
+            btnOk, btnCancel
                 });
 
-                dialog.AcceptButton = btnOk;
-                dialog.CancelButton = btnCancel;
+                // Vẫn cần gán DialogResult cho nút OK để Form biết bấm nút đó là thành công
+                // Nhưng không gán vào property AcceptButton của Form
+                btnOk.DialogResult = DialogResult.OK;
 
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
@@ -265,10 +304,9 @@ namespace QuanLyBida.GUI.Main
                         HoTen = inputHoTen.Text.Trim(),
                         SDT = inputSoDienThoai.Text.Trim(),
                         Email = inputEmail.Text.Trim(),
-                        Hang = inputHangThanhVien.SelectedItem?.ToString() ?? "Bạc"
+                        Hang = inputHangThanhVien.SelectedItem?.ToString() ?? "Thường"
                     };
 
-                    // Gán MaKH nếu là sửa
                     if (seed != null)
                     {
                         customer.MaKH = seed.MaKH;

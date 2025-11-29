@@ -8,16 +8,20 @@ namespace QuanLyBida.GUI
     {
         private string _otpHeThong; // Mã OTP đúng (được truyền từ form trước)
         private string _email;      // Email người dùng
-        public FormXacthuc()
-        {
-            InitializeComponent();
-        }
         public FormXacthuc(string otp, string email)
         {
             InitializeComponent();
             _otpHeThong = otp;
             _email = email;
+
+            // 1. SẮP XẾP TAB INDEX
+            TextBox_Code.TabIndex = 0;
+            ButtonConfirm.TabIndex = 1;
+
+            // 2. GÁN SỰ KIỆN ENTER
+            TextBox_Code.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonConfirm.PerformClick(); e.SuppressKeyPress = true; } };
         }
+        
         private void ButtonConfirm_Click(object sender, EventArgs e)
         {
             string otpNhap = TextBox_Code.Text.Trim();

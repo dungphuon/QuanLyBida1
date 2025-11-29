@@ -11,6 +11,13 @@ namespace QuanLyBida.GUI
         public FormForgetPassword()
         {
             InitializeComponent();
+
+            // 1. SẮP XẾP TAB INDEX
+            TextBox_email.TabIndex = 0;
+            ButtonContinue.TabIndex = 1;
+
+            // 2. GÁN SỰ KIỆN ENTER
+            TextBox_email.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonContinue.PerformClick(); e.SuppressKeyPress = true; } };
         }
 
         private void ButtonContinue_Click(object sender, EventArgs e)

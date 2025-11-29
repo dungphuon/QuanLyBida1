@@ -18,9 +18,20 @@ namespace QuanLyBida.GUI.Authentication
             comboBox1.SelectedIndex = 0; // Mặc định chọn cái đầu
 
             // Gán sự kiện
-            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
-            guna2Button1.Click += BtnKiemTra_Click; // Nút Kiểm tra (nút xám)
-            guna2Button2.Click += BtnLuu_Click;     // Nút Lưu (nút xanh)
+            guna2TextBox1.TabIndex = 0; // Server
+            guna2TextBox2.TabIndex = 1; // DB
+            comboBox1.TabIndex = 2;     // Auth Type
+            guna2TextBox3.TabIndex = 3; // User
+            guna2TextBox4.TabIndex = 4; // Pass
+            guna2Button1.TabIndex = 5;  // Nút Test
+            guna2Button2.TabIndex = 6;  // Nút Save
+
+            // 2. GÁN SỰ KIỆN ENTER
+            guna2TextBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { guna2TextBox2.Focus(); e.SuppressKeyPress = true; } };
+            guna2TextBox2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { comboBox1.Focus(); e.SuppressKeyPress = true; } };
+
+            // Xử lý riêng cho ô Mật khẩu: Nếu đang nhập pass -> Bấm Enter -> Bấm nút Test luôn cho tiện
+            guna2TextBox4.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { guna2Button1.PerformClick(); e.SuppressKeyPress = true; } };
         }
 
         // Xử lý ẩn/hiện ô nhập liệu

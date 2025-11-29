@@ -49,8 +49,38 @@ namespace QuanLyBida.GUI.Main
 
             // Định dạng textbox số tiền
             txtSoTien.TextChanged += TxtSoTien_TextChanged;
+            SetTabAndEnter();
         }
+        private void SetTabAndEnter()
+        {
+            // 1. Tab Order
+            txtSoPhieu.TabStop = false; // Bỏ qua số phiếu (readonly)
+            dtpNgayLap.TabIndex = 0;
+            txtNguoiNop.TabIndex = 1;
+            txtLyDo.TabIndex = 2;
+            txtSoTien.TabIndex = 3;
+            txtNguoiLap.TabIndex = 4;
+            btnLuu.TabIndex = 5;
+            btnInPhieu.TabIndex = 6;
+            btnHuy.TabIndex = 7;
 
+            // 2. Sự kiện Enter
+            txtNguoiNop.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { txtLyDo.Focus(); e.SuppressKeyPress = true; } };
+
+            // Lý do là Multiline nên thường Enter là xuống dòng, nhưng nếu muốn Enter là đi tiếp thì dùng code này:
+            txtLyDo.KeyDown += (s, e) => {
+                if (e.KeyCode == Keys.Enter && !e.Shift) // Shift+Enter để xuống dòng, Enter thường để đi tiếp
+                {
+                    txtSoTien.Focus();
+                    e.SuppressKeyPress = true;
+                }
+            };
+
+            txtSoTien.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { txtNguoiLap.Focus(); e.SuppressKeyPress = true; } };
+
+            // Ở ô cuối cùng, Enter = Bấm Lưu
+            txtNguoiLap.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { btnLuu.PerformClick(); e.SuppressKeyPress = true; } };
+        }
         // 🔥 SỬA: Tạo số phiếu tự động đơn giản
         private void TaoSoPhieuTuDong()
         {

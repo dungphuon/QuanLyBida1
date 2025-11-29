@@ -21,21 +21,45 @@ namespace QuanLyBida.GUI.Main
             InitializeComponent();
             _maNV = maNV;
             _tenNV = tenNV;
+            SetupTabOrder();
         }
         public FormNhapHang()
         {
             InitializeComponent();
             _maNV = 1; // Mặc định
             _tenNV = "Nhân viên";
+            SetupTabOrder();
         }
         private void FormNhapHang_Load(object sender, EventArgs e)
         {
             LoadDanhSachSanPham();
             SetupDataGridView();
             guna2TextBoxTimKiem.KeyDown += guna2TextBoxTimKiem_KeyDown;
-            
+            // 2. Gán sự kiện Enter
+            guna2TextBoxTimKiem.KeyDown += guna2TextBoxTimKiem_KeyDown;
+
+            // Focus vào ô tìm kiếm ngay khi mở form
+            this.ActiveControl = guna2TextBoxTimKiem;
+
+        }
+        private void SetupTabOrder()
+        {
+            // Thứ tự nhảy khi bấm Tab:
+            guna2TextBoxTimKiem.TabIndex = 0;      // 1. Ô tìm kiếm
+            guna2DataGridViewSanPham.TabIndex = 1; // 2. Bảng sản phẩm (để sửa số lượng)
+            btnLuu.TabIndex = 2;                   // 3. Nút Lưu
+            btnDong.TabIndex = 3;                  // 4. Nút Đóng
         }
 
+        // Xử lý phím Enter ---
+        private void guna2TextBoxTimKiem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; 
+                TimKiemVaThemSanPham();    // Gọi hàm tìm và thêm
+            }
+        }
         private void LoadDanhSachSanPham()
         {
             try
@@ -92,22 +116,24 @@ namespace QuanLyBida.GUI.Main
             guna2DataGridViewSanPham.CellEndEdit += Guna2DataGridViewSanPham_CellEndEdit;
         }
 
-        // CÁC METHOD KHÁC GIỮ NGUYÊN NHƯ CODE CŨ...
-        private void guna2TextBoxTimKiem_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                TimKiemVaThemSanPham();
-            }
-        }
 
         private void TimKiemVaThemSanPham()
         {
             string searchText = guna2TextBoxTimKiem.Text.Trim();
             if (string.IsNullOrEmpty(searchText))
             {
-                MessageBox.Show("Vui lòng nhập tên sản phẩm!", "Thông báo");
+                // Nếu ô tìm kiếm trống, chuyển focus xuống lưới để nhập số lượng
+                if (guna2DataGridViewSanPham.Rows.Count > 0)
+                {
+                    guna2DataGridViewSanPham.Focus();
+                    // Chọn ô số lượng của dòng cuối cùng
+                    guna2DataGridViewSanPham.CurrentCell = guna2DataGridViewSanPham.Rows[guna2DataGridViewSanPham.Rows.Count - 1].Cells["SoLuong"];
+                    guna2DataGridViewSanPham.BeginEdit(true);
+                }
+                else
+                {
+                    MessageBox.Show("Vui lòng nhập tên sản phẩm!", "Thông báo");
+                }
                 return;
             }
 
@@ -119,18 +145,15 @@ namespace QuanLyBida.GUI.Main
                     .ThenBy(sp => sp.TenSP.Length)
                     .ToList();
 
-                if (ketQua.Count == 1)
+                if (ketQua.Count > 0)
                 {
+                    // Lấy sản phẩm đầu tiên tìm thấy (chính xác nhất)
                     ThemSanPhamVaoDanhSach(ketQua.First());
-                }
-                else if (ketQua.Count > 1)
-                {
-                    HienThiDanhSachLuaChon(ketQua, searchText);
                 }
                 else
                 {
-                    MessageBox.Show($"Không tìm thấy sản phẩm với từ khóa: '{searchText}'", "Thông báo");
-                    guna2TextBoxTimKiem.Focus();
+                    MessageBox.Show($"Không tìm thấy sản phẩm: '{searchText}'", "Thông báo");
+                    guna2TextBoxTimKiem.SelectAll(); // Bôi đen để nhập lại
                 }
             }
             catch (Exception ex)
@@ -148,23 +171,40 @@ namespace QuanLyBida.GUI.Main
                     MaSP = sanPham.MaSP,
                     TenSP = sanPham.TenSP,
                     DonViTinh = sanPham.DonViTinh,
-                    GiaNhap = sanPham.GiaNhap, // 🔥 LẤY GIÁ NHẬP TỪ SANPHAMDTO
+                    GiaNhap = sanPham.GiaNhap,
                     SoLuongNhap = 1
                 };
                 _sanPhamNhap.Add(sanPhamNhap);
 
-                guna2DataGridViewSanPham.Rows.Add(
+                int index = guna2DataGridViewSanPham.Rows.Add(
                     sanPham.TenSP,
                     "1",
                     sanPham.DonViTinh
                 );
 
+                // Sau khi thêm, xóa ô tìm kiếm để nhập tiếp
                 guna2TextBoxTimKiem.Text = "";
                 guna2TextBoxTimKiem.Focus();
             }
             else
             {
-                MessageBox.Show("Sản phẩm đã có trong danh sách nhập!", "Thông báo");
+                // Nếu đã có, tăng số lượng lên 1
+                var spDaCo = _sanPhamNhap.FirstOrDefault(sp => sp.MaSP == sanPham.MaSP);
+                if (spDaCo != null)
+                {
+                    spDaCo.SoLuongNhap++;
+
+                    // Cập nhật trên lưới
+                    foreach (DataGridViewRow row in guna2DataGridViewSanPham.Rows)
+                    {
+                        if (row.Cells["TenSanPham"].Value.ToString() == sanPham.TenSP)
+                        {
+                            row.Cells["SoLuong"].Value = spDaCo.SoLuongNhap.ToString();
+                            break;
+                        }
+                    }
+                }
+
                 guna2TextBoxTimKiem.Text = "";
                 guna2TextBoxTimKiem.Focus();
             }

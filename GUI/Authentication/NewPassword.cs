@@ -15,9 +15,19 @@ namespace QuanLyBida.GUI
         {
             InitializeComponent();
             _email = email;
-            // Đảm bảo button hiển thị trên textbox
             ButtonShowNewPassword.BringToFront();
             ButtonShowConfirmPassword.BringToFront();
+
+            // 1. SẮP XẾP TAB INDEX
+            TextBox_newPassword.TabIndex = 0;
+            TextBox_confirmPassword.TabIndex = 1;
+            ButtonShowNewPassword.TabIndex = 2;
+            ButtonShowConfirmPassword.TabIndex = 3;
+            ButtonChange.TabIndex = 4;
+
+            // 2. GÁN SỰ KIỆN ENTER
+            TextBox_newPassword.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { TextBox_confirmPassword.Focus(); e.SuppressKeyPress = true; } };
+            TextBox_confirmPassword.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonChange.PerformClick(); e.SuppressKeyPress = true; } };
         }
 
         private void ButtonChange_Click(object sender, EventArgs e)

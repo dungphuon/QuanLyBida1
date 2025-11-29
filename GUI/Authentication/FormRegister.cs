@@ -13,8 +13,19 @@ namespace QuanLyBida.GUI
         public FormRegister()
         {
             InitializeComponent();
-            // Đảm bảo button hiển thị trên textbox
             ButtonShowPassword.BringToFront();
+
+            // 1. SẮP XẾP TAB INDEX
+            TextBox_username.TabIndex = 0;
+            TextBox_email.TabIndex = 1;
+            TextBox_password.TabIndex = 2;
+            ButtonShowPassword.TabIndex = 3;
+            ButtonJoin.TabIndex = 4;
+
+            // 2. GÁN SỰ KIỆN ENTER
+            TextBox_username.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { TextBox_email.Focus(); e.SuppressKeyPress = true; } };
+            TextBox_email.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { TextBox_password.Focus(); e.SuppressKeyPress = true; } };
+            TextBox_password.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonJoin.PerformClick(); e.SuppressKeyPress = true; } };
         }
 
         private void ButtonJoin_Click(object sender, EventArgs e)

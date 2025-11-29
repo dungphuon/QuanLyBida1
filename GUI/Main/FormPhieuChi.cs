@@ -51,7 +51,7 @@ namespace QuanLyBida.GUI.Main
             txtSoTien.KeyPress += TxtSoTien_KeyPress;
 
             // Đặt tab order
-            SetTabOrder();
+            SetTabAndEnter();
         }
 
         private void TaoSoPhieuTuDong()
@@ -70,17 +70,33 @@ namespace QuanLyBida.GUI.Main
             }
         }
 
-        private void SetTabOrder()
+        private void SetTabAndEnter()
         {
-            txtSoPhieu.TabStop = false; // Vì là readonly
+            // 1. Tab Order
+            txtSoPhieu.TabStop = false;
             dtpNgayLap.TabIndex = 0;
-            txtNguoiNop.TabIndex = 1;
+            txtNguoiNop.TabIndex = 1; // Người nhận
             txtLyDo.TabIndex = 2;
             txtSoTien.TabIndex = 3;
             txtNguoiLap.TabIndex = 4;
             btnLuu.TabIndex = 5;
             btnInPhieu.TabIndex = 6;
             btnHuy.TabIndex = 7;
+
+            // 2. Enter Logic
+            txtNguoiNop.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { txtLyDo.Focus(); e.SuppressKeyPress = true; } };
+
+            txtLyDo.KeyDown += (s, e) => {
+                if (e.KeyCode == Keys.Enter && !e.Shift)
+                {
+                    txtSoTien.Focus();
+                    e.SuppressKeyPress = true;
+                }
+            };
+
+            txtSoTien.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { txtNguoiLap.Focus(); e.SuppressKeyPress = true; } };
+
+            txtNguoiLap.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { btnLuu.PerformClick(); e.SuppressKeyPress = true; } };
         }
 
         private void TxtSoTien_TextChanged(object sender, EventArgs e)

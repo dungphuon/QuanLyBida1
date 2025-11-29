@@ -17,11 +17,45 @@ namespace QuanLyBida.GUI
             InitializeComponent();
             MakeRoundedControls();
 
+            // 1. SẮP XẾP LẠI THỨ TỰ TAB (Để bấm Tab nó nhảy đúng thứ tự)
+            TextBox_username.TabIndex = 0; // Đầu tiên
+            Textboxpassword.TabIndex = 1;  // Thứ hai
+            ButtonShowPassword.TabIndex = 2; // Nút hiện pass (nếu cần tab qua)
+            ButtonLogin.TabIndex = 3;      // Cuối cùng là nút Login
+
+            // Các link bên dưới
+            LinkForgot.TabIndex = 4;
+            LinkSignup.TabIndex = 5;
+
+            // 2. GÁN SỰ KIỆN PHÍM ENTER (Để bấm Enter thì nhảy xuống hoặc Login)
+            TextBox_username.KeyDown += TextBox_username_KeyDown;
+            Textboxpassword.KeyDown += Textboxpassword_KeyDown;
+
             // Gán sự kiện Click cho ButtonLogin
             this.ButtonLogin.Click -= ButtonLogin_Click;
             this.ButtonLogin.Click += ButtonLogin_Click;
         }
+        // --- THÊM MỚI: Xử lý khi bấm Enter ở ô Tài khoản ---
+        private void TextBox_username_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Bấm Enter ở ô Username thì nhảy xuống ô Password
+                Textboxpassword.Focus();
+                e.SuppressKeyPress = true; // Tắt tiếng "ting" của windows
+            }
+        }
 
+        // --- THÊM MỚI: Xử lý khi bấm Enter ở ô Mật khẩu ---
+        private void Textboxpassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Bấm Enter ở ô Password thì thực hiện Đăng nhập luôn
+                ButtonLogin.PerformClick();
+                e.SuppressKeyPress = true; // Tắt tiếng "ting"
+            }
+        }
         private void ButtonLogin_Click(object sender, EventArgs e)
         {
             try
@@ -139,6 +173,7 @@ namespace QuanLyBida.GUI
             FormLogin_Resize(sender, e); // Đảm bảo panel căn giữa khi load
             // Đảm bảo button hiển thị trên textbox
             ButtonShowPassword.BringToFront();
+            TextBox_username.Focus();
         }
         private void ButtonMinimize_Click(object sender, EventArgs e)
         {
