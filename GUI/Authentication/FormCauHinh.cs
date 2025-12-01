@@ -11,13 +11,25 @@ namespace QuanLyBida.GUI.Authentication
         {
             InitializeComponent();
 
-            // Cài đặt ComboBox
+            // 1. Cài đặt ComboBox
             comboBox1.Items.Clear();
             comboBox1.Items.Add("Windows Authentication");
             comboBox1.Items.Add("SQL Server Authentication");
-            comboBox1.SelectedIndex = 0; // Mặc định chọn cái đầu
 
-            // Gán sự kiện
+            // --- 🔥 KHẮC PHỤC LỖI Ở ĐÂY ---
+
+            // A. Gắn sự kiện (Nối dây)
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged; // Xử lý ẩn hiện User/Pass
+            guna2Button1.Click += BtnKiemTra_Click; // Nút Kiểm tra
+            guna2Button2.Click += BtnLuu_Click;     // Nút Lưu
+
+            // B. Chọn mặc định và kích hoạt luôn giao diện mờ/sáng
+            comboBox1.SelectedIndex = 0;
+            ComboBox1_SelectedIndexChanged(null, null); // Gọi hàm này ngay lập tức để ẩn User/Pass nếu chọn Windows Auth
+
+            // --------------------------------
+
+            // 2. Sắp xếp thứ tự Tab (Giữ nguyên code cũ của bạn)
             guna2TextBox1.TabIndex = 0; // Server
             guna2TextBox2.TabIndex = 1; // DB
             comboBox1.TabIndex = 2;     // Auth Type
@@ -26,11 +38,11 @@ namespace QuanLyBida.GUI.Authentication
             guna2Button1.TabIndex = 5;  // Nút Test
             guna2Button2.TabIndex = 6;  // Nút Save
 
-            // 2. GÁN SỰ KIỆN ENTER
+            // 3. Xử lý phím Enter (Giữ nguyên code cũ của bạn)
             guna2TextBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { guna2TextBox2.Focus(); e.SuppressKeyPress = true; } };
             guna2TextBox2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { comboBox1.Focus(); e.SuppressKeyPress = true; } };
 
-            // Xử lý riêng cho ô Mật khẩu: Nếu đang nhập pass -> Bấm Enter -> Bấm nút Test luôn cho tiện
+            // Nếu đang ở ô Mật khẩu mà bấm Enter -> Tự bấm nút Kiểm tra
             guna2TextBox4.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { guna2Button1.PerformClick(); e.SuppressKeyPress = true; } };
         }
 

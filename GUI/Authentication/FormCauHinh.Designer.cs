@@ -84,6 +84,7 @@
             this.guna2Button2.Size = new System.Drawing.Size(145, 41);
             this.guna2Button2.TabIndex = 12;
             this.guna2Button2.Text = "Lưu";
+            this.guna2Button2.Click += new System.EventHandler(this.BtnLuu_Click);
             // 
             // guna2Button1
             // 
@@ -100,6 +101,7 @@
             this.guna2Button1.Size = new System.Drawing.Size(145, 41);
             this.guna2Button1.TabIndex = 11;
             this.guna2Button1.Text = "Kiểm tra kết nối";
+            this.guna2Button1.Click += new System.EventHandler(this.BtnKiemTra_Click);
             // 
             // guna2TextBox4
             // 
@@ -316,8 +318,6 @@
             this.Controls.Add(this.ButtonClose);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = true;
-            this.MinimizeBox = true;
             this.Name = "FormCauHinh";
             this.Text = "Cấu hình hệ thống";
             this.panel1.ResumeLayout(false);
