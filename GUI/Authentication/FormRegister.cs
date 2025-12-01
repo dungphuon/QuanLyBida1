@@ -1,10 +1,11 @@
-﻿using QuanLyBida.BLL;
-using QuanLyBida.DTO;
-using System;
+﻿using System;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using QuanLyBida.BLL;
+using QuanLyBida.DTO;
 
 namespace QuanLyBida.GUI
 {
@@ -26,6 +27,8 @@ namespace QuanLyBida.GUI
             TextBox_username.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { TextBox_email.Focus(); e.SuppressKeyPress = true; } };
             TextBox_email.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { TextBox_password.Focus(); e.SuppressKeyPress = true; } };
             TextBox_password.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonJoin.PerformClick(); e.SuppressKeyPress = true; } };
+            this.DoubleBuffered = true;
+            this.PanelLeft.Paint += new PaintEventHandler(PanelLeft_Paint);
         }
 
         private void ButtonJoin_Click(object sender, EventArgs e)
@@ -110,6 +113,17 @@ namespace QuanLyBida.GUI
                 MessageBox.Show($"Lỗi kiểm tra: {ex.Message}", "Lỗi");
             }
         }
+        private void PanelLeft_Paint(object sender, PaintEventArgs e)
+        {
+            Color color1 = Color.FromArgb(26, 34, 65);
+            Color color2 = Color.FromArgb(41, 128, 185);
+            LinearGradientBrush gradientBrush = new LinearGradientBrush(
+                this.PanelLeft.ClientRectangle,
+                color1,
+                color2,
+                LinearGradientMode.Vertical);
+            e.Graphics.FillRectangle(gradientBrush, this.PanelLeft.ClientRectangle);
+        }
 
         private void TitleLabel_Click(object sender, EventArgs e) { }
 
@@ -171,17 +185,22 @@ namespace QuanLyBida.GUI
 
         private void ButtonShowPassword_Click(object sender, EventArgs e)
         {
-            if (TextBox_password.PasswordChar == '●')
+            // Kiểm tra trực tiếp thuộc tính UseSystemPasswordChar
+            if (TextBox_password.UseSystemPasswordChar == true)
             {
-                // Hiển thị mật khẩu
-                TextBox_password.PasswordChar = '\0';
-                ButtonShowPassword.Text = "👁‍🗨";
+                // Nếu đang bị che, thì tắt chế độ che đi để hiển thị mật khẩu
+                TextBox_password.UseSystemPasswordChar = false;
+
+                // Thay đổi màu của nút để người dùng biết là đang ở chế độ xem
+                ButtonShowPassword.ForeColor = Color.FromArgb(41, 128, 185);
             }
             else
             {
-                // Ẩn mật khẩu bằng chấm tròn
-                TextBox_password.PasswordChar = '●';
-                ButtonShowPassword.Text = "👁";
+                // Nếu đang hiển thị, thì bật lại chế độ che mật khẩu
+                TextBox_password.UseSystemPasswordChar = true;
+
+                // Trả lại màu mặc định
+                ButtonShowPassword.ForeColor = Color.Gray;
             }
         }
 

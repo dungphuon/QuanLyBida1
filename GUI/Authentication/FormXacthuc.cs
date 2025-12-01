@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace QuanLyBida.GUI
@@ -20,8 +21,10 @@ namespace QuanLyBida.GUI
 
             // 2. GÁN SỰ KIỆN ENTER
             TextBox_Code.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonConfirm.PerformClick(); e.SuppressKeyPress = true; } };
+            this.PanelLeft.Paint += new PaintEventHandler(PanelLeft_Paint);
+
         }
-        
+
         private void ButtonConfirm_Click(object sender, EventArgs e)
         {
             string otpNhap = TextBox_Code.Text.Trim();
@@ -48,7 +51,17 @@ namespace QuanLyBida.GUI
                 MessageBox.Show("Mã xác thực không đúng!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        private void PanelLeft_Paint(object sender, PaintEventArgs e)
+        {
+            Color color1 = Color.FromArgb(26, 34, 65);
+            Color color2 = Color.FromArgb(41, 128, 185);
+            LinearGradientBrush gradientBrush = new LinearGradientBrush(
+                this.PanelLeft.ClientRectangle,
+                color1,
+                color2,
+                LinearGradientMode.Vertical);
+            e.Graphics.FillRectangle(gradientBrush, this.PanelLeft.ClientRectangle);
+        }
         private void ButtonMinimize_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;

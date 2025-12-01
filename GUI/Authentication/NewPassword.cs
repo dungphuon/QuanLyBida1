@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using QuanLyBida.BLL;
 using QuanLyBida.DTO;
-using System.Text.RegularExpressions;
 
 namespace QuanLyBida.GUI
 {
@@ -28,6 +29,8 @@ namespace QuanLyBida.GUI
             // 2. GÁN SỰ KIỆN ENTER
             TextBox_newPassword.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { TextBox_confirmPassword.Focus(); e.SuppressKeyPress = true; } };
             TextBox_confirmPassword.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonChange.PerformClick(); e.SuppressKeyPress = true; } };
+            this.PanelLeft.Paint += new PaintEventHandler(PanelLeft_Paint);
+
         }
 
         private void ButtonChange_Click(object sender, EventArgs e)
@@ -87,6 +90,17 @@ namespace QuanLyBida.GUI
                               MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void PanelLeft_Paint(object sender, PaintEventArgs e)
+        {
+            Color color1 = Color.FromArgb(26, 34, 65);
+            Color color2 = Color.FromArgb(41, 128, 185);
+            LinearGradientBrush gradientBrush = new LinearGradientBrush(
+                this.PanelLeft.ClientRectangle,
+                color1,
+                color2,
+                LinearGradientMode.Vertical);
+            e.Graphics.FillRectangle(gradientBrush, this.PanelLeft.ClientRectangle);
+        }
 
         private void TitleLabel_Click(object sender, EventArgs e) { }
         private void NewPassword_Load(object sender, EventArgs e) { }
@@ -95,6 +109,7 @@ namespace QuanLyBida.GUI
         {
             this.WindowState = FormWindowState.Minimized;
         }
+
 
         private void ButtonMinimize_MouseEnter(object sender, EventArgs e)
         {
@@ -149,33 +164,33 @@ namespace QuanLyBida.GUI
 
         private void ButtonShowNewPassword_Click(object sender, EventArgs e)
         {
-            if (TextBox_newPassword.PasswordChar == '●')
+            if (TextBox_newPassword.UseSystemPasswordChar == true)
             {
                 // Hiển thị mật khẩu
-                TextBox_newPassword.PasswordChar = '\0';
-                ButtonShowNewPassword.Text = "👁‍🗨";
+                TextBox_newPassword.UseSystemPasswordChar = false;
+                ButtonShowNewPassword.ForeColor = Color.FromArgb(41, 128, 185);
             }
             else
             {
                 // Ẩn mật khẩu bằng chấm tròn
-                TextBox_newPassword.PasswordChar = '●';
-                ButtonShowNewPassword.Text = "👁";
+                TextBox_newPassword.UseSystemPasswordChar = true;
+                ButtonShowNewPassword.ForeColor = Color.Gray;
             }
         }
 
         private void ButtonShowConfirmPassword_Click(object sender, EventArgs e)
         {
-            if (TextBox_confirmPassword.PasswordChar == '●')
+            if (TextBox_confirmPassword.UseSystemPasswordChar == true)
             {
                 // Hiển thị mật khẩu
-                TextBox_confirmPassword.PasswordChar = '\0';
-                ButtonShowConfirmPassword.Text = "👁‍🗨";
+                TextBox_confirmPassword.UseSystemPasswordChar = false;
+                ButtonShowConfirmPassword.ForeColor = Color.FromArgb(41, 128, 185);
             }
             else
             {
                 // Ẩn mật khẩu bằng chấm tròn
-                TextBox_confirmPassword.PasswordChar = '●';
-                ButtonShowConfirmPassword.Text = "👁";
+                TextBox_confirmPassword.UseSystemPasswordChar = true;
+                ButtonShowConfirmPassword.ForeColor = Color.Gray;
             }
         }
     }

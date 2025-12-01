@@ -716,5 +716,10 @@ namespace QuanLyBida.GUI.Main
         private void lblTienGiamTitle_Click(object sender, EventArgs e) { }
 
         private void FormThanhToan_Load(object sender, EventArgs e) { }
+
+        private void listItems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

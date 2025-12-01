@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using QuanLyBida.BLL;
 using QuanLyBida.DTO;
@@ -18,6 +19,9 @@ namespace QuanLyBida.GUI
 
             // 2. GÁN SỰ KIỆN ENTER
             TextBox_email.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) { ButtonContinue.PerformClick(); e.SuppressKeyPress = true; } };
+
+            this.PanelLeft.Paint += new PaintEventHandler(PanelLeft_Paint);
+
         }
 
         private void ButtonContinue_Click(object sender, EventArgs e)
@@ -72,6 +76,17 @@ namespace QuanLyBida.GUI
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e) { }
+        private void PanelLeft_Paint(object sender, PaintEventArgs e)
+        {
+            Color color1 = Color.FromArgb(26, 34, 65);
+            Color color2 = Color.FromArgb(41, 128, 185);
+            LinearGradientBrush gradientBrush = new LinearGradientBrush(
+                this.PanelLeft.ClientRectangle,
+                color1,
+                color2,
+                LinearGradientMode.Vertical);
+            e.Graphics.FillRectangle(gradientBrush, this.PanelLeft.ClientRectangle);
+        }
 
         private void ButtonMinimize_Click(object sender, EventArgs e)
         {

@@ -321,6 +321,7 @@ namespace QuanLyBida.GUI.Main
             this.listItems.TabIndex = 9;
             this.listItems.UseCompatibleStateImageBehavior = false;
             this.listItems.View = System.Windows.Forms.View.Details;
+            this.listItems.SelectedIndexChanged += new System.EventHandler(this.listItems_SelectedIndexChanged);
             // 
             // colTen
             // 

@@ -1,12 +1,13 @@
-﻿using QuanLyBida.BLL;
+﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Windows.Forms;
+using QuanLyBida.BLL;
 using QuanLyBida.DAL;
 using QuanLyBida.DTO;
 using QuanLyBida.GUI.Admin;
 using QuanLyBida.GUI.Main;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 namespace QuanLyBida.GUI
 {
@@ -15,7 +16,7 @@ namespace QuanLyBida.GUI
         public FormLogin()
         {
             InitializeComponent();
-            MakeRoundedControls();
+            
 
             // 1. SẮP XẾP LẠI THỨ TỰ TAB (Để bấm Tab nó nhảy đúng thứ tự)
             TextBox_username.TabIndex = 0; // Đầu tiên
@@ -34,6 +35,8 @@ namespace QuanLyBida.GUI
             // Gán sự kiện Click cho ButtonLogin
             this.ButtonLogin.Click -= ButtonLogin_Click;
             this.ButtonLogin.Click += ButtonLogin_Click;
+            this.DoubleBuffered = true;
+            this.PanelLeft.Paint += new PaintEventHandler(PanelLeft_Paint);
         }
         // --- THÊM MỚI: Xử lý khi bấm Enter ở ô Tài khoản ---
         private void TextBox_username_KeyDown(object sender, KeyEventArgs e)
@@ -113,27 +116,27 @@ namespace QuanLyBida.GUI
         }
 
         // Các method cũ giữ nguyên
-        private void MakeRoundedControls()
-        {
-            // Bo tròn Button
-            MakeRoundedButton(ButtonLogin, 25);
-        }
+        //private void MakeRoundedControls()
+        //{
+        //    // Bo tròn Button
+        //    MakeRoundedButton(ButtonLogin, 25);
+        //}
 
-        private void MakeRoundedButton(Button button, int radius)
-        {
-            button.Region = CreateRoundedRegion(button.Width, button.Height, radius);
-        }
+        //private void MakeRoundedButton(Button button, int radius)
+        //{
+        //    button.Region = CreateRoundedRegion(button.Width, button.Height, radius);
+        //}
 
-        private Region CreateRoundedRegion(int width, int height, int radius)
-        {
-            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
-            path.AddArc(0, 0, radius * 2, radius * 2, 180, 90);
-            path.AddArc(width - radius * 2, 0, radius * 2, radius * 2, 270, 90);
-            path.AddArc(width - radius * 2, height - radius * 2, radius * 2, radius * 2, 0, 90);
-            path.AddArc(0, height - radius * 2, radius * 2, radius * 2, 90, 90);
-            path.CloseAllFigures();
-            return new Region(path);
-        }
+        //private Region CreateRoundedRegion(int width, int height, int radius)
+        //{
+        //    System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+        //    path.AddArc(0, 0, radius * 2, radius * 2, 180, 90);
+        //    path.AddArc(width - radius * 2, 0, radius * 2, radius * 2, 270, 90);
+        //    path.AddArc(width - radius * 2, height - radius * 2, radius * 2, radius * 2, 0, 90);
+        //    path.AddArc(0, height - radius * 2, radius * 2, radius * 2, 90, 90);
+        //    path.CloseAllFigures();
+        //    return new Region(path);
+        //}
 
         // Các method khác giữ nguyên
         private void LinkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -154,27 +157,35 @@ namespace QuanLyBida.GUI
         private void TitleLabel_Click(object sender, EventArgs e) { }
         private void MainPanel_Paint(object sender, PaintEventArgs e) { }
 
-        private void FormLogin_Resize(object sender, EventArgs e)
+        //private void FormLogin_Resize(object sender, EventArgs e)
+        //{
+        //    if (PanelRight != null && MainPanel != null)
+        //    {
+        //        int x = (PanelRight.Width - MainPanel.Width) / 2;
+        //        int y = (PanelRight.Height - MainPanel.Height) / 2;
+        //        MainPanel.Location = new Point(x, y);
+        //    }
+        //}
+        private void PanelLeft_Paint(object sender, PaintEventArgs e)
         {
-            // Căn giữa panel
-            MainPanel.Left = (this.ClientSize.Width - MainPanel.Width) / 2;
-            MainPanel.Top = (this.ClientSize.Height - MainPanel.Height) / 2;
-            // Cập nhật vị trí các nút
-            ButtonClose.Left = this.ClientSize.Width - ButtonClose.Width - 10;
-            ButtonClose.Top = 10;
-            ButtonMaximize.Left = ButtonClose.Left - ButtonMaximize.Width - 5;
-            ButtonMaximize.Top = 10;
-            ButtonMinimize.Left = ButtonMaximize.Left - ButtonMinimize.Width - 5;
-            ButtonMinimize.Top = 10;
+            Color color1 = Color.FromArgb(26, 34, 65);
+            Color color2 = Color.FromArgb(41, 128, 185);
+            LinearGradientBrush gradientBrush = new LinearGradientBrush(
+                this.PanelLeft.ClientRectangle,
+                color1,
+                color2,
+                LinearGradientMode.Vertical);
+            e.Graphics.FillRectangle(gradientBrush, this.PanelLeft.ClientRectangle);
         }
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
-            FormLogin_Resize(sender, e); // Đảm bảo panel căn giữa khi load
+            //FormLogin_Resize(sender, e); // Đảm bảo panel căn giữa khi load
             // Đảm bảo button hiển thị trên textbox
             ButtonShowPassword.BringToFront();
             TextBox_username.Focus();
         }
+
         private void ButtonMinimize_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
@@ -233,19 +244,28 @@ namespace QuanLyBida.GUI
 
         private void ButtonShowPassword_Click(object sender, EventArgs e)
         {
-            if (Textboxpassword.PasswordChar == '●')
+            // Kiểm tra trực tiếp thuộc tính UseSystemPasswordChar
+            if (Textboxpassword.UseSystemPasswordChar == true)
             {
-                // Hiển thị mật khẩu
-                Textboxpassword.PasswordChar = '\0';
-                ButtonShowPassword.Text = "👁‍🗨";
+                // Nếu đang bị che, thì tắt chế độ che đi để hiển thị mật khẩu
+                Textboxpassword.UseSystemPasswordChar = false;
+
+                // Thay đổi màu của nút để người dùng biết là đang ở chế độ xem
+                ButtonShowPassword.ForeColor = Color.FromArgb(41, 128, 185);
             }
             else
             {
-                // Ẩn mật khẩu bằng chấm tròn
-                Textboxpassword.PasswordChar = '●';
-                ButtonShowPassword.Text = "👁";
+                // Nếu đang hiển thị, thì bật lại chế độ che mật khẩu
+                Textboxpassword.UseSystemPasswordChar = true;
+
+                // Trả lại màu mặc định
+                ButtonShowPassword.ForeColor = Color.Gray;
             }
         }
-        
+
+        private void LabelSlogan_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
