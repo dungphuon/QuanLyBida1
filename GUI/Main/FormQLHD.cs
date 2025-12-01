@@ -40,42 +40,38 @@ namespace QuanLyBida.GUI.Main
             guna2ComboBox1.SelectedIndexChanged += Guna2ComboBox1_SelectedIndexChanged;
         }
 
+        // Trong FormQLHD.cs
+
         private void CreateColumns()
         {
-            // Xóa tất cả cột cũ trước khi tạo mới
             guna2DataGridHoadon.Columns.Clear();
 
-            // ================== CÁC CỘT CHÍNH ==================
             guna2DataGridHoadon.Columns.Add("MaHD", "Mã hóa đơn");
             guna2DataGridHoadon.Columns.Add("NgayLap", "Ngày lập");
             guna2DataGridHoadon.Columns.Add("TongTien", "Tổng tiền");
             guna2DataGridHoadon.Columns.Add("PhuongThuc", "Phương thức");
             guna2DataGridHoadon.Columns.Add("TrangThai", "Trạng thái");
 
-            // ================== CỘT XEM ==================
             DataGridViewLinkColumn colView = new DataGridViewLinkColumn();
-            colView.ActiveLinkColor = Color.FromArgb(0, 123, 255);
-            colView.HeaderText = "Xem";
-            colView.LinkColor = Color.FromArgb(0, 123, 255);
-            colView.MinimumWidth = 60;
-            colView.Name = "View";
-            colView.ReadOnly = true;
+            colView.Name = "View"; 
+            colView.HeaderText = "";
             colView.Text = "Xem";
-            colView.UseColumnTextForLinkValue = true;
+            colView.UseColumnTextForLinkValue = true; 
+            colView.LinkColor = Color.FromArgb(0, 123, 255); 
+            colView.ActiveLinkColor = Color.Blue;
             colView.VisitedLinkColor = Color.FromArgb(0, 123, 255);
+            colView.Width = 60;
             guna2DataGridHoadon.Columns.Add(colView);
 
-            // ================== CỘT XÓA ==================
             DataGridViewLinkColumn colDelete = new DataGridViewLinkColumn();
-            colDelete.ActiveLinkColor = Color.IndianRed;
-            colDelete.HeaderText = "Xóa";
-            colDelete.LinkColor = Color.IndianRed;
-            colDelete.MinimumWidth = 60;
-            colDelete.Name = "Delete";
-            colDelete.ReadOnly = true;
+            colDelete.Name = "Delete"; 
+            colDelete.HeaderText = "";
             colDelete.Text = "Xóa";
-            colDelete.UseColumnTextForLinkValue = true;
+            colDelete.UseColumnTextForLinkValue = true; 
+            colDelete.LinkColor = Color.IndianRed; 
+            colDelete.ActiveLinkColor = Color.Red;
             colDelete.VisitedLinkColor = Color.IndianRed;
+            colDelete.Width = 60;
             guna2DataGridHoadon.Columns.Add(colDelete);
         }
 
@@ -178,14 +174,17 @@ namespace QuanLyBida.GUI.Main
         {
             if (e.RowIndex < 0) return;
 
-            string maHDText = guna2DataGridHoadon.Rows[e.RowIndex].Cells["MaHD"].Value.ToString();
-            int maHD = int.Parse(maHDText.Replace("HD", ""));
+            string colName = guna2DataGridHoadon.Columns[e.ColumnIndex].Name;
 
-            if (guna2DataGridHoadon.Columns[e.ColumnIndex].Name == "View")
+
+            string maHDText = guna2DataGridHoadon.Rows[e.RowIndex].Cells["MaHD"].Value.ToString();
+            int maHD = int.Parse(maHDText.Replace("HD", "")); // Lọc bỏ chữ "HD" để lấy số
+
+            if (colName == "View")
             {
                 ShowInvoiceDetails(maHD);
             }
-            else if (guna2DataGridHoadon.Columns[e.ColumnIndex].Name == "Delete")
+            else if (colName == "Delete")
             {
                 DeleteInvoice(maHD, maHDText, e.RowIndex);
             }

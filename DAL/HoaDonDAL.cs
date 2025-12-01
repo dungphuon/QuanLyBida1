@@ -222,6 +222,7 @@ namespace QuanLyBida.DAL
                        LEFT JOIN BanBida b ON hd.MaBan = b.MaBan
                        LEFT JOIN KhachHang kh ON hd.MaKH = kh.MaKH
                        LEFT JOIN NhanVien nv ON hd.MaNV = nv.MaNV
+                       WHERE hd.TrangThaiThanhToan = N'Đã thanh toán'
                        ORDER BY hd.NgayLap DESC";
 
                 using (var cmd = new SqlCommand(sql, conn))

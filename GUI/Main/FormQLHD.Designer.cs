@@ -59,7 +59,6 @@ namespace QuanLyBida.GUI.Main
             this.guna2TextBox1.Location = new System.Drawing.Point(12, 12);
             this.guna2TextBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.guna2TextBox1.Name = "guna2TextBox1";
-            this.guna2TextBox1.PasswordChar = '\0';
             this.guna2TextBox1.PlaceholderText = "Nhập mã hóa đơn...";
             this.guna2TextBox1.SelectedText = "";
             this.guna2TextBox1.Size = new System.Drawing.Size(340, 45);
@@ -78,7 +77,7 @@ namespace QuanLyBida.GUI.Main
             // 
             // panelToolbar
             // 
-            this.panelToolbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.panelToolbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelToolbar.BackColor = System.Drawing.Color.White;
             this.panelToolbar.Controls.Add(this.guna2ComboBox1);
@@ -142,8 +141,8 @@ namespace QuanLyBida.GUI.Main
             this.guna2DataGridHoadon.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
             this.guna2DataGridHoadon.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.guna2DataGridHoadon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.guna2DataGridHoadon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.guna2DataGridHoadon.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -202,6 +201,7 @@ namespace QuanLyBida.GUI.Main
             this.guna2DataGridHoadon.ThemeStyle.RowsStyle.Height = 44;
             this.guna2DataGridHoadon.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.guna2DataGridHoadon.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            this.guna2DataGridHoadon.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.guna2DataGridHoadon_CellContentClick);
             // 
             // FormQLHD
             // 
