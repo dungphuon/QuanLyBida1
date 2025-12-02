@@ -154,5 +154,17 @@ namespace QuanLyBida.BLL
                 return new ResultDTO(false, $"Lỗi hệ thống: {ex.Message}");
             }
         }
+        // Kiểm tra nhân viên đã có tài khoản chưa
+        public bool KiemTraNhanVienDaCoTaiKhoan(int maNV)
+        {
+            return _taiKhoanDAL.CheckTaiKhoanByMaNV(maNV);
+        }
+
+        // Thêm tài khoản cho nhân viên
+        public bool ThemTaiKhoan(TaiKhoanDTO tk)
+        {
+            return _taiKhoanDAL.CreateTaiKhoanForNhanVien(tk);
+        }
+
     }
 }

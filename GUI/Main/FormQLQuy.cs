@@ -28,48 +28,60 @@ namespace QuanLyBida.GUI.Main
                 guna2DataGridThuChi.AutoGenerateColumns = false;
                 guna2DataGridThuChi.Columns.Clear();
 
-                // Tạo cột Mã giao dịch
+                // 1. Cột Mã giao dịch
                 var colMa = new DataGridViewTextBoxColumn
                 {
                     Name = "MaPhieu",
                     DataPropertyName = "MaPhieu",
-                    HeaderText = "Mã giao dịch",
-                    Width = 120
+                    HeaderText = "Mã GD",
+                    Width = 80
                 };
                 guna2DataGridThuChi.Columns.Add(colMa);
 
-                // Tạo cột Thời gian
+                // 2. Cột Thời gian
                 var colNgay = new DataGridViewTextBoxColumn
                 {
                     Name = "NgayTao",
                     DataPropertyName = "NgayTao",
                     HeaderText = "Thời gian",
-                    Width = 150,
+                    Width = 140,
                     DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy HH:mm" }
                 };
                 guna2DataGridThuChi.Columns.Add(colNgay);
 
-                // Tạo cột Loại giao dịch
+                // 3. Cột Loại giao dịch
                 var colLoai = new DataGridViewTextBoxColumn
                 {
                     Name = "LoaiGiaoDichDisplay",
                     DataPropertyName = "LoaiGiaoDichDisplay",
-                    HeaderText = "Loại giao dịch",
-                    Width = 120
+                    HeaderText = "Loại",
+                    Width = 100
                 };
                 guna2DataGridThuChi.Columns.Add(colLoai);
 
-                // Tạo cột Số tiền
+                // 4. Cột Lý do 
+                var colLyDo = new DataGridViewTextBoxColumn
+                {
+                    Name = "LyDo",
+                    DataPropertyName = "LyDo", // Tên thuộc tính trong DTO
+                    HeaderText = "Lý do / Diễn giải",
+                    Width = 250 // Cho rộng ra chút để đọc nội dung
+                };
+                guna2DataGridThuChi.Columns.Add(colLyDo);
+
+                // 5. Cột Số tiền
                 var colTien = new DataGridViewTextBoxColumn
                 {
                     Name = "SoTien",
                     DataPropertyName = "SoTien",
                     HeaderText = "Số tiền",
-                    Width = 150,
+                    Width = 120,
                     DefaultCellStyle = new DataGridViewCellStyle
                     {
                         Format = "N0",
-                        Alignment = DataGridViewContentAlignment.MiddleRight
+                        Alignment = DataGridViewContentAlignment.MiddleRight,
+                        ForeColor = System.Drawing.Color.DarkBlue,
+                        Font = new System.Drawing.Font("Segoe UI", 9, System.Drawing.FontStyle.Bold)
                     }
                 };
                 guna2DataGridThuChi.Columns.Add(colTien);
@@ -96,7 +108,7 @@ namespace QuanLyBida.GUI.Main
 
             if (comboBox1.Items.Count > 0)
             {
-                comboBox1.SelectedIndex = 0;
+                comboBox1.SelectedIndex = 4;
             }
 
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
@@ -321,7 +333,6 @@ namespace QuanLyBida.GUI.Main
                 }
             }
         }
-        // Các sự kiện khác giữ nguyên...
         private void guna2DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void label9_Click(object sender, EventArgs e) { }
         private void label9_Click_1(object sender, EventArgs e) { }

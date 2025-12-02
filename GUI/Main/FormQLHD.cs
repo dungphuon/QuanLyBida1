@@ -91,23 +91,25 @@ namespace QuanLyBida.GUI.Main
 
         private void BindDataToGrid(List<HoaDonDTO> hoaDonList)
         {
-
             guna2DataGridHoadon.Rows.Clear();
 
             foreach (var hd in hoaDonList)
             {
+                string phuongThucHienThi = string.IsNullOrEmpty(hd.PhuongThucThanhToan)
+                                           ? "Tiền mặt" 
+                                           : hd.PhuongThucThanhToan;
+
                 guna2DataGridHoadon.Rows.Add(
                     $"HD{hd.MaHD:D6}",
                     hd.NgayLap.ToString("dd/MM/yyyy HH:mm"),
                     string.Format("{0:N0} đ", hd.TongTien),
-                    hd.PhuongThucThanhToan ?? "Tiền mặt",
+                    phuongThucHienThi, 
                     hd.TrangThaiThanhToan ?? "Đã thanh toán",
                     "Xem",
                     "Xóa"
                 );
             }
 
-            // Hiển thị tổng số hóa đơn
             labelTitle.Text = $"Quản Lý Hóa Đơn ({hoaDonList.Count} hóa đơn)";
         }
 

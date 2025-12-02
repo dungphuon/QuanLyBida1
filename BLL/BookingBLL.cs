@@ -24,6 +24,10 @@ namespace QuanLyBida.BLL
 
             if (booking.ThoiGianKetThuc <= booking.ThoiGianBatDau)
                 throw new Exception("Giờ kết thúc phải sau giờ bắt đầu");
+            if (IsBookingConflict(booking))
+            {
+                throw new Exception("Khung giờ này đã có người đặt rồi! Vui lòng chọn giờ khác.");
+            }
 
             // Thêm booking
             return bookingDAL.AddBooking(booking);
@@ -80,6 +84,21 @@ namespace QuanLyBida.BLL
             {
                 throw new Exception($"Lỗi khi cập nhật trạng thái booking: {ex.Message}");
             }
+        }
+        private bool IsBookingConflict(BookingDTO newBooking)
+        {
+            var allBookings = bookingDAL.GetAllBookings(); // Lấy tất cả
+
+            // Lọc các lịch của CÙNG BÀN (trừ trạng thái Hủy/Kết thúc)
+            var conflict = allBookings.Any(b =>
+                b.MaBan == newBooking.MaBan &&
+                b.TrangThai != "Đã hủy" &&
+                b.TrangThai != "Đã kết thúc" &&
+                // Công thức kiểm tra giao nhau của 2 khoảng thời gian: (StartA < EndB) && (EndA > StartB)
+                (newBooking.ThoiGianBatDau < b.ThoiGianKetThuc && newBooking.ThoiGianKetThuc > b.ThoiGianBatDau)
+            );
+
+            return conflict;
         }
     }
 }

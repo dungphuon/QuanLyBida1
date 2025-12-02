@@ -1,7 +1,8 @@
 ﻿// SanPhamDAL.cs
+using QuanLyBida.DTO;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using QuanLyBida.DTO;
 
 namespace QuanLyBida.DAL
 {
@@ -19,6 +20,7 @@ namespace QuanLyBida.DAL
                 string query = @"
             SELECT MaSP, TenSP, DonViTinh, GiaNhap, GiaBan, SoLuongTon, LoaiHangHoa
             FROM DichVu_SanPham 
+            WHERE IsDeleted = 0
             ORDER BY TenSP";
 
                 using (var cmd = new SqlCommand(query, conn))
@@ -31,9 +33,9 @@ namespace QuanLyBida.DAL
                             MaSP = (int)reader["MaSP"],
                             TenSP = reader["TenSP"].ToString(),
                             DonViTinh = reader["DonViTinh"].ToString(),
-                            GiaNhap = (decimal)reader["GiaNhap"],
+                            GiaNhap = reader["GiaNhap"] == DBNull.Value ? 0 : (decimal)reader["GiaNhap"],
                             GiaBan = (decimal)reader["GiaBan"],
-                            SoLuongTon = (int)reader["SoLuongTon"],
+                            SoLuongTon = reader["SoLuongTon"] == DBNull.Value ? 0 : (int)reader["SoLuongTon"],
                             LoaiHangHoa = reader["LoaiHangHoa"]?.ToString()
                         });
                     }
@@ -47,8 +49,10 @@ namespace QuanLyBida.DAL
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                string query = "DELETE FROM DichVu_SanPham WHERE MaSP = @MaSP";
-
+                string query = @"
+                    UPDATE DichVu_SanPham
+                    SET IsDeleted = 1
+                    WHERE MaSP = @MaSP";
                 using (var cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@MaSP", maSP);

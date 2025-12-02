@@ -109,6 +109,7 @@ namespace QuanLyBida.GUI.Main
             int stt = 1;
             foreach (var sp in sanPhamList)
             {
+                if (sp.MaSP <= 0) continue;
                 guna2DataGridViewHangHoa.Rows.Add(
                     sp.MaSP,
                     sp.TenSP,

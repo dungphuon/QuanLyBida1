@@ -600,23 +600,23 @@ namespace QuanLyBida.GUI.Main
         }
 
         // Event handlers cho các control mới
-        private void txtSDT_Enter(object sender, System.EventArgs e)
-        {
-            if (txtSDT.Text == "Nhập số điện thoại...")
-            {
-                txtSDT.Text = "";
-                txtSDT.ForeColor = System.Drawing.Color.Black;
-            }
-        }
+        //private void txtSDT_Enter(object sender, System.EventArgs e)
+        //{
+        //    if (txtSDT.Text == "Nhập số điện thoại...")
+        //    {
+        //        txtSDT.Text = "";
+        //        txtSDT.ForeColor = System.Drawing.Color.Black;
+        //    }
+        //}
 
-        private void txtSDT_Leave(object sender, System.EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtSDT.Text))
-            {
-                txtSDT.Text = "Nhập số điện thoại...";
-                txtSDT.ForeColor = System.Drawing.Color.Gray;
-            }
-        }
+        //private void txtSDT_Leave(object sender, System.EventArgs e)
+        //{
+        //    if (string.IsNullOrWhiteSpace(txtSDT.Text))
+        //    {
+        //        txtSDT.Text = "Nhập số điện thoại...";
+        //        txtSDT.ForeColor = System.Drawing.Color.Gray;
+        //    }
+        //}
 
         
 

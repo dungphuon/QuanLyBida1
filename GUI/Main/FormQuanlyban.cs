@@ -210,7 +210,7 @@ namespace QuanLyBida.GUI.Main
             if (state.TrangThai == "Ngưng hoạt động" || state.TrangThai == "Hỏng")
             {
                 panel.BackColor = Color.FromArgb(240, 240, 240); // Màu xám nhạt
-                                                                 // panel.Enabled = false; // Có thể bỏ comment dòng này nếu muốn không cho click vào panel luôn
+                                                                 
 
                 // Tên bàn (Gạch ngang để thể hiện đã hủy)
                 var lblNameDeleted = new Label
@@ -250,7 +250,19 @@ namespace QuanLyBida.GUI.Main
                 return panel; // 🛑 DỪNG TẠI ĐÂY, không vẽ nút bấm nữa
             }
             // ---------------------------------------------------------
+            // 🔥 [MỚI] TẠO MENU CHUỘT PHẢI
+            ContextMenuStrip contextMenu = new ContextMenuStrip();
 
+            // Mục 1: Xem lịch đặt
+            var itemView = contextMenu.Items.Add($"📅 Xem lịch đặt bàn ({state.Reservations.Count})");
+            itemView.Click += (s, e) => ShowReservationList(state); // Gọi hàm hiện danh sách
+
+            // Mục 2: Đặt bàn nhanh (Optional)
+            var itemAdd = contextMenu.Items.Add("➕ Đặt bàn mới");
+            itemAdd.Click += (s, e) => ReserveTable(state);
+
+            // Gắn menu vào Panel
+            panel.ContextMenuStrip = contextMenu;
 
             // --- [CODE CŨ] XỬ LÝ CHO BÀN HOẠT ĐỘNG BÌNH THƯỜNG ---
 
@@ -508,12 +520,21 @@ namespace QuanLyBida.GUI.Main
                         TrangThai = "Đang đặt"
                     };
 
-                    int bookingId = bookingBLL.AddBooking(bookingDTO);
-                    bookingDTO.MaDatBan = bookingId;
-                    state.Reservations.Add(bookingDTO);
+                    try
+                    {
+                        int bookingId = bookingBLL.AddBooking(bookingDTO);
 
-                    RenderTables();
-                    MessageBox.Show("Đặt bàn thành công!");
+                        bookingDTO.MaDatBan = bookingId;
+                        state.Reservations.Add(bookingDTO);
+
+                        RenderTables();
+                        MessageBox.Show("Đặt bàn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Lỗi đặt bàn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    }
                 }
             }
         }
@@ -652,8 +673,7 @@ namespace QuanLyBida.GUI.Main
             int maNV = CurrentTaiKhoan?.MaNV ?? 1;
             string tenNhanVien = CurrentTaiKhoan?.TenDangNhap ?? CurrentUserName;
 
-            // DEBUG
-            Console.WriteLine($"✅ FormQuanlyban - Thanh toán với MaNV = {maNV}");
+            
 
             using (var dlg = new FormThanhToan(
                 tableName: $"Bàn {state.TableNumber}",
@@ -672,27 +692,13 @@ namespace QuanLyBida.GUI.Main
                     state.IsPlaying = false;
                     state.StartTime = null;
                     state.Items.Clear();
-                    Console.WriteLine($"✅ Đã xóa {state.Items.Count} dịch vụ khỏi bàn {state.TableNumber}");
                     RenderTables();
                     
                 }
             }
         }
 
-        // 🔧 THÊM PHƯƠNG THỨC LẤY MA NHÂN VIÊN THỰC TẾ
-        //private int LayMaNhanVienThucTe(string tenNhanVien)
-        //{
-        //    try
-        //    {
-        //        var nhanVienBLL = new NhanVienBLL();
-        //        return nhanVienBLL.LayMaNhanVienTheoTen(tenNhanVien);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Lỗi khi lấy MaNV thực tế: {ex.Message}");
-        //        return 1; // Fallback
-        //    }
-        //}
+
 
         private void UpdateDatabaseAfterPayment(TableState state, BookingDTO activeBooking)
         {
@@ -720,7 +726,6 @@ namespace QuanLyBida.GUI.Main
 
                 // Sử dụng method mới - lấy trực tiếp dịch vụ chưa thanh toán
                 var pendingServices = hoaDonDAL.GetPendingServicesByTable(maBan);
-                Console.WriteLine($"🔍 LoadServicesFromDatabase - Bàn {maBan}: {pendingServices.Count} dịch vụ chưa thanh toán");
                 foreach (var service in pendingServices)
                 {
                     services.Add(new FormDichVu.ServiceItem
@@ -740,6 +745,46 @@ namespace QuanLyBida.GUI.Main
                 Console.WriteLine($"Lỗi load dịch vụ: {ex.Message}");
                 return new List<FormDichVu.ServiceItem>();
             }
+        }
+
+        private void ShowReservationList(TableState state)
+        {
+            // Tạo Form tạm để chứa lưới
+            Form listForm = new Form();
+            listForm.Text = $"Lịch đặt - Bàn số {state.TableNumber}";
+            listForm.Size = new Size(600, 400);
+            listForm.StartPosition = FormStartPosition.CenterParent;
+            listForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            listForm.MaximizeBox = false;
+
+            // Tạo lưới hiển thị
+            DataGridView grid = new DataGridView();
+            grid.Dock = DockStyle.Fill;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.BackgroundColor = Color.White;
+            grid.ReadOnly = true;
+            grid.AllowUserToAddRows = false;
+            grid.RowHeadersVisible = false;
+
+            // Đổ dữ liệu vào (chỉ lấy cột cần thiết)
+            // Sắp xếp theo giờ tăng dần để dễ nhìn
+            var dataShow = state.Reservations
+                .OrderBy(r => r.ThoiGianBatDau)
+                .Select(r => new
+                {
+                    KhachHang = r.HoTen,
+                    BatDau = r.ThoiGianBatDau.ToString("HH:mm dd/MM"),
+                    KetThuc = r.ThoiGianKetThuc.ToString("HH:mm dd/MM"),
+                    TrangThai = r.TrangThai
+                }).ToList();
+
+            grid.DataSource = dataShow;
+
+            // Thêm cột nút Hủy (nếu muốn hủy nhanh tại đây)
+            // (Tùy chọn, bạn có thể bỏ qua nếu không cần)
+
+            listForm.Controls.Add(grid);
+            listForm.ShowDialog();
         }
     }
 }

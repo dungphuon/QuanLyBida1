@@ -145,6 +145,44 @@ namespace QuanLyBida.DAL
                 throw new Exception($"Lỗi cập nhật mật khẩu: {ex.Message}");
             }
         }
+        public bool CheckTaiKhoanByMaNV(int maNV)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string query = "SELECT COUNT(*) FROM TaiKhoan WHERE MaNV = @MaNV";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaNV", maNV);
+                    int count = (int)cmd.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+        public bool CreateTaiKhoanForNhanVien(TaiKhoanDTO taiKhoan)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+
+                string query = @"INSERT INTO TaiKhoan (TenDangNhap, MatKhau, VaiTro, Email, MaNV)
+                         VALUES (@TenDangNhap, @MatKhau, @VaiTro, @Email, @MaNV)";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@TenDangNhap", taiKhoan.TenDangNhap);
+                    cmd.Parameters.AddWithValue("@MatKhau", taiKhoan.MatKhau);
+                    cmd.Parameters.AddWithValue("@VaiTro", taiKhoan.VaiTro);
+                    cmd.Parameters.AddWithValue("@Email", taiKhoan.Email ?? "");
+                    cmd.Parameters.AddWithValue("@MaNV", taiKhoan.MaNV);
+
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+
     }
 }
     

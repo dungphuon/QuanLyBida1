@@ -1,7 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using QuanLyBida.BLL;
 using QuanLyBida.DTO;
-using QuanLyBida.BLL;
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 
 namespace GUI.Admin
 {
@@ -112,7 +115,6 @@ namespace GUI.Admin
 
         private void SetMode()
         {
-            // Điều khiển trạng thái các control theo chế độ
             bool enabled = isEditMode;
 
             txtMaNV.Enabled = false;
@@ -128,48 +130,137 @@ namespace GUI.Admin
             cmbCaLamViec.Enabled = enabled;
             cmbTrangThai.Enabled = enabled;
 
-            // Điều khiển nút
             if (isViewMode)
             {
-                // Chế độ xem: Ẩn nút Lưu, đổi tên nút Hủy thành Sửa
-                btnLuu.Visible = false;
+                // Ẩn logic edit → giữ lại nút cho cấp tài khoản
+                btnLuu.Visible = true;
+                btnLuu.Text = "Cấp tài khoản";
+                btnLuu.FillColor = Color.FromArgb(46, 213, 115);
+                btnLuu.Size = new Size(130, btnLuu.Height);
+
+                // đổi nút hủy → sửa
                 btnHuy.Text = "Sửa";
-                btnHuy.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(92)))), ((int)(((byte)(124)))), ((int)(((byte)(250))))); // Màu xanh
+                btnHuy.FillColor = Color.FromArgb(92, 124, 250);
             }
             else
             {
-                // Chế độ chỉnh sửa/thêm mới: Hiện nút Lưu, đổi tên nút Hủy thành Hủy
+                // chế độ thêm hoặc sửa
                 btnLuu.Visible = true;
+                btnLuu.Text = "Lưu";
+                btnLuu.FillColor = Color.FromArgb(46, 213, 115);
+
                 btnHuy.Text = "Hủy";
-                btnHuy.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(76)))), ((int)(((byte)(60))))); // Màu đỏ
+                btnHuy.FillColor = Color.FromArgb(231, 76, 60);
             }
         }
 
+
         private void btnLuu_Click(object sender, EventArgs e)
         {
+            // Nếu đang xem → nút này = Cấp tài khoản
+            if (isViewMode)
+            {
+                CapTaiKhoanTuDong();
+                return;
+            }
+
+            // Nếu KHÔNG phải chế độ xem → đây là nút LƯU bình thường
             if (KiemTraDuLieuHopLe())
             {
                 try
                 {
                     if (nhanVien == null)
-                    {
-                        // THÊM MỚI
                         ThemNhanVienMoi();
-                    }
                     else
-                    {
-                        // CẬP NHẬT
                         CapNhatNhanVien();
-                    }
                 }
                 catch (Exception ex)
                 {
                     string action = nhanVien == null ? "thêm" : "cập nhật";
-                    MessageBox.Show($"Lỗi khi {action} nhân viên: {ex.Message}", "Lỗi",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Lỗi khi {action} nhân viên: {ex.Message}");
                 }
             }
         }
+        private void CapTaiKhoanTuDong()
+        {
+            TaiKhoanBLL tkBLL = new TaiKhoanBLL();
+
+            if (tkBLL.KiemTraNhanVienDaCoTaiKhoan(nhanVien.MaNV))
+            {
+                MessageBox.Show("Nhân viên này đã có tài khoản!");
+                return;
+            }
+
+            string username = TaoUsername(nhanVien.HoTen);
+            string password = "123456";
+            string role = LayVaiTroTuChucVu();
+
+            TaiKhoanDTO tk = new TaiKhoanDTO()
+            {
+                TenDangNhap = username,
+                MatKhau = password,
+                VaiTro = role,
+                Email = nhanVien.Email ?? "",   // <<<<<< THÊM EMAIL VÀO ĐÂY
+                MaNV = nhanVien.MaNV
+            };
+
+            if (tkBLL.ThemTaiKhoan(tk))
+            {
+                MessageBox.Show(
+                    $"Cấp tài khoản thành công!\n\n" +
+                    $"Tên đăng nhập: {username}\n" +
+                    $"Mật khẩu: 123456\n" +
+                    $"Email: {tk.Email}\n" +
+                    $"Vai trò: {role}"
+                );
+            }
+            else
+            {
+                MessageBox.Show("Không thể tạo tài khoản!");
+            }
+        }
+
+        public static string ChuyenTiengVietSangKhongDau(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return "";
+
+            text = text.ToLower().Trim();
+
+            // Đặc biệt phải xử lý "đ" trước
+            text = text.Replace("đ", "d");
+
+            // Chuẩn hóa Unicode và loại bỏ dấu
+            text = text.Normalize(NormalizationForm.FormD);
+            var chars = text.Where(c =>
+                System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c)
+                != System.Globalization.UnicodeCategory.NonSpacingMark).ToArray();
+
+            text = new string(chars).Normalize(NormalizationForm.FormC);
+
+            // Chỉ giữ a-z và số
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"[^a-z0-9]", "");
+
+            return text;
+        }
+        public static string TaoUsername(string hoTen)
+        {
+            hoTen = ChuyenTiengVietSangKhongDau(hoTen);
+
+            return hoTen.Replace(" ", "");
+        }
+
+        private string LayVaiTroTuChucVu()
+        {
+            string cv = cmbChucVu.SelectedItem?.ToString() ?? "";
+
+            if (cv.Contains("Quản lý"))
+                return "Quản lý";
+
+            return "Nhân viên";
+        }
+
+
 
         private void ThemNhanVienMoi()
         {
