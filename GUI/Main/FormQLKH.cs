@@ -15,7 +15,7 @@ namespace QuanLyBida.GUI.Main
     public partial class FormQLKH : Form
     {
         private BindingList<KhachHangDTO> customers;
-        private KhachHangBLL khachHangBLL; // Business Logic Layer
+        private KhachHangBLL khachHangBLL; 
 
         public FormQLKH()
         {
@@ -28,7 +28,6 @@ namespace QuanLyBida.GUI.Main
 
         private void FormQLKH_Load(object sender, EventArgs e)
         {
-            // Cấu hình binding cho các cột
             gridCustomers.AutoGenerateColumns = false;
             ConfigureDataGridViewColumns();
             LoadCustomersFromBLL();
@@ -36,7 +35,6 @@ namespace QuanLyBida.GUI.Main
 
         private void ConfigureDataGridViewColumns()
         {
-            // Xóa các cột cũ nếu có
             gridCustomers.Columns.Clear();
 
             // Thêm các cột mới
@@ -205,9 +203,7 @@ namespace QuanLyBida.GUI.Main
             }
         }
 
-        // Trong file FormQLKH.cs
 
-        // Trong file FormQLKH.cs
 
         private bool ShowCustomerDialog(out KhachHangDTO customer, KhachHangDTO seed = null)
         {
@@ -238,7 +234,6 @@ namespace QuanLyBida.GUI.Main
                 var btnOk = new Button { Text = "Lưu", DialogResult = DialogResult.OK, Left = 220, Width = 80, Top = 190 };
                 var btnCancel = new Button { Text = "Hủy", DialogResult = DialogResult.Cancel, Left = 310, Width = 80, Top = 190 };
 
-                // --- 1. SẮP XẾP THỨ TỰ TAB ---
                 inputHoTen.TabIndex = 0;
                 inputSoDienThoai.TabIndex = 1;
                 inputEmail.TabIndex = 2;
@@ -246,12 +241,10 @@ namespace QuanLyBida.GUI.Main
                 btnOk.TabIndex = 4;
                 btnCancel.TabIndex = 5;
 
-                // --- QUAN TRỌNG: BỎ DÒNG NÀY ĐI ---
-                // dialog.AcceptButton = btnOk; <--- XÓA DÒNG NÀY ĐỂ KHÔNG BỊ ENTER LÀ LƯU LUÔN
+
 
                 dialog.CancelButton = btnCancel; // Giữ lại dòng này để bấm Esc là thoát
 
-                // --- 2. XỬ LÝ PHÍM ENTER (Code cũ giữ nguyên) ---
                 // Họ tên -> Enter -> SĐT
                 inputHoTen.KeyDown += (s, e) => {
                     if (e.KeyCode == Keys.Enter) { inputSoDienThoai.Focus(); e.SuppressKeyPress = true; }
@@ -293,8 +286,6 @@ namespace QuanLyBida.GUI.Main
             btnOk, btnCancel
                 });
 
-                // Vẫn cần gán DialogResult cho nút OK để Form biết bấm nút đó là thành công
-                // Nhưng không gán vào property AcceptButton của Form
                 btnOk.DialogResult = DialogResult.OK;
 
                 if (dialog.ShowDialog(this) == DialogResult.OK)

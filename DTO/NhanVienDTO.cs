@@ -14,7 +14,6 @@ namespace QuanLyBida.DTO
         public string DiaChi { get; set; }
         public decimal? Luong { get; set; }
         public string CaLamViec { get; set; }
-        public string LichSuLamViec { get; set; }
         public string TrangThai { get; set; }
     }
 }

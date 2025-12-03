@@ -50,6 +50,7 @@ namespace GUI.Admin
             dateTimePickerTo.ValueChanged += Filter_Changed;
             checkBoxDoanhthu.CheckedChanged += Filter_Changed;
             checkBoxTongChi.CheckedChanged += Filter_Changed;
+            checkBoxChiTietGiaoDich.CheckedChanged += Filter_Changed;
         }
 
         private void Filter_Changed(object sender, EventArgs e)
@@ -66,10 +67,25 @@ namespace GUI.Admin
 
                 var list = _bll.LayDanhSachPhieu(from, to);
 
+                // --- SỬA ĐOẠN NÀY ---
+                bool xemTatCa = checkBoxChiTietGiaoDich.Checked;
+                bool xemThu = checkBoxDoanhthu.Checked;
+                bool xemChi = checkBoxTongChi.Checked;
+
                 var filteredList = list.Where(p =>
-                    (checkBoxDoanhthu.Checked && (p.LoaiPhieu == "Thu" || p.LoaiPhieu == "THU")) ||
-                    (checkBoxTongChi.Checked && (p.LoaiPhieu == "Chi" || p.LoaiPhieu == "CHI"))
-                ).ToList();
+                {
+                    string type = p.LoaiPhieu.ToUpper(); // "THU" hoặc "CHI"
+
+                    // 1. Nếu tích "Chi tiết giao dịch" -> Hiện HẾT (bất chấp 2 cái kia)
+                    if (xemTatCa) return true;
+
+                    // 2. Nếu không tích "Chi tiết", xét từng cái lẻ
+                    if (xemThu && type == "THU") return true;
+                    if (xemChi && type == "CHI") return true;
+
+                    return false;
+                }).ToList();
+                // --------------------
 
                 gridPreview.Rows.Clear();
 
@@ -303,7 +319,7 @@ namespace GUI.Admin
 
         private void checkBoxChiTietGiaoDich_CheckedChanged(object sender, EventArgs e)
         {
-            gridPreview.Visible = checkBoxChiTietGiaoDich.Checked;
+            LoadDataPreview();
         }
     }
 }

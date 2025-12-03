@@ -15,7 +15,7 @@ namespace QuanLyBida.DAL
             using (SqlConnection connection = DatabaseHelper.GetConnection())
             {
                 string query = @"SELECT MaNV, HoTen, GioiTinh, NgaySinh, ChucVu, 
-                                SoDienThoai, Email, DiaChi, Luong, CaLamViec, LichSuLamViec, TrangThai 
+                                SoDienThoai, Email, DiaChi, Luong, CaLamViec, TrangThai 
                                 FROM NhanVien";
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -36,7 +36,6 @@ namespace QuanLyBida.DAL
                         DiaChi = reader.IsDBNull(reader.GetOrdinal("DiaChi")) ? "" : reader.GetString(reader.GetOrdinal("DiaChi")),
                         Luong = reader.IsDBNull(reader.GetOrdinal("Luong")) ? (decimal?)null : reader.GetDecimal(reader.GetOrdinal("Luong")),
                         CaLamViec = reader.GetString(reader.GetOrdinal("CaLamViec")),
-                        LichSuLamViec = reader.IsDBNull(reader.GetOrdinal("LichSuLamViec")) ? "" : reader.GetString(reader.GetOrdinal("LichSuLamViec")),
                         TrangThai = reader.IsDBNull(reader.GetOrdinal("TrangThai")) ? "Đang làm việc" : reader.GetString(reader.GetOrdinal("TrangThai"))
                     };
                     danhSach.Add(nv);
@@ -49,15 +48,13 @@ namespace QuanLyBida.DAL
         {
             using (SqlConnection connection = DatabaseHelper.GetConnection())
             {
-                // Bỏ cột MaNV khỏi INSERT vì nó tự động tăng
                 string query = @"INSERT INTO NhanVien (HoTen, GioiTinh, NgaySinh, ChucVu, 
-                        SoDienThoai, Email, DiaChi, Luong, CaLamViec, LichSuLamViec, TrangThai) 
+                        SoDienThoai, Email, DiaChi, Luong, CaLamViec, TrangThai) 
                         VALUES (@HoTen, @GioiTinh, @NgaySinh, @ChucVu, 
-                        @SoDienThoai, @Email, @DiaChi, @Luong, @CaLamViec, @LichSuLamViec, @TrangThai)";
+                        @SoDienThoai, @Email, @DiaChi, @Luong, @CaLamViec, @TrangThai)";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                // Bỏ parameter @MaNV
                 command.Parameters.AddWithValue("@HoTen", nv.HoTen);
                 command.Parameters.AddWithValue("@GioiTinh", nv.GioiTinh ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@NgaySinh", nv.NgaySinh ?? (object)DBNull.Value);
@@ -67,7 +64,6 @@ namespace QuanLyBida.DAL
                 command.Parameters.AddWithValue("@DiaChi", nv.DiaChi ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@Luong", nv.Luong ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@CaLamViec", nv.CaLamViec);
-                command.Parameters.AddWithValue("@LichSuLamViec", nv.LichSuLamViec ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@TrangThai", nv.TrangThai ?? "Đang làm việc");
 
                 connection.Open();
@@ -81,7 +77,6 @@ namespace QuanLyBida.DAL
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                // THAY ĐỔI: Chuyển trạng thái sang "Đã nghỉ" thay vì xóa hẳn khỏi database
                 string query = "UPDATE NhanVien SET TrangThai = N'Đã nghỉ' WHERE MaNV = @MaNV";
 
                 using (var cmd = new SqlCommand(query, conn))
@@ -120,7 +115,6 @@ namespace QuanLyBida.DAL
                                 DiaChi = @DiaChi,
                                 Luong = @Luong,
                                 CaLamViec = @CaLamViec,
-                                LichSuLamViec = @LichSuLamViec,
                                 TrangThai = @TrangThai
                                 WHERE MaNV = @MaNV";
 
@@ -136,7 +130,6 @@ namespace QuanLyBida.DAL
                 command.Parameters.AddWithValue("@DiaChi", nv.DiaChi ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@Luong", nv.Luong ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@CaLamViec", nv.CaLamViec);
-                command.Parameters.AddWithValue("@LichSuLamViec", nv.LichSuLamViec ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@TrangThai", nv.TrangThai ?? "Đang làm việc");
 
                 connection.Open();
@@ -144,7 +137,6 @@ namespace QuanLyBida.DAL
                 return result > 0;
             }
         }
-        // Thêm vào class NhanVienDAL
         public int LayMaNhanVienLonNhat()
         {
             using (SqlConnection connection = DatabaseHelper.GetConnection())

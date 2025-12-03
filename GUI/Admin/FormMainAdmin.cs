@@ -38,9 +38,8 @@ namespace QuanLyBida.GUI.Admin
 
         private void LoadUserInfo()
         {
-            // Hiển thị thông tin người dùng
             
-            labelRole.Text = currentUser.VaiTro; // Hiển thị VaiTro thay vì ChucVu
+            labelRole.Text = currentUser.VaiTro; 
         }
 
         private bool CheckAdminPermission()
@@ -58,7 +57,6 @@ namespace QuanLyBida.GUI.Admin
             this.buttonHanghoa.Click += ButtonHanghoa_Click;
             this.buttonBaocaotaichinh.Click += ButtonBaocaotaichinh_Click;
             this.buttonBaotri.Click += ButtonBaotri_Click;
-            this.buttonLogout.Click += ButtonLogout_Click;
         }
         private void ButtonLogout_Click(object sender, EventArgs e)
         {

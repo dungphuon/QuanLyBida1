@@ -277,7 +277,6 @@ namespace GUI.Admin
                 DiaChi = string.IsNullOrWhiteSpace(txtDiaChi.Text) ? null : txtDiaChi.Text.Trim(),
                 Luong = string.IsNullOrWhiteSpace(txtLuong.Text) ? (decimal?)null : decimal.Parse(txtLuong.Text.Trim()),
                 CaLamViec = cmbCaLamViec.SelectedItem.ToString(),
-                LichSuLamViec = null,
                 TrangThai = cmbTrangThai.SelectedItem.ToString()
             };
 

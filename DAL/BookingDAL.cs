@@ -66,31 +66,19 @@ namespace QuanLyBida.DAL
             }
         }
 
+
         private int GetOrCreateCustomer(string hoTen, SqlConnection conn)
         {
-            if (string.IsNullOrWhiteSpace(hoTen))
-                hoTen = "Khách vãng lai";
 
-            // Tìm khách hàng theo tên
             string findSql = "SELECT MaKH FROM KhachHang WHERE HoTen = @HoTen";
             using (var findCmd = new SqlCommand(findSql, conn))
             {
                 findCmd.Parameters.AddWithValue("@HoTen", hoTen);
                 var result = findCmd.ExecuteScalar();
-
-                if (result != null)
-                    return Convert.ToInt32(result);
+                if (result != null) return Convert.ToInt32(result);
             }
 
-            // Tạo khách hàng mới
-            string insertSql = @"INSERT INTO KhachHang (HoTen, SoDienThoai, HangThanhVien, DiemTichLuy) 
-                               VALUES (@HoTen, '0000000000', N'Thường', 0);
-                               SELECT SCOPE_IDENTITY();";
-            using (var insertCmd = new SqlCommand(insertSql, conn))
-            {
-                insertCmd.Parameters.AddWithValue("@HoTen", hoTen);
-                return Convert.ToInt32(insertCmd.ExecuteScalar());
-            }
+            return 28;
         }
 
         public bool UpdateBookingStatus(int maDatBan, string trangThai)

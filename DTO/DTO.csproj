@@ -49,8 +49,6 @@
   <ItemGroup>
     <Compile Include="BaoTriDTO.cs" />
     <Compile Include="BookingDTO.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="Class2.cs" />
     <Compile Include="HoaDonDTO.cs" />
     <Compile Include="InvoiceDTO.cs" />
     <Compile Include="KhachHangDTO.cs" />

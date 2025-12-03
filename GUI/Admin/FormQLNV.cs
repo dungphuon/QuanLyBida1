@@ -231,12 +231,11 @@ namespace GUI.Admin
                     }
                 }
             }
-            // Trong FormQLNV.cs
 
             else if (gridNhanVien.Columns[e.ColumnIndex].Name == "colXoa")
             {
                 var result = MessageBox.Show(
-                    $"Bạn có chắc muốn cho nhân viên '{nhanVien.HoTen}' THÔI VIỆC?\n(Tài khoản sẽ bị khóa nhưng lịch sử làm việc vẫn còn)",
+                    $"Bạn có chắc muốn cho nhân viên '{nhanVien.HoTen}' THÔI VIỆC?\n(Tài khoản đăng nhập sẽ bị khóa)", 
                     "Xác nhận thôi việc",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
@@ -249,11 +248,10 @@ namespace GUI.Admin
                         // Gọi hàm BLL -> DAL (DAL giờ đã chạy lệnh UPDATE)
                         string deleteResult = nhanVienBLL.XoaNhanVien(nhanVien.MaNV);
 
-                        // Kiểm tra kết quả (Tùy vào cách BLL của bạn trả về bool hay string)
-                        // Nếu BLL trả về bool, sửa thành: if (deleteResult)
+                     
                         if (deleteResult == "Thành công" || deleteResult == "true" || deleteResult == "True")
                         {
-                            TaiDuLieu(); // Load lại lưới, dòng nhân viên đó sẽ chuyển sang màu đỏ (nhờ code CellFormatting cũ của bạn)
+                            TaiDuLieu(); 
                             MessageBox.Show("Đã cập nhật trạng thái nhân viên thành 'Đã nghỉ'!", "Thành công",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }

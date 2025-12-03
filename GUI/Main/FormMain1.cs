@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using QuanLyBida.BLL;
 namespace QuanLyBida.GUI.Main
 {
     public partial class FormMain1 : Form
@@ -78,16 +78,50 @@ namespace QuanLyBida.GUI.Main
 
         private void buttonLogout_Click(object sender, EventArgs e)
         {
-            // Xác nhận đăng xuất
-            var result = MessageBox.Show("Bạn có chắc muốn đăng xuất?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            TableBLL tableBLL = new TableBLL();
+            var danhSachBan = tableBLL.GetAllTables();
+
+            // Đếm số bàn đang "Đang sử dụng"
+            int banDangChoi = danhSachBan.Count(t => t.TrangThai == "Đang sử dụng");
+
+            if (banDangChoi > 0)
             {
-                // Quay lại form đăng nhập
-                FormLogin loginForm = new FormLogin();
-                this.Hide();
-                loginForm.ShowDialog();
-                this.Close();
+                // Nếu có bàn đang chơi -> Hiện cảnh báo 
+                var warnResult = MessageBox.Show(
+                    $"Đang có {banDangChoi} bàn chưa thanh toán!\n\n" +
+                    "Nếu bạn đăng xuất bây giờ, các bàn này vẫn sẽ tiếp tục tính giờ.\n" +
+                    "Bạn có chắc chắn muốn đăng xuất không?",
+                    "Cảnh báo bàn đang hoạt động",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2 
+                );
+
+                if (warnResult == DialogResult.No)
+                {
+                    return; 
+                }
             }
+            else
+            {
+                var result = MessageBox.Show(
+                    "Bạn có chắc chắn muốn đăng xuất?",
+                    "Xác nhận",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+           
+            this.Hide();
+            FormLogin loginForm = new FormLogin();
+            loginForm.ShowDialog();
+            this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)

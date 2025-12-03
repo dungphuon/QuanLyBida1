@@ -35,6 +35,7 @@ namespace QuanLyBida.GUI.Main
         private BookingBLL bookingBLL = new BookingBLL();
         private TableBLL tableBLL = new TableBLL();
         private Timer statusTimer;
+        private List<int> _daThongBaoHetGio = new List<int>();
         public TaiKhoanDTO CurrentTaiKhoan { get; set; }
         public string CurrentUserName { get; set; } = "Nhân viên";
         public FormQuanlyban(TaiKhoanDTO taiKhoan = null)
@@ -71,21 +72,25 @@ namespace QuanLyBida.GUI.Main
             {
                 if (table.IsPlaying) continue;
 
-                // ======= 1) LẤY CÁC ĐẶT BÀN HẾT GIỜ =======
+                // ======= 1) LẤY CÁC ĐẶT BÀN HẾT GIỜ (ĐÃ LỌC NHỮNG CÁI ĐÃ BÁO) =======
                 var expiredReservations = table.Reservations
-                    .Where(r => r.TrangThai == "Đang đặt" && now >= r.ThoiGianKetThuc)
+                    .Where(r => r.TrangThai == "Đang đặt"
+                             && now >= r.ThoiGianKetThuc
+                             && !_daThongBaoHetGio.Contains(r.MaDatBan)) // <--- THÊM ĐIỀU KIỆN NÀY
                     .ToList();
 
                 foreach (var r in expiredReservations)
                 {
-                    // ⚠ ĐÁNH DẤU LẠI ĐỂ POPUP KHÔNG LẶP LẠI
-                    r.TrangThai = "Đang xử lý";
+                    // Đánh dấu là đã báo rồi -> Timer lần sau sẽ bỏ qua
+                    _daThongBaoHetGio.Add(r.MaDatBan);
+
+                    // Không cần đổi r.TrangThai = "Đang xử lý" nữa để giao diện vẫn hiện màu vàng
 
                     var result = MessageBox.Show(
-                        $"Bàn {table.TableNumber} đã hết thời gian đặt.\n\n" +
+                        $"Bàn {table.TableNumber} đã hết thời gian đặt ({r.ThoiGianKetThuc:HH:mm}).\n\n" +
                         "Bạn muốn làm gì?\n" +
-                        "- YES = Gia hạn\n" +
-                        "- NO = Hủy đặt",
+                        "- YES = Gia hạn thêm giờ\n" +
+                        "- NO = Kết thúc và Thanh toán ngay",
                         "Hết giờ đặt bàn",
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Warning
@@ -93,57 +98,52 @@ namespace QuanLyBida.GUI.Main
 
                     if (result == DialogResult.Yes)  // GIA HẠN
                     {
-                        string input = ShowInputBox(
-                            "Nhập số phút muốn gia hạn:",
-                            "Gia hạn đặt bàn",
-                            "30"
-                        );
+                        string input = ShowInputBox("Nhập số phút muốn gia hạn:", "Gia hạn đặt bàn", "30");
 
                         if (int.TryParse(input, out int minutes) && minutes > 0)
                         {
                             bool hasNext = bookingBLL.CoDatKeTiep(table.TableNumber, r.ThoiGianKetThuc);
-
                             if (hasNext)
                             {
                                 MessageBox.Show("Không thể gia hạn vì có khách đặt tiếp theo!",
-                                    "Không thể gia hạn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                                // 🔁 Trả trạng thái về 'Đang đặt' để UI vẫn hiểu đây là đặt bàn chưa xử lý
-                                r.TrangThai = "Đang đặt";
+                                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                             else
                             {
                                 bookingBLL.GiaHanDatBan(r.MaDatBan, minutes);
                                 r.ThoiGianKetThuc = r.ThoiGianKetThuc.AddMinutes(minutes);
 
-                                MessageBox.Show($"Đã gia hạn thêm {minutes} phút cho bàn {table.TableNumber}.");
+                                // QUAN TRỌNG: Xóa khỏi danh sách đã báo để lần sau hết giờ mới thì báo tiếp
+                                _daThongBaoHetGio.Remove(r.MaDatBan);
 
-                                // Sau khi gia hạn → trở về trạng thái đang đặt
-                                r.TrangThai = "Đang đặt";
+                                MessageBox.Show($"Đã gia hạn thêm {minutes} phút.");
                             }
                         }
-                        else
-                        {
-                            MessageBox.Show("Số phút không hợp lệ!");
-                            r.TrangThai = "Đang đặt";
-                        }
                     }
-                    else if (result == DialogResult.No) // HỦY ĐẶT
+                    else if (result == DialogResult.No) // THANH TOÁN LUÔN
                     {
-                        bookingBLL.HuyDatBan(r.MaDatBan);
-                        r.TrangThai = "Đã hủy";
-                        table.IsReserved = false;
+                        // Lấy giờ đặt đắp vào giờ bắt đầu để tính tiền
+                        table.StartTime = r.ThoiGianBatDau;
+                        table.IsPlaying = true;
+                        r.TrangThai = "Đang sử dụng";
+
+                        // Gọi thanh toán
+                        ProcessPayment(table);
+
+                        // Render lại
+                        RenderTables();
                     }
                 }
 
-                // ======= 2) LOGIC CŨ: CẬP NHẬT IsReserved =======
+                // ======= 2) LOGIC CŨ GIỮ NGUYÊN =======
                 if (!table.IsPlaying)
                 {
                     var currentReservation = GetCurrentActiveReservation(table);
                     table.IsReserved = (currentReservation != null);
                 }
             }
-
+            // Render lại bàn nếu cần thiết (thường timer tick không cần render nếu không có thay đổi lớn)
+            // Nhưng để chắc chắn trạng thái IsReserved cập nhật đúng màu sắc
             RenderTables();
         }
 
@@ -536,15 +536,19 @@ namespace QuanLyBida.GUI.Main
             var bookingBLL = new BookingBLL();
             var tableBLL = new TableBLL();
 
+            // Cập nhật trạng thái sang Đang sử dụng
             bookingBLL.UpdateBookingStatus(reservation.MaDatBan, "Đang sử dụng");
             tableBLL.UpdateTableStatus(state.TableNumber, "Đang sử dụng");
 
+
+            tableBLL.UpdateStartTime(state.TableNumber, DateTime.Now);
+
             state.IsPlaying = true;
-            state.StartTime = DateTime.Now; // ĐẢM BẢO LUÔN SET THỜI GIAN
+            state.StartTime = DateTime.Now; 
             state.IsReserved = false;
 
             RenderTables();
-            MessageBox.Show($"Đã bắt đầu sử dụng bàn {state.TableNumber}!");
+            MessageBox.Show($"Đã bắt đầu tính giờ cho bàn {state.TableNumber}!");
         }
 
         private void CancelReservation(TableState state, BookingDTO reservation)
