@@ -64,15 +64,120 @@ namespace QuanLyBida.GUI.Main
 
         private void StatusTimer_Tick(object sender, EventArgs e)
         {
+            var bookingBLL = new BookingBLL();
+            var now = DateTime.Now;
+
             foreach (var table in tables)
             {
+                if (table.IsPlaying) continue;
+
+                // ======= 1) LẤY CÁC ĐẶT BÀN HẾT GIỜ =======
+                var expiredReservations = table.Reservations
+                    .Where(r => r.TrangThai == "Đang đặt" && now >= r.ThoiGianKetThuc)
+                    .ToList();
+
+                foreach (var r in expiredReservations)
+                {
+                    // ⚠ ĐÁNH DẤU LẠI ĐỂ POPUP KHÔNG LẶP LẠI
+                    r.TrangThai = "Đang xử lý";
+
+                    var result = MessageBox.Show(
+                        $"Bàn {table.TableNumber} đã hết thời gian đặt.\n\n" +
+                        "Bạn muốn làm gì?\n" +
+                        "- YES = Gia hạn\n" +
+                        "- NO = Hủy đặt",
+                        "Hết giờ đặt bàn",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning
+                    );
+
+                    if (result == DialogResult.Yes)  // GIA HẠN
+                    {
+                        string input = ShowInputBox(
+                            "Nhập số phút muốn gia hạn:",
+                            "Gia hạn đặt bàn",
+                            "30"
+                        );
+
+                        if (int.TryParse(input, out int minutes) && minutes > 0)
+                        {
+                            bool hasNext = bookingBLL.CoDatKeTiep(table.TableNumber, r.ThoiGianKetThuc);
+
+                            if (hasNext)
+                            {
+                                MessageBox.Show("Không thể gia hạn vì có khách đặt tiếp theo!",
+                                    "Không thể gia hạn", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                                // 🔁 Trả trạng thái về 'Đang đặt' để UI vẫn hiểu đây là đặt bàn chưa xử lý
+                                r.TrangThai = "Đang đặt";
+                            }
+                            else
+                            {
+                                bookingBLL.GiaHanDatBan(r.MaDatBan, minutes);
+                                r.ThoiGianKetThuc = r.ThoiGianKetThuc.AddMinutes(minutes);
+
+                                MessageBox.Show($"Đã gia hạn thêm {minutes} phút cho bàn {table.TableNumber}.");
+
+                                // Sau khi gia hạn → trở về trạng thái đang đặt
+                                r.TrangThai = "Đang đặt";
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Số phút không hợp lệ!");
+                            r.TrangThai = "Đang đặt";
+                        }
+                    }
+                    else if (result == DialogResult.No) // HỦY ĐẶT
+                    {
+                        bookingBLL.HuyDatBan(r.MaDatBan);
+                        r.TrangThai = "Đã hủy";
+                        table.IsReserved = false;
+                    }
+                }
+
+                // ======= 2) LOGIC CŨ: CẬP NHẬT IsReserved =======
                 if (!table.IsPlaying)
                 {
                     var currentReservation = GetCurrentActiveReservation(table);
                     table.IsReserved = (currentReservation != null);
                 }
             }
+
             RenderTables();
+        }
+
+
+
+        private string ShowInputBox(string prompt, string title, string defaultValue = "")
+        {
+            Form form = new Form();
+            form.Width = 350;
+            form.Height = 160;
+            form.Text = title;
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.MaximizeBox = false;
+            form.MinimizeBox = false;
+
+            Label lbl = new Label() { Left = 10, Top = 10, Text = prompt, Width = 300 };
+            TextBox txt = new TextBox() { Left = 10, Top = 40, Width = 300, Text = defaultValue };
+
+            Button btnOk = new Button() { Text = "OK", Left = 70, Width = 80, Top = 80 };
+            Button btnCancel = new Button() { Text = "Hủy", Left = 170, Width = 80, Top = 80 };
+
+            btnOk.DialogResult = DialogResult.OK;
+            btnCancel.DialogResult = DialogResult.Cancel;
+
+            form.Controls.Add(lbl);
+            form.Controls.Add(txt);
+            form.Controls.Add(btnOk);
+            form.Controls.Add(btnCancel);
+
+            form.AcceptButton = btnOk;
+            form.CancelButton = btnCancel;
+
+            return form.ShowDialog() == DialogResult.OK ? txt.Text : "";
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -246,8 +351,52 @@ namespace QuanLyBida.GUI.Main
                 };
                 panel.Controls.Add(lblReason);
 
-                return panel; // 🛑 DỪNG TẠI ĐÂY, không vẽ nút bấm nữa
+                return panel; 
             }
+            // KIỂM TRA TRẠNG THÁI BẢO TRÌ
+            if (state.TrangThai == "Bảo trì")
+            {
+                panel.BackColor = Color.FromArgb(255, 245, 204); 
+
+                // Tên bàn
+                var lblNameBT = new Label
+                {
+                    Text = $"Bàn {state.TableNumber}",
+                    Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                    AutoSize = true,
+                    Location = new Point(10, 10),
+                    ForeColor = Color.OrangeRed
+                };
+                panel.Controls.Add(lblNameBT);
+
+                // Loại bàn
+                var lblTypeBT = new Label
+                {
+                    Text = $"Loại: {state.TableType}",
+                    AutoSize = true,
+                    Location = new Point(10, 40),
+                    ForeColor = Color.DarkOrange
+                };
+                panel.Controls.Add(lblTypeBT);
+
+                // Label cảnh báo
+                var lblWarningBT = new Label
+                {
+                    Text = "ĐANG BẢO TRÌ",
+                    Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                    AutoSize = false,
+                    Width = panel.Width - 20,
+                    Height = 30,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    ForeColor = Color.OrangeRed,
+                    Location = new Point(10, 80)
+                };
+                panel.Controls.Add(lblWarningBT);
+
+                return panel;
+            }
+
+
             //TẠO MENU CHUỘT PHẢI
             ContextMenuStrip contextMenu = new ContextMenuStrip();
 

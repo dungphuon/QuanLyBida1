@@ -496,67 +496,118 @@ namespace QuanLyBida.GUI.Main
 
         private void ShowInvoicePreview(string invoiceContent, string phuongThuc)
         {
-            // (Giữ nguyên logic QR code và hiển thị preview của bạn)
-            var tableCost = Math.Round((decimal)playTime.TotalHours * hourlyRate, 0);
-            decimal serviceTotal = _items.Sum(item => item.Price * item.Quantity);
-            decimal tongTam = tableCost + serviceTotal;
-            decimal tienGiam = tongTam * (numGiamGia.Value / 100);
-            decimal tongCuoi = tongTam - tienGiam;
-
             var invoiceForm = new Form()
             {
                 Text = "HÓA ĐƠN THANH TOÁN - BIDA CLUB",
-                Size = new Size(480, 750),
+                Size = new Size(500, 750),
                 StartPosition = FormStartPosition.CenterParent,
+                BackColor = Color.White,
+                AutoScroll = false,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
-                MaximizeBox = false,
-                BackColor = Color.White
+                MaximizeBox = false
             };
 
-            var textPanel = new Panel() { Dock = DockStyle.Top, Height = 400, BackColor = Color.White, Padding = new Padding(10) };
+            // =============================
+            // PANEL CHÍNH CUỘN ĐƯỢC
+            // =============================
+            var scrollPanel = new Panel()
+            {
+                Dock = DockStyle.Fill,
+                AutoScroll = true,
+                BackColor = Color.White
+            };
+            invoiceForm.Controls.Add(scrollPanel);
+
+            // =============================
+            // TEXT HÓA ĐƠN
+            // =============================
             var textBoxInside = new RichTextBox()
             {
                 Text = invoiceContent,
                 Multiline = true,
                 ReadOnly = true,
                 Font = new Font("Courier New", 10, FontStyle.Regular),
-                Dock = DockStyle.Fill,
+                Width = 460,
+                Height = 400,
                 BorderStyle = BorderStyle.None,
                 BackColor = Color.White
             };
-            textPanel.Controls.Add(textBoxInside);
-            invoiceForm.Controls.Add(textPanel);
+            scrollPanel.Controls.Add(textBoxInside);
 
+            // =============================
+            // QR CODE (NẾU CÓ)
+            // =============================
             if (phuongThuc == "Chuyển khoản" || phuongThuc == "Ví điện tử")
             {
-                invoiceForm.Height += 350;
-                var qrPanel = new Panel() { Dock = DockStyle.Top, Height = 350, BackColor = Color.White };
-                var picQR = new PictureBox() { Size = new Size(300, 300), SizeMode = PictureBoxSizeMode.StretchImage, Location = new Point((invoiceForm.Width - 330) / 2, 10), BorderStyle = BorderStyle.FixedSingle };
-                var lblHuongDan = new Label() { Text = "Quét mã để thanh toán", TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Bottom, Height = 30, ForeColor = Color.Gray };
+                var qrPanel = new Panel()
+                {
+                    Width = 460,
+                    Height = 350,
+                    Top = textBoxInside.Bottom + 10,
+                    BackColor = Color.White
+                };
+
+                var picQR = new PictureBox()
+                {
+                    Size = new Size(300, 300),
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Location = new Point((qrPanel.Width - 300) / 2, 5)
+                };
 
                 try
                 {
-                    long amount = (long)tongCuoi;
+                    long amount = (long)CalculateTotal();
                     string content = $"TT HD{_maHoaDon}";
-                    string url = $"https://img.vietqr.io/image/{BANK_ID}-{ACCOUNT_NO}-{TEMPLATE}.png?amount={amount}&addInfo={content}";
+                    string url = $"https://img.vietqr.io/image/VCB-1040678824-compact.png?amount={amount}&addInfo={content}";
                     picQR.Load(url);
                 }
-                catch { picQR.BackColor = Color.WhiteSmoke; lblHuongDan.Text = "Lỗi tải QR"; }
+                catch
+                {
+                    picQR.BackColor = Color.LightGray;
+                }
 
                 qrPanel.Controls.Add(picQR);
-                qrPanel.Controls.Add(lblHuongDan);
-                invoiceForm.Controls.Add(qrPanel);
-                textPanel.BringToFront();
+                scrollPanel.Controls.Add(qrPanel);
             }
 
-            var actionPanel = new Panel() { Dock = DockStyle.Bottom, Height = 60, BackColor = Color.WhiteSmoke };
-            var btnClose = new Button() { Text = "Hoàn tất", Size = new Size(120, 40), Location = new Point((invoiceForm.Width - 140) / 2, 10), BackColor = Color.FromArgb(46, 204, 113), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+            // =============================
+            // NÚT HOÀN TẤT (CỐ ĐỊNH DƯỚI)
+            // =============================
+            var actionPanel = new Panel()
+            {
+                Dock = DockStyle.Bottom,
+                Height = 65,
+                BackColor = Color.WhiteSmoke
+            };
+
+            var btnClose = new Button()
+            {
+                Text = "Hoàn tất",
+                Size = new Size(150, 45),
+                Location = new Point((invoiceForm.Width - 170) / 2, 10),
+                BackColor = Color.FromArgb(46, 204, 113),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+
             btnClose.Click += (s, e) => invoiceForm.Close();
+
             actionPanel.Controls.Add(btnClose);
             invoiceForm.Controls.Add(actionPanel);
 
             invoiceForm.ShowDialog();
         }
+
+        // Hàm lấy tổng tiền cuối để đổ vào QR
+        private decimal CalculateTotal()
+        {
+            var tableCost = Math.Round((decimal)playTime.TotalHours * hourlyRate, 0);
+            decimal serviceTotal = _items.Sum(i => i.Price * i.Quantity);
+            decimal tongTam = tableCost + serviceTotal;
+            decimal giamGia = tongTam * (numGiamGia.Value / 100);
+            return tongTam - giamGia;
+        }
+
 
         private bool ShowCustomerDialog(out KhachHangDTO customer, KhachHangDTO seed = null)
         {

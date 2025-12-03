@@ -21,7 +21,7 @@ namespace GUI.Admin
             Load += FormBaotrisuco_Load;
             comboBoxType.SelectedIndexChanged += ComboBoxType_SelectedIndexChanged;
             buttonAddIncident.Click += ButtonAddIncident_Click;
-            gridIncidents.CellContentClick += GridIncidents_CellContentClick; // Sự kiện bấm nút trên lưới
+            gridIncidents.CellContentClick += GridIncidents_CellContentClick; 
         }
 
         private void FormBaotrisuco_Load(object sender, EventArgs e)
@@ -31,7 +31,7 @@ namespace GUI.Admin
 
             // Set mặc định
             if (comboBoxType.Items.Count > 0) comboBoxType.SelectedIndex = 0;
-            if (comboBoxStatus.Items.Count > 0) comboBoxStatus.SelectedIndex = 2; // Mặc định: Chờ xử lý
+            if (comboBoxStatus.Items.Count > 0) comboBoxStatus.SelectedIndex = 2;
         }
 
         private void LoadTables()
@@ -131,12 +131,15 @@ namespace GUI.Admin
                 bool result = _baoTriBLL.ThemSuCoMoi(type, targetName, description, status);
                 if (result)
                 {
-                    MessageBox.Show("Thêm sự cố thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadIncidentList(); // Reload lại lưới
+                    // Nếu sự cố liên quan đến bàn → chuyển bàn sang Bảo trì
+                    if (comboBoxType.SelectedItem.ToString() == "Bàn")
+                    {
+                        int maBan = int.Parse(comboBoxTable.SelectedItem.ToString().Replace("Bàn", "").Trim());
+                        _tableBLL.UpdateTableStatus(maBan, "Bảo trì");
+                    }
 
-                    // Reset form
-                    textBoxDescription.Clear();
-                    textBoxDevice.Clear();
+                    MessageBox.Show("Thêm sự cố thành công!", "Thông báo");
+                    LoadIncidentList();
                 }
                 else
                 {
@@ -151,27 +154,64 @@ namespace GUI.Admin
 
         private void GridIncidents_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Kiểm tra xem có bấm vào cột Button "Action" không
             if (e.RowIndex >= 0 && e.ColumnIndex == gridIncidents.Columns["colAction"].Index)
             {
                 int maSuCo = Convert.ToInt32(gridIncidents.Rows[e.RowIndex].Cells["colID"].Value);
                 string currentStatus = gridIncidents.Rows[e.RowIndex].Cells["colStatus"].Value.ToString();
 
+                string deviceOrTable = gridIncidents.Rows[e.RowIndex].Cells["colDeviceTable"].Value.ToString();
+
+                // Xác định có phải sự cố của BÀN không
+                bool isTableIncident = deviceOrTable.StartsWith("Bàn");
+
+                // Nếu sự cố thuộc bàn → target = "Bàn 5"
+                string targetName = deviceOrTable;
+
+                // Nếu đã xử lý rồi -> không làm nữa
                 if (currentStatus == "Đã xử lý")
                 {
                     MessageBox.Show("Sự cố này đã hoàn thành!");
                     return;
                 }
 
-                var confirm = MessageBox.Show($"Bạn muốn chuyển trạng thái từ '{currentStatus}' sang bước tiếp theo?",
-                                              "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                // Xác nhận chuyển trạng thái tiếp theo
+                var confirm = MessageBox.Show(
+                    $"Bạn muốn chuyển trạng thái từ '{currentStatus}' sang bước tiếp theo?",
+                    "Xác nhận",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
 
                 if (confirm == DialogResult.Yes)
                 {
                     bool success = _baoTriBLL.ChuyenTrangThaiTiepTheo(maSuCo, currentStatus);
+
                     if (success)
                     {
-                        LoadIncidentList(); // Reload lại để thấy trạng thái mới
+                        // Lấy trạng thái mới từ DB
+                        string newStatus = _baoTriBLL.LayTrangThaiHienTai(maSuCo);
+
+
+                        if (isTableIncident)
+                        {
+                            // Tách số bàn từ "Bàn 5"
+                            int maBan = int.Parse(targetName.Replace("Bàn", "").Trim());
+                            TableBLL tableBLL = new TableBLL();
+
+                            if (newStatus == "Chờ xử lý" || newStatus == "Đang xử lý")
+                            {
+                                // Khi sự cố đang tồn tại -> bàn = Bảo trì
+                                tableBLL.UpdateTableStatus(maBan, "Bảo trì");
+                            }
+                            else if (newStatus == "Đã xử lý")
+                            {
+                                // Khi sự cố được xử lý -> bàn hoạt động lại
+                                tableBLL.UpdateTableStatus(maBan, "Trống");
+                            }
+                        }
+
+                        // Refresh grid
+                        LoadIncidentList();
                     }
                     else
                     {
@@ -180,6 +220,8 @@ namespace GUI.Admin
                 }
             }
         }
+
+
 
         private void ComboBoxType_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -78,5 +78,19 @@ namespace QuanLyBida.DAL
                 }
             }
         }
+        public string LayTrangThaiHienTai(int maSuCo)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string sql = "SELECT TrangThai FROM SuCo WHERE MaSuCo = @MaSuCo";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaSuCo", maSuCo);
+                    return cmd.ExecuteScalar()?.ToString();
+                }
+            }
+        }
     }
 }

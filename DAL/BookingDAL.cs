@@ -122,6 +122,59 @@ namespace QuanLyBida.DAL
             }
         }
 
+        public bool CoDatKeTiep(int maBan, DateTime gioKetThucHienTai)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                string sql = @"
+            SELECT COUNT(*)
+            FROM DatBan
+            WHERE MaBan = @MaBan
+              AND ThoiGianBatDau >= @EndTime
+              AND TrangThai = N'Đang đặt'";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MaBan", maBan);
+                    cmd.Parameters.AddWithValue("@EndTime", gioKetThucHienTai);
+
+                    return (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+        }
+        public bool GiaHanDatBan(int maDatBan, int soPhut)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                string sql = @"
+            UPDATE DatBan
+            SET ThoiGianKetThuc = DATEADD(MINUTE, @p, ThoiGianKetThuc)
+            WHERE MaDatBan = @id";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@p", soPhut);
+                    cmd.Parameters.AddWithValue("@id", maDatBan);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+        public bool HuyDatBan(int maDatBan)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                string sql = @"UPDATE DatBan SET TrangThai = N'Đã hủy' WHERE MaDatBan = @id";
+
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", maDatBan);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
 
     }
 }

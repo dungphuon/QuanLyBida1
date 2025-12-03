@@ -38,5 +38,10 @@ namespace QuanLyBida.BLL
 
             return _dal.CapNhatTrangThai(maSuCo, trangThaiMoi);
         }
+        public string LayTrangThaiHienTai(int maSuCo)
+        {
+            return _dal.LayTrangThaiHienTai(maSuCo);
+        }
+
     }
 }

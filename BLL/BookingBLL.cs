@@ -99,5 +99,20 @@ namespace QuanLyBida.BLL
 
             return conflict;
         }
+        public bool CoDatKeTiep(int maBan, DateTime gioKetThuc)
+        {
+            return bookingDAL.CoDatKeTiep(maBan, gioKetThuc);
+        }
+
+        public bool GiaHanDatBan(int maDatBan, int phut)
+        {
+            return bookingDAL.GiaHanDatBan(maDatBan, phut);
+        }
+
+        public bool HuyDatBan(int maDatBan)
+        {
+            return bookingDAL.HuyDatBan(maDatBan);
+        }
+
     }
 }
