@@ -87,9 +87,8 @@ namespace QuanLyBida.BLL
         }
         private bool IsBookingConflict(BookingDTO newBooking)
         {
-            var allBookings = bookingDAL.GetAllBookings(); // Lấy tất cả
+            var allBookings = bookingDAL.GetAllBookings(); 
 
-            // Lọc các lịch của CÙNG BÀN (trừ trạng thái Hủy/Kết thúc)
             var conflict = allBookings.Any(b =>
                 b.MaBan == newBooking.MaBan &&
                 b.TrangThai != "Đã hủy" &&

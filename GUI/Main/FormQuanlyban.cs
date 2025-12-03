@@ -204,9 +204,8 @@ namespace QuanLyBida.GUI.Main
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            // ---------------------------------------------------------
-            // 🔥 [MỚI] KIỂM TRA TRẠNG THÁI NGƯNG HOẠT ĐỘNG (XÓA MỀM)
-            // ---------------------------------------------------------
+            // KIỂM TRA TRẠNG THÁI NGƯNG HOẠT ĐỘNG (XÓA MỀM)
+            
             if (state.TrangThai == "Ngưng hoạt động" || state.TrangThai == "Hỏng")
             {
                 panel.BackColor = Color.FromArgb(240, 240, 240); // Màu xám nhạt
@@ -249,8 +248,7 @@ namespace QuanLyBida.GUI.Main
 
                 return panel; // 🛑 DỪNG TẠI ĐÂY, không vẽ nút bấm nữa
             }
-            // ---------------------------------------------------------
-            // 🔥 [MỚI] TẠO MENU CHUỘT PHẢI
+            //TẠO MENU CHUỘT PHẢI
             ContextMenuStrip contextMenu = new ContextMenuStrip();
 
             // Mục 1: Xem lịch đặt
@@ -264,7 +262,6 @@ namespace QuanLyBida.GUI.Main
             // Gắn menu vào Panel
             panel.ContextMenuStrip = contextMenu;
 
-            // --- [CODE CŨ] XỬ LÝ CHO BÀN HOẠT ĐỘNG BÌNH THƯỜNG ---
 
             var lbl = new Label
             {
@@ -331,19 +328,17 @@ namespace QuanLyBida.GUI.Main
 
         private void ShowActiveReservationInfo(Panel panel, TableState state, BookingDTO reservation)
         {
-            // 1. GỘP THÔNG TIN: Giờ + Tên khách vào 1 dòng
             var lblReservationInfo = new Label
             {
-                // Format: "Đặt: 14:00-16:00 • Tên Khách"
                 Text = $"Đặt: {reservation.ThoiGianBatDau:HH:mm}-{reservation.ThoiGianKetThuc:HH:mm} • Khách: {reservation.HoTen}",
                 AutoSize = false,
                 Width = panel.Width - 20,
                 Height = 30,
-                ForeColor = Color.OrangeRed, // Màu cam đỏ để nổi bật trạng thái đang đặt
+                ForeColor = Color.OrangeRed, 
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
                 Location = new Point(10, 80),
                 TextAlign = ContentAlignment.MiddleLeft,
-                AutoEllipsis = true // Nếu tên dài quá sẽ hiện dấu ...
+                AutoEllipsis = true 
             };
             panel.Controls.Add(lblReservationInfo);
 
@@ -438,31 +433,19 @@ namespace QuanLyBida.GUI.Main
                 var nextReservation = upcomingReservations.First();
                 var lblUpcomingInfo = new Label
                 {
-                    // GỘP: "Sắp: 14:00-16:00 • Tên Khách"
                     Text = $"Sắp đặt: {nextReservation.ThoiGianBatDau:HH:mm}-{nextReservation.ThoiGianKetThuc:HH:mm} • Khách: {nextReservation.HoTen}",
                     AutoSize = false,
                     Width = panel.Width - 20,
                     Height = 30,
-                    ForeColor = Color.DarkGreen, // Dùng màu đậm hơn chút cho dễ đọc trên 1 dòng
-                    Font = new Font("Segoe UI", 8, FontStyle.Italic), // Hoặc tăng lên size 9 nếu thấy nhỏ
-                    Location = new Point(10, 80), // Vị trí cũ của dòng đầu tiên
+                    ForeColor = Color.DarkGreen, 
+                    Font = new Font("Segoe UI", 8, FontStyle.Italic), 
+                    Location = new Point(10, 80), 
                     TextAlign = ContentAlignment.MiddleLeft,
-                    AutoEllipsis = true // QUAN TRỌNG: Nếu tên khách dài quá, nó sẽ tự hiện dấu "..." thay vì vỡ giao diện
+                    AutoEllipsis = true 
                 };
                 panel.Controls.Add(lblUpcomingInfo);
 
-                //var lblUpcomingCustomer = new Label
-                //{
-                //    Text = $"Khách: {nextReservation.HoTen}",
-                //    AutoSize = false,
-                //    Width = panel.Width - 20,
-                //    Height = 20,
-                //    ForeColor = Color.DarkGreen,
-                //    Font = new Font("Segoe UI", 8, FontStyle.Italic),
-                //    Location = new Point(10, 105),
-                //    TextAlign = ContentAlignment.MiddleLeft
-                //};
-                //panel.Controls.Add(lblUpcomingCustomer);
+
             }
 
             var btnStart = new Guna2Button
@@ -628,11 +611,8 @@ namespace QuanLyBida.GUI.Main
             panel.Controls.Add(btnPay);
             panel.Controls.Add(btnService);
 
-            // --- SỬA PHẦN CĂN CHỈNH VỊ TRÍ TẠI ĐÂY ---
-            // Thêm số 115 vào cuối hàm để đẩy nút xuống vị trí Y=115
             ArrangeTwoButtons(panel, btnPay, btnService, 115);
 
-            // Đảm bảo khi resize cũng giữ vị trí 115
             panel.Resize += (s, e2) => ArrangeTwoButtons(panel, btnPay, btnService, 115);
         }
 
@@ -669,7 +649,6 @@ namespace QuanLyBida.GUI.Main
                 maDatBan = activeBooking.MaDatBan;
             }
 
-            // 🔧 LẤY MA NHÂN VIÊN THỰC TẾ THEO TÊN
             int maNV = CurrentTaiKhoan?.MaNV ?? 1;
             string tenNhanVien = CurrentTaiKhoan?.TenDangNhap ?? CurrentUserName;
 
@@ -683,7 +662,7 @@ namespace QuanLyBida.GUI.Main
                 items: state.Items,
                 maDatBan: maDatBan,
                 tenNhanVien: tenNhanVien,
-                maNhanVien: maNV)) // 🔧 TRUYỀN MA NHÂN VIÊN THỰC TẾ
+                maNhanVien: maNV)) 
             {
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
@@ -779,9 +758,6 @@ namespace QuanLyBida.GUI.Main
                 }).ToList();
 
             grid.DataSource = dataShow;
-
-            // Thêm cột nút Hủy (nếu muốn hủy nhanh tại đây)
-            // (Tùy chọn, bạn có thể bỏ qua nếu không cần)
 
             listForm.Controls.Add(grid);
             listForm.ShowDialog();
