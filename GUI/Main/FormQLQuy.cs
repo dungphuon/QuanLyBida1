@@ -275,7 +275,6 @@ namespace QuanLyBida.GUI.Main
         {
             try
             {
-                // 🔧 TRUYỀN MaNV THỰC TẾ CHO FORMPHIEUTHU
                 int maNV = _taiKhoan?.MaNV ?? 1;
                 string tenNV = _taiKhoan?.TenDangNhap ?? "Nhân viên";
 
@@ -298,7 +297,6 @@ namespace QuanLyBida.GUI.Main
         {
             try
             {
-                // 🔧 TRUYỀN MaNV THỰC TẾ CHO FORMPHIEUTHU
                 int maNV = _taiKhoan?.MaNV ?? 1;
                 string tenNV = _taiKhoan?.TenDangNhap ?? "Nhân viên";
 

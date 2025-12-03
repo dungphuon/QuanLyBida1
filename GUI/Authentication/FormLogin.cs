@@ -26,7 +26,7 @@ namespace QuanLyBida.GUI
 
             // Các link bên dưới
             LinkForgot.TabIndex = 4;
-            LinkSignup.TabIndex = 5;
+           
 
             // 2. GÁN SỰ KIỆN PHÍM ENTER (Để bấm Enter thì nhảy xuống hoặc Login)
             TextBox_username.KeyDown += TextBox_username_KeyDown;
@@ -145,13 +145,7 @@ namespace QuanLyBida.GUI
             forgetForm.ShowDialog();
         }
 
-        private void LinkSignup_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            var registerForm = new FormRegister();
-            this.Hide();
-            registerForm.ShowDialog();
-            this.Show();
-        }
+        
 
         // Các method khác giữ nguyên...
         private void TitleLabel_Click(object sender, EventArgs e) { }

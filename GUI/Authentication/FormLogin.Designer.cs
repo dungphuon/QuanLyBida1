@@ -38,7 +38,6 @@
             this.ButtonMinimize = new System.Windows.Forms.Button();
             this.TableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
             this.MainPanel = new System.Windows.Forms.Panel();
-            this.LinkSignup = new System.Windows.Forms.LinkLabel();
             this.ButtonShowPassword = new System.Windows.Forms.Button();
             this.TextBox_username = new Guna.UI2.WinForms.Guna2TextBox();
             this.SubtitleLabel = new System.Windows.Forms.Label();
@@ -175,7 +174,6 @@
             // 
             this.MainPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.MainPanel.BackColor = System.Drawing.Color.Transparent;
-            this.MainPanel.Controls.Add(this.LinkSignup);
             this.MainPanel.Controls.Add(this.ButtonShowPassword);
             this.MainPanel.Controls.Add(this.TextBox_username);
             this.MainPanel.Controls.Add(this.SubtitleLabel);
@@ -189,21 +187,6 @@
             this.MainPanel.Name = "MainPanel";
             this.MainPanel.Size = new System.Drawing.Size(420, 540);
             this.MainPanel.TabIndex = 0;
-            // 
-            // LinkSignup
-            // 
-            this.LinkSignup.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
-            this.LinkSignup.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.LinkSignup.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(80)))), ((int)(((byte)(87)))));
-            this.LinkSignup.Location = new System.Drawing.Point(56, 455);
-            this.LinkSignup.Name = "LinkSignup";
-            this.LinkSignup.Size = new System.Drawing.Size(308, 23);
-            this.LinkSignup.TabIndex = 5;
-            this.LinkSignup.TabStop = true;
-            this.LinkSignup.Text = "Chưa có tài khoản? Đăng ký ngay";
-            this.LinkSignup.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LinkSignup.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(80)))), ((int)(((byte)(87)))));
-            this.LinkSignup.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkSignup_LinkClicked);
             // 
             // ButtonShowPassword
             // 
@@ -371,7 +354,6 @@
         private System.Windows.Forms.Button ButtonClose;
         private System.Windows.Forms.Button ButtonMinimize;
         private System.Windows.Forms.Panel MainPanel;
-        private System.Windows.Forms.LinkLabel LinkSignup;
         private System.Windows.Forms.Button ButtonShowPassword;
         private Guna.UI2.WinForms.Guna2TextBox TextBox_username;
         private System.Windows.Forms.Label SubtitleLabel;

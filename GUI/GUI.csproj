@@ -211,12 +211,6 @@
     <Compile Include="Authentication\FormLogin.Designer.cs">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Authentication\FormRegister.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Authentication\FormRegister.Designer.cs">
-      <DependentUpon>FormRegister.cs</DependentUpon>
-    </Compile>
     <Compile Include="Authentication\FormXacthuc.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -301,12 +295,6 @@
     <Compile Include="Main\FormQuanlydichvuanuong.Designer.cs">
       <DependentUpon>FormQuanlydichvuanuong.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main\FormQuanlyQuy.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Main\FormQuanlyQuy.Designer.cs">
-      <DependentUpon>FormQuanlyQuy.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main\FormThanhToan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -364,9 +352,6 @@
     <EmbeddedResource Include="Authentication\FormLogin.resx">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Authentication\FormRegister.resx">
-      <DependentUpon>FormRegister.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Authentication\FormXacthuc.resx">
       <DependentUpon>FormXacthuc.cs</DependentUpon>
     </EmbeddedResource>
@@ -413,7 +398,6 @@
     <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Authentication.FormCauHinh.resources" />
     <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormForgetPassword.resources" />
     <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormLogin.resources" />
-    <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormRegister.resources" />
     <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.FormXacthuc.resources" />
     <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormHelp.resources" />
     <EmbeddedResource Include="obj\Debug\QuanLyBida.GUI.Main.FormMain1.resources" />
