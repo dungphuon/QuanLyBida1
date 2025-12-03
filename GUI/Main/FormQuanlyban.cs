@@ -20,6 +20,7 @@ namespace QuanLyBida.GUI.Main
         private class TableState
         {
             public int TableNumber { get; set; }
+            public string TableName { get; set; }
             public bool IsPlaying { get; set; }
             public bool IsReserved { get; set; }
             public string TableType { get; set; }
@@ -210,6 +211,7 @@ namespace QuanLyBida.GUI.Main
                     var tableState = new TableState
                     {
                         TableNumber = tableDTO.MaBan,
+                        TableName = tableDTO.TenBan,
                         TableType = tableDTO.LoaiBan,
                         HourlyRate = tableDTO.GiaGio,
                         IsPlaying = tableDTO.TrangThai == "Đang sử dụng",
@@ -267,7 +269,7 @@ namespace QuanLyBida.GUI.Main
                     TableNumber = i,
                     IsPlaying = false,
                     IsReserved = false,
-                    TableType = (i % 2 == 0) ? "Lỗ" : "3 bi",
+                    TableType = (i % 2 == 0) ? "Lỗ" : "Carom",
                     HourlyRate = (i % 2 == 0) ? 35000 : 40000
                 });
             }
@@ -319,7 +321,7 @@ namespace QuanLyBida.GUI.Main
                 // Tên bàn (Gạch ngang để thể hiện đã hủy)
                 var lblNameDeleted = new Label
                 {
-                    Text = $"Bàn {state.TableNumber}",
+                    Text = state.TableName,
                     Font = new Font("Segoe UI", 12, FontStyle.Strikeout | FontStyle.Bold),
                     AutoSize = true,
                     Location = new Point(10, 10),
@@ -361,7 +363,7 @@ namespace QuanLyBida.GUI.Main
                 // Tên bàn
                 var lblNameBT = new Label
                 {
-                    Text = $"Bàn {state.TableNumber}",
+                    Text = state.TableName,
                     Font = new Font("Segoe UI", 12, FontStyle.Bold),
                     AutoSize = true,
                     Location = new Point(10, 10),
@@ -414,7 +416,7 @@ namespace QuanLyBida.GUI.Main
 
             var lbl = new Label
             {
-                Text = $"Bàn {state.TableNumber}",
+                Text = state.TableName,
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 AutoSize = true,
                 Location = new Point(10, 10)
@@ -680,7 +682,7 @@ namespace QuanLyBida.GUI.Main
             panel.Controls.Clear();
             var lbl = new Label
             {
-                Text = $"Bàn {state.TableNumber}",
+                Text = state.TableName,
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 AutoSize = true,
                 Location = new Point(10, 10)

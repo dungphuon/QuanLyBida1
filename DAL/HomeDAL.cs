@@ -118,7 +118,10 @@ namespace QuanLyBida.DAL
                 string sql = @"
                     SELECT 
                         db.MaDatBan,
-                        kh.HoTen AS KhachHang,
+                        CASE 
+                        WHEN db.TenKhachDat IS NOT NULL AND db.TenKhachDat <> '' THEN db.TenKhachDat 
+                        ELSE kh.HoTen 
+                    END AS KhachHang,
                         b.TenBan AS SoBan,
                         db.ThoiGianBatDau,
                         db.ThoiGianKetThuc,

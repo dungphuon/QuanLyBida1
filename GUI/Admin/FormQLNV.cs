@@ -7,7 +7,7 @@ using QuanLyBida.DTO;
 using QuanLyBida.BLL;
 using OfficeOpenXml;
 using System.IO;
-using System.Drawing;
+
 
 namespace GUI.Admin
 {

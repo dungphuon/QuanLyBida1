@@ -13,15 +13,19 @@ namespace QuanLyBida.DAL
             using (var conn = GetConnection())
             {
                 conn.Open();
-                string sql = @"SELECT db.*, kh.HoTen 
-                             FROM DatBan db 
-                             INNER JOIN KhachHang kh ON db.MaKH = kh.MaKH";
+                string sql = @"SELECT db.*, kh.HoTen as TenKhachHangGoc
+                       FROM DatBan db 
+                       INNER JOIN KhachHang kh ON db.MaKH = kh.MaKH";
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
+                            string tenHienThi = reader["TenKhachDat"] != DBNull.Value
+                                                ? reader["TenKhachDat"].ToString()
+                                                : reader["TenKhachHangGoc"].ToString();
+
                             list.Add(new BookingDTO
                             {
                                 MaDatBan = Convert.ToInt32(reader["MaDatBan"]),
@@ -30,7 +34,8 @@ namespace QuanLyBida.DAL
                                 ThoiGianBatDau = Convert.ToDateTime(reader["ThoiGianBatDau"]),
                                 ThoiGianKetThuc = Convert.ToDateTime(reader["ThoiGianKetThuc"]),
                                 TrangThai = reader["TrangThai"].ToString(),
-                                HoTen = reader["HoTen"].ToString()
+
+                                HoTen = tenHienThi
                             });
                         }
                     }
@@ -45,13 +50,13 @@ namespace QuanLyBida.DAL
             {
                 conn.Open();
 
-                // Tìm hoặc tạo khách hàng
+                // 1. Vẫn dùng hàm này để lấy ID. 
+                // (Nếu bạn đã sửa hàm này trả về 1 như bài trước thì nó sẽ trả về 1)
                 int maKH = GetOrCreateCustomer(booking.HoTen, conn);
 
-                // Thêm đặt bàn
-                string sql = @"INSERT INTO DatBan (MaKH, MaBan, ThoiGianBatDau, ThoiGianKetThuc, TrangThai) 
-                             VALUES (@MaKH, @MaBan, @ThoiGianBatDau, @ThoiGianKetThuc, @TrangThai);
-                             SELECT SCOPE_IDENTITY();";
+                string sql = @"INSERT INTO DatBan (MaKH, MaBan, ThoiGianBatDau, ThoiGianKetThuc, TrangThai, TenKhachDat) 
+                       VALUES (@MaKH, @MaBan, @ThoiGianBatDau, @ThoiGianKetThuc, @TrangThai, @TenKhachDat);
+                       SELECT SCOPE_IDENTITY();";
 
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -60,6 +65,8 @@ namespace QuanLyBida.DAL
                     cmd.Parameters.AddWithValue("@ThoiGianBatDau", booking.ThoiGianBatDau);
                     cmd.Parameters.AddWithValue("@ThoiGianKetThuc", booking.ThoiGianKetThuc);
                     cmd.Parameters.AddWithValue("@TrangThai", booking.TrangThai);
+
+                    cmd.Parameters.AddWithValue("@TenKhachDat", booking.HoTen);
 
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }
