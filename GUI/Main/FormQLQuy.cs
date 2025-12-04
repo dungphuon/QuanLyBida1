@@ -9,7 +9,6 @@ namespace QuanLyBida.GUI.Main
     public partial class FormQLQuy : Form
     {
         private PhieuThuChiBLL phieuBLL = new PhieuThuChiBLL();
-        private decimal quyDauKy = 10000000; // Quỹ đầu kỳ mặc định
         private TaiKhoanDTO _taiKhoan;
         public FormQLQuy(TaiKhoanDTO taiKhoan = null)
         {
@@ -154,8 +153,7 @@ namespace QuanLyBida.GUI.Main
 
                 case "Tất cả":
                 default:
-                    // Quỹ đầu kỳ = 10,000,000 (quỹ ban đầu)
-                    return 10000000;
+                    return 0;
             }
         }
  
@@ -163,7 +161,7 @@ namespace QuanLyBida.GUI.Main
         private decimal TinhTonQuyDenNgay(DateTime denNgay)
         {
             // Quỹ ban đầu (ngày đầu tiên hệ thống hoạt động)
-            decimal quyBanDau = 10000000;
+            decimal quyBanDau = 0;
 
             // Tính tồn quỹ đến ngày được chỉ định
             return phieuBLL.TinhTonQuy(quyBanDau, null, denNgay);
